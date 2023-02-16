@@ -1,8 +1,18 @@
 export const theme = {
   colors: {
-    white: '#ffffff',
-    black: '#000000',
-    blue: '#254e92',
-    yellow: '#e7a838',
+    primary: {
+      // lilac
+      main: '#C89EF2',
+      light: '#BCD1FB',
+      dark: '#3446E4',
+    },
+
+    highEmphasis: '#322E1E',
+    mediumEmphasis: '#545454',
+    lowEmphasis: '#949494',
+
+    White: '#FFFFFF',
+    divider: '#EDECE6',
+    background: '#FAFAFA',
   },
 };

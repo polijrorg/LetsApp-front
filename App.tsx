@@ -1,11 +1,11 @@
 import AppProvider from '@hooks/index';
-import Home from '@screens/Home';
+import Routes from '@routes/index';
 import React from 'react';
 
 export default function App() {
   return (
     <AppProvider>
-      <Home />
+      <Routes />
     </AppProvider>
   );
 }
