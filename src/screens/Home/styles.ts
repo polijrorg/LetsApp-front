@@ -5,7 +5,7 @@ export const Wrapper = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background: ${({ theme }) => theme.colors.blue};
+  background: ${({ theme }) => theme.colors.background};
 `;
 
 export const StyledText = styled(Text)`
