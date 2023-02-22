@@ -1,19 +1,24 @@
-// import * as S from './styles';
-// import Input from '@components/Input';
-// import React from 'react';
+import * as S from './styles';
+import Button from '@components/Button';
+import React from 'react';
 
-// const Autentication: React.FC = ({}) => {
-//   return (
-//     <S.Body>
-//       <S.Title>Achievements</S.Title>
-//       <Input
-//         arrow={true}
-//         width="304px"
-//         height="32px"
-//         placeholder="Selecione o seu país"
-//       />
-//     </S.Body>
-//   );
-// };
+const Message = require('../../assets/MessageIcon.png');
 
-// export default Autentication;
+const Autentication: React.FC = ({}) => {
+  return (
+    <S.Body>
+      <S.Title>Achievements</S.Title>
+      <Button
+        width="144px"
+        backgroundColor="#3446E4"
+        borderColor="transparent"
+        hasIcon={false}
+        icon={Message}
+        title="Continuar"
+        titleColor="#FAFAFA"
+      />
+    </S.Body>
+  );
+};
+
+export default Autentication;
