@@ -18,13 +18,13 @@ const Autentication: React.FC = ({}) => {
       </S.Descrition>
       <Input
         arrow={true}
-        height="32"
-        width="304"
+        height="32px"
+        width="304px"
         placeholder="Selecione seu país"
       />
       <S.ContainerInputs>
-        <Input arrow={false} height="32" width="60" placeholder="DDD" />
-        <Input arrow={false} height="32" width="246" placeholder="Número" />
+        <Input arrow={false} height="32px" width="60px" placeholder="DDD" />
+        <Input arrow={false} height="32px" width="238px" placeholder="Número" />
       </S.ContainerInputs>
       <Button
         width="144px"
