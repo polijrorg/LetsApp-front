@@ -2,7 +2,7 @@ export const theme = {
   colors: {
     primary: {
       // lilac
-      main: '#C89EF2',
+      main: '#727FF6',
       light: '#BCD1FB',
       dark: '#3446E4',
     },
