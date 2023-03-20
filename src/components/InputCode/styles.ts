@@ -19,6 +19,6 @@ export const ContainerInput = styled.View<InputProps>`
 
 export const Input = styled.TextInput`
   flex: 1;
-  font-size: 30px;
+  font-size: 26px;
   letter-spacing: 16px;
 `;

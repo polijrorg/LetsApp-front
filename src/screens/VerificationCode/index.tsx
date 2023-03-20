@@ -20,15 +20,22 @@ const VerificationCode: React.FC = ({ navigation }) => {
       </S.ContainerTitle>
       <InputCode height="32px" width="240px" placeholder="––––––" />
       <S.Descrition>Preencha aqui com o código recebido por SMS</S.Descrition>
-      <Button
-        width="328px"
-        backgroundColor="#3446E4"
-        borderColor="transparent"
-        hasIcon={true}
-        icon={Message}
-        title="Reenviar código"
-        titleColor="#FAFAFA"
-      />
+      <TouchableOpacity
+        activeOpacity={1.0}
+        onPress={() => {
+          navigation.navigate('InitialData');
+        }}
+      >
+        <Button
+          width="328px"
+          backgroundColor="#3446E4"
+          borderColor="transparent"
+          hasIcon={true}
+          icon={Message}
+          title="Reenviar código"
+          titleColor="#FAFAFA"
+        />
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Autentication');

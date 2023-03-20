@@ -17,12 +17,7 @@ const Autentication: React.FC = ({ navigation }) => {
       <S.Descrition>
         Você receberá em breve um SMS com o código de verificação.
       </S.Descrition>
-      <Input
-        arrow={true}
-        height="32px"
-        width="304px"
-        placeholder="Selecione seu país"
-      />
+      <Input arrow={true} height="32px" width="304px" placeholder="Brasil" />
       <S.ContainerInputs>
         <Input arrow={false} height="32px" width="60px" placeholder="DDD" />
         <Input arrow={false} height="32px" width="238px" placeholder="Número" />

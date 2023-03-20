@@ -12,6 +12,7 @@ const ImageArrow = require('../../assets/ArrowInput.png');
 
 const Input: React.FC<InputProps> = ({ arrow, width, height, placeholder }) => {
   const [input, setInput] = useState('');
+  console.log(input);
   return (
     <S.ContainerInput width={width} height={height}>
       <S.Input
