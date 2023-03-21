@@ -1,10 +1,10 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import { ModalCard } from '@components/Modal';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-// import { Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 
 const Logo = require('../../assets/Logo.png');
@@ -13,6 +13,7 @@ const Gallery = require('../../assets/Gallery.png');
 
 const InitialData: React.FC = ({ navigation }) => {
   const [image, setImage] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const pickImage = () => {
     ImagePicker.launchImageLibrary(
@@ -56,7 +57,7 @@ const InitialData: React.FC = ({ navigation }) => {
       <S.Empty />
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('VerificationCode');
+          setOpen(true);
         }}
       >
         <Button
@@ -68,6 +69,7 @@ const InitialData: React.FC = ({ navigation }) => {
           title="Salvar"
           titleColor="#FAFAFA"
         />
+        <ModalCard Open={open} setOpen={setOpen} />
       </TouchableOpacity>
       <S.SmallCircleLeft />
       <S.SmallCircleRight />

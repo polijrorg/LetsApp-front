@@ -5,12 +5,17 @@ export type InputProps = {
   width: string;
   height: string;
   placeholder: string;
-  arrow: boolean;
+  arrow?: boolean;
 };
 
 const ImageArrow = require('../../assets/ArrowInput.png');
 
-const Input: React.FC<InputProps> = ({ arrow, width, height, placeholder }) => {
+const Input: React.FC<InputProps> = ({
+  arrow = false,
+  width,
+  height,
+  placeholder,
+}) => {
   const [input, setInput] = useState('');
   console.log(input);
   return (

@@ -13,7 +13,7 @@ export type ButtonProps = {
 
 const Button: React.FC<ButtonProps> = ({
   width,
-  hasIcon,
+  hasIcon = false,
   icon,
   backgroundColor,
   title,
