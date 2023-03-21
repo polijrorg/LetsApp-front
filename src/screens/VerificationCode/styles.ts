@@ -43,9 +43,8 @@ export const SmallCircleLeft = styled.View`
   width: 208px;
   height: 208px;
   border-radius: 30000px;
-  position: absolute;
-  bottom: -104px;
-  left: -104px;
+  bottom: -154px;
+  left: -154px;
   background-color: ${theme.colors.primary.main};
 `;
 

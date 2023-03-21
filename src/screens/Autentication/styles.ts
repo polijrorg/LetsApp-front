@@ -6,6 +6,7 @@ export const Body = styled.View`
   padding: 24px;
   background-color: ${theme.colors.background};
   align-items: center;
+  display: flex;
 `;
 
 export const Logo = styled.Image`
@@ -35,9 +36,8 @@ export const SmallCircleLeft = styled.View`
   width: 208px;
   height: 208px;
   border-radius: 30000px;
-  position: absolute;
   bottom: -104px;
-  left: -104px;
+  left: -160px;
   background-color: ${theme.colors.primary.main};
 `;
 

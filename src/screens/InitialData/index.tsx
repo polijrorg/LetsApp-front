@@ -69,7 +69,12 @@ const InitialData: React.FC = ({ navigation }) => {
           title="Salvar"
           titleColor="#FAFAFA"
         />
-        <ModalCard Open={open} setOpen={setOpen} />
+        <ModalCard
+          Open={open}
+          setOpen={setOpen}
+          navigation={navigation}
+          screen="VerificationCode"
+        />
       </TouchableOpacity>
       <S.SmallCircleLeft />
       <S.SmallCircleRight />

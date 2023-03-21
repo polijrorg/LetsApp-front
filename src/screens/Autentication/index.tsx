@@ -3,7 +3,7 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
@@ -19,9 +19,8 @@ const Autentication: React.FC = ({ navigation }) => {
       </S.Descrition>
       <Input arrow={true} height="32px" width="304px" placeholder="Brasil" />
       <S.ContainerInputs>
-        {/* <KeyboardAvoidingView> */}
         <Input arrow={false} height="32px" width="60px" placeholder="DDD" />
-        {/* </KeyboardAvoidingView> */}
+
         <Input arrow={false} height="32px" width="238px" placeholder="Número" />
       </S.ContainerInputs>
       <TouchableOpacity

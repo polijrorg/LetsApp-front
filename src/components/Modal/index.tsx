@@ -9,11 +9,15 @@ type ModalProps = {
   color?: string;
   Open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  navigation: any;
+  screen?: string;
 };
 
 export const ModalCard: React.FC<ModalProps> = ({
   Open,
   setOpen,
+  navigation,
+  screen,
 }: ModalProps) => {
   const [isSelected, setSelected] = useState(false);
 
@@ -36,7 +40,13 @@ export const ModalCard: React.FC<ModalProps> = ({
               onPress={() => setSelected(!isSelected)}
             />
           </S.ContainerDescriton>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (screen) {
+                navigation.navigate(screen);
+              }
+            }}
+          >
             <Icon name="check" size={30} color="#3446E4" />
           </TouchableOpacity>
         </S.ContentContainer>
