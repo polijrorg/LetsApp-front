@@ -1,5 +1,6 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import CardsInvite from '@components/CardsInvite';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { StatusBar } from 'expo-status-bar';
@@ -10,6 +11,8 @@ import ImagePicker from 'react-native-image-picker';
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 const Gallery = require('../../assets/Gallery.png');
+
+const picture1 = require('../../assets/picture1.png');
 
 const InitialData: React.FC = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -68,6 +71,20 @@ const InitialData: React.FC = ({ navigation }) => {
           icon={Message}
           title="Salvar"
           titleColor="#FAFAFA"
+        />
+        <CardsInvite
+          name="Ana Arejano"
+          adress="R.Legal, 123"
+          event="presencial"
+          date="01/02/2023"
+          image={picture1}
+        />
+        <CardsInvite
+          name="Ana Arejano"
+          adress="R.Legal, 123"
+          event="presencial"
+          date="01/02/2023"
+          image={picture1}
         />
         <ModalCard
           Open={open}
