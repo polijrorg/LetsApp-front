@@ -9,7 +9,6 @@ export const ContainerCard = styled.View`
   border-top-width: 1px;
   border-top-color: ${theme.colors.lowEmphasis};
   background-color: ${theme.colors.background};
-  align-items: center;
   justify-content: center;
 `;
 

@@ -74,7 +74,7 @@ const InitialData: React.FC = ({ navigation }) => {
           Open={open}
           setOpen={setOpen}
           navigation={navigation}
-          screen="VerificationCode"
+          screen="MainScreen"
         />
       </TouchableOpacity>
       <MyCalendar />
