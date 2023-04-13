@@ -75,6 +75,7 @@ const InitialData: React.FC = ({ navigation }) => {
           setOpen={setOpen}
           navigation={navigation}
           screen="MainScreen"
+          type="Schedule"
         />
       </TouchableOpacity>
       <MyCalendar />

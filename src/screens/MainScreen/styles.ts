@@ -68,6 +68,14 @@ export const ScrollView = styled.ScrollView`
   height: 60%;
 `;
 
+export const ContainerInvite = styled.View`
+  display: flex;
+`;
+
+export const ContainerEvent = styled.View`
+  display: flex;
+`;
+
 export const IconMore = styled.View`
   flex-direction: row;
   justify-content: flex-end;
