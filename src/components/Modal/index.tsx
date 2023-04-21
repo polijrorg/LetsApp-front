@@ -35,7 +35,7 @@ export const ModalCard: React.FC<ModalProps> = ({
 
   if (type === 'Schedule') {
     title = 'Vincular Nova Agenda';
-    descrition = 'Todos os meus contatos podem ver a minha agenda.';
+    descrition = 'Concordo com os termos de uso.';
   } else if (type === 'Number') {
     title = 'Adicionar Novo Número';
     descrition = '';

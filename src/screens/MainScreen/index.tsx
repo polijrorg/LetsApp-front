@@ -65,6 +65,30 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Event2}
               />
+              <CardsEvent
+                adress="Av. Paulista"
+                name="Beatriz Brum"
+                event="presencial"
+                image={Event1}
+              />
+              <CardsEvent
+                adress="Av. Paulista"
+                name="Ana Arejano"
+                event="presencial"
+                image={Event2}
+              />
+              <CardsEvent
+                adress="Av. Paulista"
+                name="Marco Rudas"
+                event="presencial"
+                image={Event1}
+              />
+              <CardsEvent
+                adress="Av. Paulista"
+                name="Pedro Mendes"
+                event="presencial"
+                image={Event2}
+              />
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
@@ -74,6 +98,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Picture1}
                 date="01/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Google Meets"
@@ -81,6 +106,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="online"
                 image={Picture2}
                 date="02/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Google Meets"
@@ -88,6 +114,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="online"
                 image={Picture3}
                 date="03/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Av. Paulista"
@@ -95,6 +122,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Picture4}
                 date="04/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Av. Paulista"
@@ -102,6 +130,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Picture4}
                 date="04/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Av. Paulista"
@@ -109,6 +138,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Picture4}
                 date="04/02/23"
+                // navigation={navigation}
               />
               <CardsInvite
                 adress="Av. Paulista"
@@ -116,6 +146,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 event="presencial"
                 image={Picture4}
                 date="04/02/23"
+                // navigation={navigation}
               />
             </S.ContainerInvite>
           )}
