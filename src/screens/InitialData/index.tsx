@@ -1,6 +1,5 @@
 import * as S from './styles';
 import Button from '@components/Button';
-import MyCalendar from '@components/Calendar';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { StatusBar } from 'expo-status-bar';
@@ -78,7 +77,6 @@ const InitialData: React.FC = ({ navigation }) => {
           type="Schedule"
         />
       </TouchableOpacity>
-      <MyCalendar />
       <S.SmallCircleLeft />
       <S.SmallCircleRight />
       <S.SmallTop />
