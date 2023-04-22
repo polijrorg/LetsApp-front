@@ -11,7 +11,7 @@ export const Body = styled.View`
 export const Logo = styled.Image`
   width: 121px;
   height: 119px;
-  margin-top: 30%;
+  margin-top: 40%;
 `;
 
 export const Title = styled.Text`
@@ -31,6 +31,7 @@ export const Gallery = styled.Image`
   width: 90px;
   height: 90px;
   margin-bottom: 16px;
+  border-radius: 180px;
 `;
 
 export const Empty = styled.View`
@@ -43,8 +44,9 @@ export const SmallCircleLeft = styled.View`
   width: 208px;
   height: 208px;
   border-radius: 30000px;
-  bottom: -74px;
-  left: -180px;
+  position: absolute;
+  bottom: -104px;
+  left: -104px;
   background-color: ${theme.colors.primary.main};
 `;
 

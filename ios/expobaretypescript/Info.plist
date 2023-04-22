@@ -51,5 +51,9 @@
 	<false/>
   <key>UIStatusBarStyle</key>
   <string>UIStatusBarStyleDefault</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Permissão para acessar sua galeria</string>
+<key>NSCameraUsageDescription</key>
+<string>Permissão para acessar sua camera</string>
 </dict>
 </plist>
