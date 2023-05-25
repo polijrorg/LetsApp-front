@@ -18,10 +18,12 @@ export const Logo = styled.Image`
 export const Title = styled.Text`
   font-size: 48px;
   color: ${theme.colors.primary.main};
+  font-family: 'Roboto';
 `;
 
 export const Descrition = styled.Text`
   text-align: center;
+  font-family: 'Roboto';
   font-size: 16px;
   color: ${theme.colors.highEmphasis};
   margin-top: 16px;
@@ -64,6 +66,7 @@ export const SmallTop = styled.View`
 export const TextError = styled.Text`
   color: #ff375b;
   margin: -10px 0px 10px 0px;
+  font-family: 'Roboto';
 `;
 
 export const Errors = styled.View`

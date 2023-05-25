@@ -23,6 +23,7 @@ export const ContainerInput = styled.View<InputProps>`
 export const Input = styled.TextInput`
   flex: 1;
   font-size: 16px;
+  font-family: 'Roboto';
 `;
 
 export const ContainerArrow = styled.View<InputProps>`

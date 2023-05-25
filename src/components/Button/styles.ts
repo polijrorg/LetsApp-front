@@ -31,6 +31,7 @@ export const Title = styled.Text<ButtonProps>`
   font-size: 16px;
   letter-spacing: 1.25px;
   text-transform: uppercase;
+  font-family: 'Roboto';
 `;
 
 export const ContainerIcon = styled.View<ButtonProps>`

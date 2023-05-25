@@ -33,10 +33,12 @@ export const Data = styled.View`
 
 export const Name = styled.Text`
   font-size: 16px;
+  font-family: 'Roboto';
 `;
 
 export const PhoneOrEmail = styled.Text`
   color: ${theme.colors.lowEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const ContainerAll = styled.View`

@@ -3,14 +3,12 @@ import { KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Wrapper = styled(KeyboardAvoidingView)`
-  flex: 1;
   align-items: center;
   background-color: ${theme.colors.White};
 `;
 
 export const Body = styled.View`
   flex: 1;
-  padding: 24px;
   background-color: ${theme.colors.White};
   align-items: center;
   flex-direction: column;
@@ -25,6 +23,7 @@ export const Logo = styled.Image`
 export const Title = styled.Text`
   font-size: 32px;
   color: ${theme.colors.primary.main};
+  font-family: 'Roboto';
 `;
 
 export const Descrition = styled.Text`
@@ -33,6 +32,7 @@ export const Descrition = styled.Text`
   color: ${theme.colors.highEmphasis};
   margin-top: 16px;
   margin-bottom: 32px;
+  font-family: 'Roboto';
 `;
 
 export const Gallery = styled.Image`
@@ -81,6 +81,7 @@ export const SmallTop = styled.View`
 export const TextError = styled.Text`
   color: #ff375b;
   margin: -10px 0px 10px 0px;
+  font-family: 'Roboto';
 `;
 
 export const Errors = styled.View`

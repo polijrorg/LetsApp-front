@@ -434,16 +434,20 @@ const MainScreen: React.FC = ({ navigation }) => {
         <S.ScrollView showsVerticalScrollIndicator={false}>
           {showEvent ? (
             <S.ContainerEvent>
-              {/* {events.map((event, index) => (
-                <CardsEvent
-                  key={index}
-                  adress={event.items[0].start.timeZone}
-                  name={event.items[0].summary}
-                  event="presencial"
-                  image={Event2}
-                />
-              ))} */}
-              <CardsEvent
+              {events.map((event, index) => (
+                <React.Fragment key={index}>
+                  {event.items.map((items, itemIndex) => (
+                    <CardsEvent
+                      key={itemIndex}
+                      adress={items.start.timeZone}
+                      name={items.summary}
+                      event="presencial"
+                      image={Event2}
+                    />
+                  ))}
+                </React.Fragment>
+              ))}
+              {/* <CardsEvent
                 adress="Av. Paulista"
                 name="Marco Rudas"
                 event="presencial"
@@ -478,7 +482,7 @@ const MainScreen: React.FC = ({ navigation }) => {
                 name="Pedro Mendes"
                 event="presencial"
                 image={Event2}
-              />
+              /> */}
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>

@@ -118,7 +118,7 @@ const InitialData: React.FC = ({ navigation }) => {
   }
 
   return (
-    <S.Wrapper behavior="position">
+    <S.Wrapper behavior="position" keyboardVerticalOffset={-140}>
       <S.Body>
         <StatusBar hidden={true} />
         <S.Logo source={Logo} />

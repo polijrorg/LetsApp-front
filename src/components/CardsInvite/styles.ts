@@ -30,16 +30,19 @@ export const Image = styled.Image`
 
 export const Name = styled.Text`
   font-size: 16px;
+  font-family: 'Roboto';
 `;
 
 export const Adress = styled.Text`
   font-size: 12px;
   color: ${theme.colors.mediumEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const Date = styled.Text`
   font-size: 12px;
   color: ${theme.colors.mediumEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const IconDate = styled.Image`

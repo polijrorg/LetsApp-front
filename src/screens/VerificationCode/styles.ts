@@ -23,17 +23,20 @@ export const TitleI = styled.Text`
   color: ${theme.colors.primary.main};
   font-size: 32px;
   line-height: 38px;
+  font-family: 'Roboto';
 `;
 
 export const TitleII = styled.Text`
   color: ${theme.colors.primary.dark};
   font-size: 32px;
   line-height: 38px;
+  font-family: 'Roboto';
 `;
 
 export const Descrition = styled.Text`
   text-align: center;
   font-size: 16px;
+  font-family: 'Roboto';
   color: ${theme.colors.highEmphasis};
   margin-top: 8px;
   margin-bottom: 32px;

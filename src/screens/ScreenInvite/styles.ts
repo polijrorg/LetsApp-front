@@ -50,12 +50,14 @@ export const ContainerContent = styled.View`
 
 export const Name = styled.Text`
   font-size: 16px;
+  font-family: 'Roboto';
 `;
 
 export const Adress = styled.Text`
   font-size: 12px;
   color: ${theme.colors.mediumEmphasis};
   margin-bottom: 6px;
+  font-family: 'Roboto';
 `;
 
 export const IconAdress = styled.Image`
@@ -69,6 +71,7 @@ export const Date = styled.Text`
   font-size: 12px;
   color: ${theme.colors.mediumEmphasis};
   margin-bottom: 6px;
+  font-family: 'Roboto';
 `;
 
 export const ContainerIcon = styled.View`
@@ -100,11 +103,13 @@ export const Schedule = styled.Text`
   font-size: 12px;
   text-transform: uppercase;
   color: ${theme.colors.lowEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const LocalandDate = styled.Text`
   font-size: 12px;
   color: ${theme.colors.lowEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const Adjust = styled.View`
@@ -133,7 +138,8 @@ export const ContainerDescrition = styled.View`
 
 export const Descrition = styled.Text`
   font-size: 16px;
-  font-weight: 700;
+  /* font-weight: 700; */
+  font-family: 'RobotoBold';
   text-transform: uppercase;
   color: ${theme.colors.primary.main};
 `;
@@ -144,4 +150,5 @@ export const Scroll = styled.ScrollView`
 
 export const Content = styled.Text`
   font-size: 14px;
+  font-family: 'Roboto';
 `;

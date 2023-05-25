@@ -55,11 +55,13 @@ export const OptionEvents = styled.TouchableOpacity<OptionProps>`
 export const Events = styled.Text<OptionProps>`
   font-size: 20px;
   color: ${(props) => (props.Option === 'events' ? '#727FF6' : '#949494')};
+  font-family: 'Roboto';
 `;
 
 export const Invite = styled.Text<OptionProps>`
   font-size: 20px;
   color: ${(props) => (props.Option === 'invite' ? '#727FF6' : '#949494')};
+  font-family: 'Roboto';
 `;
 
 export const ContainerScroll = styled.View`
@@ -116,6 +118,7 @@ export const ButtonText = styled.Text`
   color: ${theme.colors.background};
   font-size: 12px;
   text-transform: uppercase;
+  font-family: 'Roboto';
 `;
 
 export const CalendarContainer = styled.View`
@@ -154,6 +157,7 @@ export const DayContainer = styled.View<Props>`
 export const DayText = styled.Text`
   font-size: 12px;
   line-height: 20px;
+  font-family: 'Roboto';
 `;
 
 export const Border = styled.View`
@@ -198,6 +202,7 @@ export const DateTitle = styled.Text`
   font-weight: 70px;
   line-height: 19px;
   padding: 6px 0;
+  font-family: 'Roboto';
 `;
 
 export const MarginBottom12px = styled.View`

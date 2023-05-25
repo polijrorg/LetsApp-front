@@ -21,4 +21,5 @@ export const Input = styled.TextInput`
   flex: 1;
   font-size: 26px;
   letter-spacing: 20px;
+  font-family: 'Roboto';
 `;

@@ -51,4 +51,5 @@ export const ContainerButtons = styled.View`
 
 export const Descrtion = styled.Text`
   font-size: 16px;
+  font-family: 'Roboto';
 `;

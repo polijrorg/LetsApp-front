@@ -37,6 +37,7 @@ export const NameInput = styled.Text`
   font-weight: 700;
   margin-top: 2%;
   margin-bottom: 2%;
+  font-family: 'Roboto';
 `;
 
 export const ContainerAdd = styled.View`
@@ -63,9 +64,10 @@ export const IconAdd = styled.Image`
 
 export const TextAdd = styled.Text`
   font-size: 14px;
-  font-weight: 700;
+  /* font-weight: 700; */
   color: ${theme.colors.highEmphasis};
   text-transform: uppercase;
+  font-family: 'RobotoBold';
 `;
 
 export const ContainerDelete = styled.View`
@@ -81,6 +83,7 @@ export const Delete = styled.Text`
   color: #f10e0e;
   margin-right: 8px;
   text-transform: uppercase;
+  font-family: 'Roboto';
 `;
 
 export const IconDelete = styled.Image`

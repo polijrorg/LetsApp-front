@@ -9,6 +9,7 @@ export const Body = styled.View`
 `;
 
 export const Header = styled.View`
+  margin-top: 4%;
   flex-direction: row;
   align-items: center;
 `;
@@ -16,6 +17,7 @@ export const Header = styled.View`
 export const Title = styled.Text`
   font-size: 20px;
   color: ${theme.colors.primary.main};
+  font-family: 'Roboto';
 `;
 
 export const IconBack = styled.Image`
@@ -48,6 +50,7 @@ export const IconSearch = styled.Image`
 export const InputSearch = styled.TextInput`
   font-size: 16px;
   flex: 1;
+  font-family: 'Roboto';
 `;
 
 export const ContainerEmail = styled.View`
@@ -73,6 +76,7 @@ export const IconSend = styled.Image`
 export const InputEmail = styled.TextInput`
   font-size: 16px;
   flex: 1;
+  font-family: 'Roboto';
 `;
 
 export const Scroll = styled.ScrollView`
@@ -94,9 +98,11 @@ export const ContainerSubtitle = styled.View`
 export const Subtitle = styled.Text`
   font-size: 16px;
   color: ${theme.colors.lowEmphasis};
+  font-family: 'Roboto';
 `;
 
 export const Mandatory = styled.Text`
   font-size: 10px;
   color: ${theme.colors.highEmphasis};
+  font-family: 'Roboto';
 `;
