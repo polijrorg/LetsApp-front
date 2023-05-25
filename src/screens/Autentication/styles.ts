@@ -2,7 +2,8 @@ import { theme } from '@styles/default.theme';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
-  flex: 1;
+  height: 100%;
+  width: 100%;
   padding: 24px;
   background-color: ${theme.colors.White};
   align-items: center;

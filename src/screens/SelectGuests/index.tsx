@@ -1,5 +1,6 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
+import { theme } from '@styles/default.theme';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -32,6 +33,7 @@ const SelectGuests: React.FC = ({ navigation }) => {
         </S.ContainerIcon>
         <S.InputSearch
           placeholder="Pesquisar..."
+          placeholderTextColor={theme.colors.mediumEmphasis}
           value={search}
           onChangeText={(texto) => setSearch(texto)}
         />
@@ -42,6 +44,7 @@ const SelectGuests: React.FC = ({ navigation }) => {
         </S.ContainerIcon>
         <S.InputEmail
           placeholder="Email"
+          placeholderTextColor={theme.colors.mediumEmphasis}
           value={email}
           onChangeText={(texto) => setEmail(texto)}
         />
