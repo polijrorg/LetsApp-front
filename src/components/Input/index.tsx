@@ -1,4 +1,5 @@
 import * as S from './styles';
+import { theme } from '@styles/default.theme';
 import React from 'react';
 
 export type InputProps = {
@@ -28,6 +29,7 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChangeText={onChange}
         placeholder={placeholder}
+        placeholderTextColor={theme.colors.mediumEmphasis}
         keyboardType={keyboardType}
       />
       <S.ContainerArrow arrow={arrow}>

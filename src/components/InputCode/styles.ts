@@ -15,11 +15,13 @@ export const ContainerInput = styled.View<InputProps>`
   background-color: ${theme.colors.White};
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `;
 
 export const Input = styled.TextInput`
-  flex: 1;
   font-size: 26px;
-  letter-spacing: 20px;
   font-family: 'Roboto';
+  letter-spacing: 12px;
+  padding-left: 12px;
+  text-align: center;
 `;
