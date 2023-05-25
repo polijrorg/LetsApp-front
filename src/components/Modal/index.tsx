@@ -1,7 +1,9 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
-import React, { useState } from 'react';
+import { api } from '@services/api';
+import { UserContext } from '@utils/UserContext';
+import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -13,6 +15,8 @@ type ModalProps = {
   navigation: any;
   screen?: string;
   type: 'Schedule' | 'Number' | 'Account';
+  valueEmail?: string;
+  onChangeEmail?: (text: string) => void;
 };
 
 export const ModalCard: React.FC<ModalProps> = ({
@@ -21,6 +25,8 @@ export const ModalCard: React.FC<ModalProps> = ({
   navigation,
   screen,
   type,
+  onChangeEmail,
+  valueEmail,
 }: ModalProps) => {
   const [isSelected, setSelected] = useState(false);
   const [inputs, setInputs] = useState([]);
@@ -30,6 +36,36 @@ export const ModalCard: React.FC<ModalProps> = ({
     setInputs([...inputs, value]);
   };
 
+  const { userId } = useContext(UserContext);
+
+  async function handleSendData() {
+    try {
+      const form = new FormData();
+      form.append('id', userId);
+      form.append('email', valueEmail);
+
+      const { data } = await api.post('/updateEmail', form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log(data);
+
+      setOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // async function handlePress() {
+  //   try {
+  //     const result = await handleSendData();
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
   let title;
   let descrition;
 
@@ -50,7 +86,13 @@ export const ModalCard: React.FC<ModalProps> = ({
         <S.ContentContainer>
           <S.Title type={type}>{title}</S.Title>
           {type === 'Schedule' ? (
-            <Input height="32px" width="278px" placeholder="nome@gmail.com" />
+            <Input
+              height="32px"
+              width="278px"
+              placeholder="nome@gmail.com"
+              onChange={onChangeEmail}
+              value={valueEmail}
+            />
           ) : type === 'Number' ? (
             <S.ContainerInputs>
               <Input
@@ -87,6 +129,8 @@ export const ModalCard: React.FC<ModalProps> = ({
                 navigation.navigate(screen);
               }
               handleAddInput(Input);
+              handleSendData();
+              setOpen(false);
             }}
           >
             {type === 'Account' ? (

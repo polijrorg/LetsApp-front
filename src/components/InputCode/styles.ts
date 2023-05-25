@@ -12,7 +12,7 @@ export const ContainerInput = styled.View<InputProps>`
   padding: 0px 10px 0px 10px;
   border-bottom-width: 1px;
   border-bottom-color: ${theme.colors.highEmphasis};
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.White};
   flex-direction: row;
   align-items: center;
 `;
@@ -20,5 +20,5 @@ export const ContainerInput = styled.View<InputProps>`
 export const Input = styled.TextInput`
   flex: 1;
   font-size: 26px;
-  letter-spacing: 16px;
+  letter-spacing: 20px;
 `;

@@ -15,7 +15,7 @@ export const ContainerInput = styled.View<InputProps>`
   border-radius: 8px;
   border-width: 1px;
   border-color: ${theme.colors.primary.dark};
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.White};
   flex-direction: row;
   align-items: center;
 `;

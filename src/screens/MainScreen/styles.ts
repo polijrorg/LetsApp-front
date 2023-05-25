@@ -7,9 +7,10 @@ type OptionProps = {
 };
 
 export const Body = styled.View`
-  padding: 0px 24px 24px;
+  padding: 0px 24px 0px;
   background-color: ${theme.colors.background};
   display: flex;
+  flex: 1;
 `;
 
 export const Header = styled.View`
@@ -61,12 +62,12 @@ export const Invite = styled.Text<OptionProps>`
   color: ${(props) => (props.Option === 'invite' ? '#727FF6' : '#949494')};
 `;
 
-export const ContainerScroll = styled.ScrollView`
-  height: 60%;
+export const ContainerScroll = styled.View`
+  height: 100%;
 `;
 
 export const ScrollView = styled.ScrollView`
-  height: 60%;
+  height: 100%;
 `;
 
 export const ContainerInvite = styled.View`
@@ -80,6 +81,9 @@ export const ContainerEvent = styled.View`
 export const IconMore = styled.View`
   flex-direction: row;
   justify-content: flex-end;
+  position: absolute;
+  top: 85%;
+  right: 10%;
 `;
 
 export const More = styled.Image`

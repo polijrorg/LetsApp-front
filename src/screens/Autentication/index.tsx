@@ -1,14 +1,64 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { api } from '@services/api';
+import { UserContext } from '@utils/UserContext';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
+import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 
+type FormDataProps = {
+  DDD: string;
+  phone: string;
+};
+
+const ValidationSchema = yup.object({
+  phone: yup
+    .string()
+    .required('Informe o número do seu celular')
+    .length(9, 'Número de celular inválido'),
+
+  DDD: yup.string().required('Informe seu DDD').length(2, 'DDD inválido'),
+});
+
 const Autentication: React.FC = ({ navigation }) => {
+  const [DDD, setDDD] = useState('');
+  const [phone, setPhone] = useState('');
+  const { setUserId } = useContext(UserContext);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(ValidationSchema),
+  });
+
+  async function handleSignUp() {
+    // try {
+    //   console.log(DDD);
+    //   console.log(phone);
+    //   const { data } = await api.post('/register', {
+    //     phone: `+55${DDD}${phone}`,
+    //   });
+
+    // const newUserId = data.id;
+    // setUserId(newUserId);
+
+    // console.log(data);
+
+    navigation.navigate('VerificationCode');
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+
   return (
     <S.Body>
       <StatusBar hidden={true} />
@@ -19,15 +69,56 @@ const Autentication: React.FC = ({ navigation }) => {
       </S.Descrition>
       <Input arrow={true} height="32px" width="304px" placeholder="Brasil" />
       <S.ContainerInputs>
-        <Input arrow={false} height="32px" width="60px" placeholder="DDD" />
-
-        <Input arrow={false} height="32px" width="238px" placeholder="Número" />
+        <S.Errors>
+          <Controller
+            control={control}
+            name="DDD"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                arrow={false}
+                height="32px"
+                width="60px"
+                placeholder="DDD"
+                value={value}
+                onChange={(e) => {
+                  const inputValue = e;
+                  if (inputValue.length <= 2) {
+                    onChange(inputValue);
+                    setDDD(inputValue);
+                  }
+                }}
+                keyboardType="numeric"
+              />
+            )}
+          />
+          {errors.DDD && <S.TextError>{errors.DDD?.message}</S.TextError>}
+        </S.Errors>
+        <S.Errors>
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                arrow={false}
+                height="32px"
+                width="238px"
+                placeholder="Número"
+                value={value}
+                onChange={(e) => {
+                  const inputValue = e;
+                  if (inputValue.length <= 9) {
+                    onChange(inputValue);
+                    setPhone(inputValue);
+                  }
+                }}
+                keyboardType="numeric"
+              />
+            )}
+          />
+          {errors.phone && <S.TextError>{errors.phone?.message}</S.TextError>}
+        </S.Errors>
       </S.ContainerInputs>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('VerificationCode');
-        }}
-      >
+      <TouchableOpacity onPress={handleSubmit(handleSignUp)}>
         <Button
           width="144px"
           backgroundColor="#3446E4"
@@ -38,7 +129,7 @@ const Autentication: React.FC = ({ navigation }) => {
           titleColor="#FAFAFA"
         />
       </TouchableOpacity>
-      <S.SmallCircleLeft />
+      {/* <S.SmallCircleLeft /> */}
       <S.SmallCircleRight />
       <S.SmallTop />
     </S.Body>

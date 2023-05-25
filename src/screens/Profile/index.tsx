@@ -1,8 +1,9 @@
 import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
+import { UserContext } from '@utils/UserContext';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBack.png');
@@ -15,6 +16,9 @@ const Profile: React.FC = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+
+  const { photo } = useContext(UserContext);
+  console.log(photo);
 
   return (
     <S.Body>
@@ -29,7 +33,11 @@ const Profile: React.FC = ({ navigation }) => {
         >
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
-        <S.Icon source={IconProfile} />
+        {photo ? (
+          <S.Icon source={{ uri: photo }} />
+        ) : (
+          <S.Icon source={IconProfile} />
+        )}
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>

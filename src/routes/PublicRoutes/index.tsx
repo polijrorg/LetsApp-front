@@ -6,8 +6,8 @@ import InitialData from '@screens/InitialData';
 import MainScreen from '@screens/MainScreen';
 import Profile from '@screens/Profile';
 import ScreenInvite from '@screens/ScreenInvite';
+import SelectGuests from '@screens/SelectGuests';
 import VerificationCode from '@screens/VerificationCode';
-// import Home from '@screens/Home';
 import React from 'react';
 
 export type RootStackParamList = {
@@ -18,7 +18,7 @@ export type RootStackParamList = {
   MainScreen: undefined;
   Profile: undefined;
   ScreenInvite: undefined;
-  // Home: undefined;
+  SelectGuests: undefined;
 };
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -35,7 +35,7 @@ const PublicRoutes: React.FC = () => {
       <Screen name="MainScreen" component={MainScreen} />
       <Screen name="Profile" component={Profile} />
       <Screen name="ScreenInvite" component={ScreenInvite} />
-      {/* <Screen name="Home" component={Home} /> */}
+      <Screen name="SelectGuests" component={SelectGuests} />
     </Navigator>
   );
 };

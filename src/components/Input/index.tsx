@@ -1,11 +1,14 @@
 import * as S from './styles';
-import React, { useState } from 'react';
+import React from 'react';
 
 export type InputProps = {
   width: string;
   height: string;
   placeholder: string;
   arrow?: boolean;
+  value?: string;
+  onChange?: (text: string) => void;
+  keyboardType?: string;
 };
 
 const ImageArrow = require('../../assets/ArrowInput.png');
@@ -15,15 +18,17 @@ const Input: React.FC<InputProps> = ({
   width,
   height,
   placeholder,
+  value,
+  onChange,
+  keyboardType,
 }) => {
-  const [input, setInput] = useState('');
-  console.log(input);
   return (
     <S.ContainerInput width={width} height={height}>
       <S.Input
-        value={input}
-        onChangeText={(texto) => setInput(texto)}
+        value={value}
+        onChangeText={onChange}
         placeholder={placeholder}
+        keyboardType={keyboardType}
       />
       <S.ContainerArrow arrow={arrow}>
         <S.Arrow source={ImageArrow} />

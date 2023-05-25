@@ -10,7 +10,7 @@ export type CardsInviteProps = {
   route: any;
 };
 
-const IconArrow = require('../../assets/ArrowBack.png');
+const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
 const online = require('../../assets/OnlineEvent.png');
 const presencial = require('../../assets/PresencialEvent.png');

@@ -20,7 +20,7 @@ export const Back = styled.ImageBackground<InviteProps>`
 
 export const Header = styled.View`
   background-color: ${theme.colors.background};
-  margin-top: 80%;
+  margin-top: 75%;
   flex: 1;
   border-top-left-radius: 48px;
   border-top-right-radius: 48px;
@@ -29,15 +29,17 @@ export const Header = styled.View`
 `;
 
 export const IconBack = styled.Image`
-  width: 40px;
-  height: 40px;
-  margin-right: 22%;
+  width: 53px;
+  height: 53px;
+  margin-left: 4%;
+  margin-top: 1%;
 `;
 
 export const Image = styled.Image`
   width: 48px;
   height: 48px;
   margin-right: 12px;
+  color: blue;
 `;
 
 export const ContainerContent = styled.View`

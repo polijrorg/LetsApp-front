@@ -1,11 +1,19 @@
 import { theme } from '@styles/default.theme';
+import { KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components/native';
+
+export const Wrapper = styled(KeyboardAvoidingView)`
+  flex: 1;
+  align-items: center;
+  background-color: ${theme.colors.White};
+`;
 
 export const Body = styled.View`
   flex: 1;
   padding: 24px;
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.White};
   align-items: center;
+  flex-direction: column;
 `;
 
 export const Logo = styled.Image`
@@ -68,4 +76,14 @@ export const SmallTop = styled.View`
   top: -54px;
   right: 72px;
   background-color: ${theme.colors.primary.light};
+`;
+
+export const TextError = styled.Text`
+  color: #ff375b;
+  margin: -10px 0px 10px 0px;
+`;
+
+export const Errors = styled.View`
+  flex-direction: column;
+  align-items: center;
 `;

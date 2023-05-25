@@ -5,25 +5,35 @@ export type InputProps = {
   width: string;
   height: string;
   placeholder: string;
+  value?: string;
+  onChange?: (text: string) => void;
+  keyboardType?: string;
 };
 
-const InputCode: React.FC<InputProps> = ({ width, height, placeholder }) => {
+const InputCode: React.FC<InputProps> = ({
+  width,
+  height,
+  placeholder,
+  value,
+  onChange,
+  keyboardType,
+}) => {
   const MAX_LENGTH = 6;
-  const [input, setInput] = useState('');
 
   function handleChangeText(newText) {
     if (newText.length <= MAX_LENGTH) {
-      setInput(newText);
+      onChange(newText);
     }
   }
 
   return (
     <S.ContainerInput width={width} height={height}>
       <S.Input
-        value={input}
+        value={value}
         onChangeText={handleChangeText}
         placeholder={placeholder}
         placeholderTextColor="#BCD1FB"
+        keyboardType={keyboardType}
       />
     </S.ContainerInput>
   );
