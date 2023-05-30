@@ -9,6 +9,7 @@ const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
 const IconEmail = require('../../assets/Email.png');
 const IconSend = require('../../assets/Send.png');
+const Check = require('../../assets/Check.png');
 
 const SelectGuests: React.FC = ({ navigation }) => {
   const [search, setSearch] = useState('');
@@ -74,6 +75,13 @@ const SelectGuests: React.FC = ({ navigation }) => {
         <Contact name="Cainã" phoneOrEmail="11953975915" />
         <Contact name="Cainã" phoneOrEmail="11953975915" />
       </S.Scroll>
+      <S.IconCheck>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DateAndSchedule')}
+        >
+          <S.Check source={Check} />
+        </TouchableOpacity>
+      </S.IconCheck>
     </S.Body>
   );
 };

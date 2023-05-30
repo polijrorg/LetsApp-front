@@ -18,7 +18,6 @@ const Profile: React.FC = ({ navigation }) => {
   const [open2, setOpen2] = useState(false);
 
   const { photo } = useContext(UserContext);
-  console.log(photo);
 
   return (
     <S.Body>
@@ -33,11 +32,7 @@ const Profile: React.FC = ({ navigation }) => {
         >
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
-        {photo ? (
-          <S.Icon source={{ uri: photo }} />
-        ) : (
-          <S.Icon source={IconProfile} />
-        )}
+        {photo ? <S.Icon source={photo} /> : <S.Icon source={IconProfile} />}
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>

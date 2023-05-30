@@ -9,7 +9,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
@@ -31,6 +31,7 @@ const InitialData: React.FC = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState('');
+  const [firstRequisition, setFirstRequisition] = useState(false);
 
   const {
     control,
@@ -81,7 +82,7 @@ const InitialData: React.FC = ({ navigation }) => {
 
   async function handleSendData({ name, imageUser }: FormDataProps) {
     try {
-      const phone = '+5511953334567';
+      const phone = '+5511953975915';
       const form = new FormData();
       form.append('phone', phone);
       form.append('name', name);
@@ -97,24 +98,47 @@ const InitialData: React.FC = ({ navigation }) => {
       setPhoto(newPhoto);
 
       console.log(data);
-      console.log('Abaixo da requisição', photo);
-      setOpen(true);
+      console.log('New photo', photo);
     } catch (error) {
       console.log(error);
     }
   }
 
   async function handlePress() {
-    // try {
-    //   const result = await handleSendData({ name, imageUser });
-    //   console.log(result);
+    try {
+      const result = await handleSendData({ name, imageUser });
+      console.log(result);
+      setOpen(true);
+      setFirstRequisition(true);
+    } catch (error) {
+      console.log(error);
+    }
+    // if (firstRequisition === true) {
+    //   try {
+    // const phone = '+5511953975915';
+    // const form = new FormData();
+    // form.append('phone', phone);
+    // const { data } = await api.get('/getAuthUrl', {
+    //   phone,
+    // });
+    //   const phone = '+5511953975915';
+    //   const form = new FormData();
+    //   form.append('phone', phone);
+
+    //   const { data } = await api.get('/upload', form, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //   });
+    //   const response = await AuthSession.startAsync(data);
+    //   console.log(response);
     // } catch (error) {
     //   console.log(error);
+    // }
     // }
     // const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.settings.readonly&client_id=460915142438-07m2mml77f2e50k1ub9l0nt8aeivm8sl.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3030&response_type=code`;
     // const response = await AuthSession.startAsync({ authUrl });
     // console.log(response);
-    setOpen(true);
   }
 
   return (

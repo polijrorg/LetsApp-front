@@ -2,6 +2,7 @@ import { ModalCard } from '@components/Modal';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Autentication from '@screens/Autentication';
+import DateAndSchedule from '@screens/DateAndSchedule';
 import InitialData from '@screens/InitialData';
 import MainScreen from '@screens/MainScreen';
 import Profile from '@screens/Profile';
@@ -19,6 +20,7 @@ export type RootStackParamList = {
   Profile: undefined;
   ScreenInvite: undefined;
   SelectGuests: undefined;
+  DateAndSchedule: undefined;
 };
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +38,7 @@ const PublicRoutes: React.FC = () => {
       <Screen name="Profile" component={Profile} />
       <Screen name="ScreenInvite" component={ScreenInvite} />
       <Screen name="SelectGuests" component={SelectGuests} />
+      <Screen name="DateAndSchedule" component={DateAndSchedule} />
     </Navigator>
   );
 };

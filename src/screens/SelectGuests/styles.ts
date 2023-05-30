@@ -106,3 +106,16 @@ export const Mandatory = styled.Text`
   color: ${theme.colors.highEmphasis};
   font-family: 'Roboto';
 `;
+
+export const IconCheck = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+  position: absolute;
+  top: 90%;
+  right: 10%;
+`;
+
+export const Check = styled.Image`
+  width: 48px;
+  height: 48px;
+`;
