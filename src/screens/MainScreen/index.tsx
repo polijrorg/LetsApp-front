@@ -195,7 +195,7 @@ const events = [
 ];
 
 const MainScreen: React.FC = ({ navigation, route }) => {
-  const { name, imageUser } = route.params;
+  const { imageUser } = route.params;
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
 
   const [showCompleteCalendar] = useState(false);
@@ -418,7 +418,6 @@ const MainScreen: React.FC = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             appNavigation.navigate('Profile', {
-              name: name,
               imageUser: imageUser,
             });
           }}

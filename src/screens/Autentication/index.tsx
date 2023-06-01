@@ -41,22 +41,22 @@ const Autentication: React.FC = ({ navigation }) => {
   });
 
   async function handleSignUp() {
-    // try {
-    //   console.log(DDD);
-    //   console.log(phone);
-    //   const { data } = await api.post('/register', {
-    //     phone: `+55${DDD}${phone}`,
-    //   });
+    try {
+      console.log(DDD);
+      console.log(phone);
+      const { data } = await api.post('/register', {
+        phone: `+55${DDD}${phone}`,
+      });
 
-    // const newUserId = data.id;
-    // setUserId(newUserId);
+      const newUserId = data.id;
+      setUserId(newUserId);
 
-    // console.log(data);
+      console.log(data);
 
-    navigation.navigate('VerificationCode');
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      navigation.navigate('VerificationCode');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

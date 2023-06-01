@@ -113,7 +113,6 @@ const InitialData: React.FC = ({ navigation }) => {
       const result = await handleSendData({ name, imageUser });
       console.log(result);
       appNavigation.navigate('MainScreen', {
-        name: name,
         imageUser: imageUser,
       });
       setFirstRequisition(true);
