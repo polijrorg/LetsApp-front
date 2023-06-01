@@ -3,6 +3,8 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { api } from '@services/api';
 import { UserContext } from '@utils/UserContext';
 import * as AuthSession from 'expo-auth-session';
@@ -32,6 +34,8 @@ const InitialData: React.FC = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState('');
   const [firstRequisition, setFirstRequisition] = useState(false);
+
+  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
 
   const {
     control,
@@ -108,7 +112,10 @@ const InitialData: React.FC = ({ navigation }) => {
     try {
       const result = await handleSendData({ name, imageUser });
       console.log(result);
-      setOpen(true);
+      appNavigation.navigate('MainScreen', {
+        name: name,
+        imageUser: imageUser,
+      });
       setFirstRequisition(true);
     } catch (error) {
       console.log(error);

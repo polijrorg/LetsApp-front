@@ -24,6 +24,7 @@ export const Header = styled.View`
 export const Icon = styled.Image`
   width: 48px;
   height: 48px;
+  border-radius: 96px;
 `;
 
 export const Name = styled.Text`

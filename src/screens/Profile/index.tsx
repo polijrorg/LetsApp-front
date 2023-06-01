@@ -9,13 +9,15 @@ import { TouchableOpacity } from 'react-native';
 const IconArrow = require('../../assets/ArrowBack.png');
 const Agenda = require('../../assets/Calendar.png');
 const IconPhone = require('../../assets/PhoneIconBlack.png');
-const IconProfile = require('../../assets/Profile.png');
+const IconProfile = require('../../assets/UserCircle.png');
 const IconDelete = require('../../assets/IconDelete.png');
 
-const Profile: React.FC = ({ navigation }) => {
+const Profile: React.FC = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+
+  const { name, imageUser } = route.params;
 
   const { photo } = useContext(UserContext);
 
@@ -32,7 +34,11 @@ const Profile: React.FC = ({ navigation }) => {
         >
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
-        {photo ? <S.Icon source={photo} /> : <S.Icon source={IconProfile} />}
+        {imageUser ? (
+          <S.Icon source={imageUser} />
+        ) : (
+          <S.Icon source={IconProfile} />
+        )}
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>

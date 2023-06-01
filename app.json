@@ -3,7 +3,7 @@
     "name": "LetsApp",
     "slug": "lets-app",
     "scheme": "lets-app",
-    "owner": "Letsapp",
+    "owner": "letsapp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

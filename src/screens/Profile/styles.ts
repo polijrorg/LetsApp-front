@@ -16,7 +16,8 @@ export const Header = styled.View`
 
 export const Icon = styled.Image`
   width: 124px;
-  height: 112px;
+  height: 124px;
+  border-radius: 248px;
 `;
 
 export const IconBack = styled.Image`

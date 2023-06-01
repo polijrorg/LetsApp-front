@@ -1,6 +1,8 @@
 import * as S from './styles';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -192,7 +194,10 @@ const events = [
   },
 ];
 
-const MainScreen: React.FC = ({ navigation }) => {
+const MainScreen: React.FC = ({ navigation, route }) => {
+  const { name, imageUser } = route.params;
+  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+
   const [showCompleteCalendar] = useState(false);
 
   const dates = [15, 16];
@@ -412,10 +417,17 @@ const MainScreen: React.FC = ({ navigation }) => {
         <S.Name>Olá Rafael!</S.Name>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Profile');
+            appNavigation.navigate('Profile', {
+              name: name,
+              imageUser: imageUser,
+            });
           }}
         >
-          <S.Icon source={IconProfile} />
+          {imageUser ? (
+            <S.Icon source={imageUser} />
+          ) : (
+            <S.Icon source={IconProfile} />
+          )}
         </TouchableOpacity>
       </S.Header>
       {!showCompleteCalendar && (
