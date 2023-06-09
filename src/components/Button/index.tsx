@@ -4,7 +4,7 @@ import React from 'react';
 export type ButtonProps = {
   width: string;
   hasIcon: boolean;
-  icon: string;
+  icon?: string;
   backgroundColor: string;
   title: string;
   titleColor: string;

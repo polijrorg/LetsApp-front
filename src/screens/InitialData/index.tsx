@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -6,12 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { api } from '@services/api';
-import { UserContext } from '@utils/UserContext';
 import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
@@ -82,8 +82,6 @@ const InitialData: React.FC = ({ navigation }) => {
     }
   }
 
-  const { photo, setPhoto } = useContext(UserContext);
-
   async function handleSendData({ name, imageUser }: FormDataProps) {
     try {
       const phone = '+5511953975915';
@@ -97,12 +95,7 @@ const InitialData: React.FC = ({ navigation }) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      const newPhoto = data.photo;
-      setPhoto(newPhoto);
-
       console.log(data);
-      console.log('New photo', photo);
     } catch (error) {
       console.log(error);
     }
@@ -111,38 +104,33 @@ const InitialData: React.FC = ({ navigation }) => {
   async function handlePress() {
     try {
       const result = await handleSendData({ name, imageUser });
-      console.log(result);
       appNavigation.navigate('MainScreen', {
         name: name,
         imageUser: imageUser,
       });
       setFirstRequisition(true);
+
+      if (firstRequisition === true) {
+        try {
+          const phone = '+5511953975915';
+          const { data } = await api.get(
+            `/getAuthUrl/${encodeURIComponent(phone)}`
+          );
+          const authUrl = data;
+          const response = await AuthSession.startAsync({ authUrl });
+          console.log('Response', response);
+          // const { type, url } = await AuthSession.startAsync({ authUrl });
+
+          // if (type === 'success') {
+          //   Linking.openURL(url);
+          // }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
-    // if (firstRequisition === true) {
-    //   try {
-    // const phone = '+5511953975915';
-    // const form = new FormData();
-    // form.append('phone', phone);
-    // const { data } = await api.get('/getAuthUrl', {
-    //   phone,
-    // });
-    //   const phone = '+5511953975915';
-    //   const form = new FormData();
-    //   form.append('phone', phone);
-
-    //   const { data } = await api.get('/upload', form, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   });
-    //   const response = await AuthSession.startAsync(data);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // }
     // const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.settings.readonly&client_id=460915142438-07m2mml77f2e50k1ub9l0nt8aeivm8sl.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3030&response_type=code`;
     // const response = await AuthSession.startAsync({ authUrl });
     // console.log(response);

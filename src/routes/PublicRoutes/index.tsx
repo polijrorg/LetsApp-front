@@ -2,12 +2,14 @@ import { ModalCard } from '@components/Modal';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Autentication from '@screens/Autentication';
+import CreateEvent from '@screens/CreateEvent';
 import DateAndSchedule from '@screens/DateAndSchedule';
 import InitialData from '@screens/InitialData';
 import MainScreen from '@screens/MainScreen';
 import Profile from '@screens/Profile';
 import ScreenInvite from '@screens/ScreenInvite';
 import SelectGuests from '@screens/SelectGuests';
+import SuggestSchedule from '@screens/SuggestSchedule';
 import VerificationCode from '@screens/VerificationCode';
 import React from 'react';
 
@@ -21,6 +23,8 @@ export type RootStackParamList = {
   ScreenInvite: undefined;
   SelectGuests: undefined;
   DateAndSchedule: undefined;
+  SuggestSchedule: undefined;
+  CreateEvent: undefined;
 };
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
@@ -39,6 +43,8 @@ const PublicRoutes: React.FC = () => {
       <Screen name="ScreenInvite" component={ScreenInvite} />
       <Screen name="SelectGuests" component={SelectGuests} />
       <Screen name="DateAndSchedule" component={DateAndSchedule} />
+      <Screen name="SuggestSchedule" component={SuggestSchedule} />
+      <Screen name="CreateEvent" component={CreateEvent} />
     </Navigator>
   );
 };
