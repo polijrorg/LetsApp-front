@@ -1,10 +1,10 @@
 import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
-import { UserContext } from '@utils/UserContext';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const IconArrow = require('../../assets/ArrowBack.png');
 const Agenda = require('../../assets/Calendar.png');
@@ -12,14 +12,14 @@ const IconPhone = require('../../assets/PhoneIconBlack.png');
 const IconProfile = require('../../assets/UserCircle.png');
 const IconDelete = require('../../assets/IconDelete.png');
 
-const Profile: React.FC = ({ navigation, route }) => {
+const Profile: React.FC = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  const { name, imageUser } = route.params;
+  // const { name, imageUser } = route.params;
 
-  const { photo } = useContext(UserContext);
+  const { nameUser, imageOfUser } = useContext(ProfileContext);
 
   return (
     <S.Body>
@@ -34,8 +34,8 @@ const Profile: React.FC = ({ navigation, route }) => {
         >
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
-        {imageUser ? (
-          <S.Icon source={imageUser} />
+        {imageOfUser ? (
+          <S.Icon source={imageOfUser} />
         ) : (
           <S.Icon source={IconProfile} />
         )}

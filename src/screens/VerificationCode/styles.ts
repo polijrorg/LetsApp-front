@@ -1,4 +1,5 @@
 import { theme } from '@styles/default.theme';
+import { KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
@@ -8,10 +9,14 @@ export const Body = styled.View`
   align-items: center;
 `;
 
+export const Wrapper = styled(KeyboardAvoidingView)`
+  align-items: center;
+  background-color: ${theme.colors.White};
+`;
+
 export const Logo = styled.Image`
   width: 121px;
   height: 119px;
-  margin-top: 40%;
 `;
 
 export const ContainerTitle = styled.View`
@@ -46,8 +51,9 @@ export const SmallCircleLeft = styled.View`
   width: 208px;
   height: 208px;
   border-radius: 30000px;
-  bottom: -154px;
-  left: -154px;
+  position: absolute;
+  bottom: -120px;
+  left: -120px;
   background-color: ${theme.colors.primary.main};
 `;
 
@@ -69,4 +75,11 @@ export const SmallTop = styled.View`
   top: -54px;
   right: 72px;
   background-color: ${theme.colors.primary.light};
+`;
+
+export const Content = styled.View`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 `;

@@ -1,7 +1,7 @@
 import { theme } from '@styles/default.theme';
 import styled from 'styled-components/native';
 
-export const ContainerCard = styled.View`
+export const ContainerCard = styled.TouchableOpacity`
   height: 90px;
   padding: 12px;
   margin: 0px;
@@ -18,7 +18,6 @@ export const ContainerContent = styled.View`
 
 export const ContainerContentData = styled.View`
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   margin-left: 16px;
 `;

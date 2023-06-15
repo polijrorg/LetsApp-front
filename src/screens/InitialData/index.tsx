@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -6,14 +7,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { api } from '@services/api';
-import { UserContext } from '@utils/UserContext';
 import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TouchableOpacity } from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -36,6 +41,7 @@ const InitialData: React.FC = ({ navigation }) => {
   const [firstRequisition, setFirstRequisition] = useState(false);
 
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+  const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
 
   const {
     control,
@@ -82,13 +88,10 @@ const InitialData: React.FC = ({ navigation }) => {
     }
   }
 
-  const { photo, setPhoto } = useContext(UserContext);
-
   async function handleSendData({ name, imageUser }: FormDataProps) {
     try {
-      const phone = '+5511953975915';
       const form = new FormData();
-      form.append('phone', phone);
+      form.append('phone', phoneUser);
       form.append('name', name);
       form.append('photo', imageUser);
 
@@ -97,12 +100,9 @@ const InitialData: React.FC = ({ navigation }) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      const newPhoto = data.photo;
-      setPhoto(newPhoto);
-
+      setNameUser(name);
+      setImageOfUser(imageUser);
       console.log(data);
-      console.log('New photo', photo);
     } catch (error) {
       console.log(error);
     }
@@ -111,102 +111,100 @@ const InitialData: React.FC = ({ navigation }) => {
   async function handlePress() {
     try {
       const result = await handleSendData({ name, imageUser });
-      console.log(result);
-      appNavigation.navigate('MainScreen', {
-        imageUser: imageUser,
-      });
+      appNavigation.navigate('MainScreen');
       setFirstRequisition(true);
+
+      if (firstRequisition === true) {
+        try {
+          const phone = phoneUser;
+          const { data } = await api.get(
+            `/getAuthUrl/${encodeURIComponent(phone)}`
+          );
+          const authUrl = data;
+          // const redirectUrl = AuthSession.makeRedirectUri({
+          //   scheme: 'lets-app',
+          // });
+          const response = await AuthSession.startAsync({ authUrl });
+          console.log(data);
+          console.log('Response', response);
+          // const { type, url } = await AuthSession.startAsync({ authUrl });
+
+          // if (type === 'success') {
+          //   Linking.openURL(url);
+          // }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
-    // if (firstRequisition === true) {
-    //   try {
-    // const phone = '+5511953975915';
-    // const form = new FormData();
-    // form.append('phone', phone);
-    // const { data } = await api.get('/getAuthUrl', {
-    //   phone,
-    // });
-    //   const phone = '+5511953975915';
-    //   const form = new FormData();
-    //   form.append('phone', phone);
-
-    //   const { data } = await api.get('/upload', form, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   });
-    //   const response = await AuthSession.startAsync(data);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // }
-    // const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.settings.readonly&client_id=460915142438-07m2mml77f2e50k1ub9l0nt8aeivm8sl.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3030&response_type=code`;
-    // const response = await AuthSession.startAsync({ authUrl });
-    // console.log(response);
   }
 
   return (
-    <S.Wrapper behavior="position" keyboardVerticalOffset={-140}>
-      <S.Body>
-        <StatusBar hidden={true} />
-        <S.Logo source={Logo} />
-        <S.Title>Dados Iniciais</S.Title>
-        <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
-        <TouchableOpacity onPress={() => pickImageFromGallery()}>
-          {imageUser === '' ? (
-            <S.Gallery source={Gallery} resizeMode={'cover'} />
-          ) : (
-            <S.Gallery source={imageUser} resizeMode={'cover'} />
-          )}
-        </TouchableOpacity>
-        <S.Errors>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                arrow={false}
-                height="40px"
-                width="328px"
-                placeholder="Seu nome"
-                value={value}
-                onChange={(e) => {
-                  onChange(e);
-                  setName(e);
-                }}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <S.Wrapper behavior="position" keyboardVerticalOffset={-220}>
+        <S.Body>
+          <StatusBar hidden={true} />
+          <S.Content>
+            <S.Logo source={Logo} />
+            <S.Title>Dados Iniciais</S.Title>
+            <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
+            <TouchableOpacity onPress={() => pickImageFromGallery()}>
+              {imageUser === '' ? (
+                <S.Gallery source={Gallery} resizeMode={'cover'} />
+              ) : (
+                <S.Gallery source={imageUser} resizeMode={'cover'} />
+              )}
+            </TouchableOpacity>
+            <S.Errors>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    arrow={false}
+                    height="40px"
+                    width="328px"
+                    placeholder="Seu nome"
+                    value={value}
+                    onChange={(e) => {
+                      onChange(e);
+                      setName(e);
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
-        </S.Errors>
-        <S.Empty />
-        <TouchableOpacity onPress={handleSubmit(handlePress)}>
-          <Button
-            width="328px"
-            backgroundColor="#3446E4"
-            borderColor="transparent"
-            hasIcon={false}
-            icon={Message}
-            title="Salvar"
-            titleColor="#FAFAFA"
-          />
-          <ModalCard
-            Open={open}
-            setOpen={setOpen}
-            navigation={navigation}
-            screen="MainScreen"
-            type="Schedule"
-            valueEmail={email}
-            onChangeEmail={(text) => setEmail(text)}
-          />
-        </TouchableOpacity>
-        {/* <S.SmallCircleLeft /> */}
-        <S.SmallCircleRight />
-        <S.SmallTop />
-      </S.Body>
-    </S.Wrapper>
+              {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
+            </S.Errors>
+            <S.Empty />
+            <TouchableOpacity onPress={handleSubmit(handlePress)}>
+              <Button
+                width="328px"
+                backgroundColor="#3446E4"
+                borderColor="transparent"
+                hasIcon={false}
+                icon={Message}
+                title="Salvar"
+                titleColor="#FAFAFA"
+              />
+              <ModalCard
+                Open={open}
+                setOpen={setOpen}
+                navigation={navigation}
+                screen="MainScreen"
+                type="Schedule"
+                valueEmail={email}
+                onChangeEmail={(text) => setEmail(text)}
+              />
+            </TouchableOpacity>
+          </S.Content>
+          <S.SmallCircleLeft />
+          <S.SmallCircleRight />
+          <S.SmallTop />
+        </S.Body>
+      </S.Wrapper>
+    </TouchableWithoutFeedback>
   );
 };
 

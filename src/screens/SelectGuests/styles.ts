@@ -4,18 +4,23 @@ import styled from 'styled-components/native';
 export const Body = styled.View`
   flex: 1;
   padding: 16px;
+  padding-top: 32px;
   background-color: ${theme.colors.background};
   display: flex;
 `;
 
 export const Header = styled.View`
   margin-top: 4%;
+  display: flex;
   flex-direction: row;
   align-items: center;
 `;
 
 export const Title = styled.Text`
   font-size: 20px;
+  width: 100%;
+  padding-right: 56px;
+  text-align: center;
   color: ${theme.colors.primary.main};
   font-family: 'Roboto';
 `;
@@ -23,7 +28,6 @@ export const Title = styled.Text`
 export const IconBack = styled.Image`
   width: 28px;
   height: 28px;
-  margin-right: 24%;
   color: ${theme.colors.highEmphasis};
 `;
 
