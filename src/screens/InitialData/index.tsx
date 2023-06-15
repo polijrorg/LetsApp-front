@@ -19,11 +19,6 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
-import {
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');

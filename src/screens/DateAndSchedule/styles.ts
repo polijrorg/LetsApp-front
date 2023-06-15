@@ -1,12 +1,12 @@
 import { theme } from '@styles/default.theme';
+import { KeyboardAvoidingView } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
   flex: 1;
-  padding: 16px;
+  padding: 16px 40px 0px;
   background-color: ${theme.colors.White};
-  display: flex;
 `;
 
 export const ContainerTitle = styled.View`
@@ -74,4 +74,16 @@ export const Buttons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`;
+
+export const Wrapper = styled(KeyboardAvoidingView)`
+  align-items: center;
+  background-color: ${theme.colors.White};
+`;
+
+export const Content = styled.View`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 `;

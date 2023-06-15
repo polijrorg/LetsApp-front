@@ -47,18 +47,18 @@ const Autentication: React.FC = ({ navigation }) => {
   });
 
   async function handleSignUp() {
-    try {
-      const { data } = await api.post('/register', {
-        phone: Phone,
-      });
-      setPhoneUser(Phone);
+    // try {
+    //   const { data } = await api.post('/register', {
+    //     phone: Phone,
+    //   });
+    //   setPhoneUser(Phone);
 
-      console.log(data);
+    //   console.log(data);
 
-      navigation.navigate('VerificationCode');
-    } catch (error) {
-      console.log(error);
-    }
+    navigation.navigate('VerificationCode');
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   return (

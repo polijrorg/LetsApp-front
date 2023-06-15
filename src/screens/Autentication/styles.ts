@@ -89,14 +89,3 @@ export const Errors = styled.View`
   flex-direction: column;
   align-items: center;
 `;
-
-export const Spacer = styled.View`
-  width: 8px;
-`;
-
-export const Content = styled.View`
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-`;

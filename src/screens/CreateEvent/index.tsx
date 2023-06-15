@@ -2,9 +2,11 @@ import * as S from './styles';
 import Button from '@components/Button';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Input } from 'react-native-elements';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
@@ -26,76 +28,78 @@ const CreateEvent: React.FC = ({ navigation }) => {
   };
 
   return (
-    <S.Wrapper behavior="position">
-      <S.Body>
-        <StatusBar hidden={true} />
-        <S.Back source={Office}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('SuggestSchedule');
-            }}
-          >
-            <S.IconBack source={IconArrow} />
-          </TouchableOpacity>
-          <S.Header>
-            <S.ContainerEvent>
-              {/* <S.NameEvent>Nome do Evento</S.NameEvent>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <S.Wrapper behavior="position">
+        <S.Body>
+          <StatusBar hidden={true} />
+          <S.Back source={Office}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SuggestSchedule');
+              }}
+            >
+              <S.IconBack source={IconArrow} />
+            </TouchableOpacity>
+            <S.Header>
+              <S.ContainerEvent>
+                {/* <S.NameEvent>Nome do Evento</S.NameEvent>
               <S.Icon source={Edition} onClick={handleIconClick} /> */}
-              {isEditing ? (
-                <S.ChangeName
-                  value={nameEvent}
-                  onChangeText={(text) => setNameEvent(text)}
-                  onBlur={handleNameEventBlur}
-                />
-              ) : (
-                <>
-                  <S.NameEvent>{nameEvent}</S.NameEvent>
-                  <TouchableOpacity onPress={handleIconClick}>
-                    <S.Icon source={Edition} />
-                  </TouchableOpacity>
-                </>
-              )}
-            </S.ContainerEvent>
-            <S.ContainerContent>
-              <S.Scroll vertical={true}>
-                <S.Content placeholder="Descrição" multiline={true} />
-              </S.Scroll>
-            </S.ContainerContent>
-            <S.ContainerLink>
-              <S.Content placeholder="Link/Endereço" />
-            </S.ContainerLink>
-            <S.Buttons>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SuggestSchedule');
-                }}
-              >
-                <Button
-                  width="136px"
-                  backgroundColor="#FAFAFA"
-                  borderColor="#949494"
-                  hasIcon={false}
-                  icon={Office}
-                  title="Voltar"
-                  titleColor="#949494"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Button
-                  width="136px"
-                  backgroundColor="#3446E4"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Office}
-                  title="Criar"
-                  titleColor="#FAFAFA"
-                />
-              </TouchableOpacity>
-            </S.Buttons>
-          </S.Header>
-        </S.Back>
-      </S.Body>
-    </S.Wrapper>
+                {isEditing ? (
+                  <S.ChangeName
+                    value={nameEvent}
+                    onChangeText={(text) => setNameEvent(text)}
+                    onBlur={handleNameEventBlur}
+                  />
+                ) : (
+                  <>
+                    <S.NameEvent>{nameEvent}</S.NameEvent>
+                    <TouchableOpacity onPress={handleIconClick}>
+                      <S.Icon source={Edition} />
+                    </TouchableOpacity>
+                  </>
+                )}
+              </S.ContainerEvent>
+              <S.ContainerContent>
+                <S.Scroll vertical={true}>
+                  <S.Content placeholder="Descrição" multiline={true} />
+                </S.Scroll>
+              </S.ContainerContent>
+              <S.ContainerLink>
+                <S.Content placeholder="Link/Endereço" />
+              </S.ContainerLink>
+              <S.Buttons>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('SuggestSchedule');
+                  }}
+                >
+                  <Button
+                    width="136px"
+                    backgroundColor="#FAFAFA"
+                    borderColor="#949494"
+                    hasIcon={false}
+                    icon={Office}
+                    title="Voltar"
+                    titleColor="#949494"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Button
+                    width="136px"
+                    backgroundColor="#3446E4"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Office}
+                    title="Criar"
+                    titleColor="#FAFAFA"
+                  />
+                </TouchableOpacity>
+              </S.Buttons>
+            </S.Header>
+          </S.Back>
+        </S.Body>
+      </S.Wrapper>
+    </TouchableWithoutFeedback>
   );
 };
 

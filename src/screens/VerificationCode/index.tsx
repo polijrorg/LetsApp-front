@@ -3,11 +3,7 @@ import Button from '@components/Button';
 import InputCode from '@components/InputCode';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
-<<<<<<< HEAD
 import React, { useState, useEffect, useContext } from 'react';
-=======
-import React, { useState, useEffect } from 'react';
->>>>>>> df561fcce2f41199fc0f83f8a585f63ba8e37298
 import {
   Keyboard,
   TouchableOpacity,
@@ -49,11 +45,7 @@ const VerificationCode: React.FC = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-<<<<<<< HEAD
       <S.Wrapper behavior="position" keyboardVerticalOffset={-200}>
-=======
-      <S.Wrapper behavior="position">
->>>>>>> df561fcce2f41199fc0f83f8a585f63ba8e37298
         <S.Body>
           <StatusBar hidden={true} />
           <S.Content>
@@ -70,22 +62,12 @@ const VerificationCode: React.FC = ({ navigation }) => {
               onChange={async (value) => {
                 setVerificationCode(value);
                 try {
-<<<<<<< HEAD
                   const { data } = await api.post('/verify', {
                     phone: phoneUser,
                     code: parseInt(value, 10),
                   });
                   console.log(data);
                   navigation.navigate('InitialData');
-=======
-                  const phone = '+5511998821010';
-                  const { data } = await api.post('/verify', {
-                    phone: phone,
-                    code: value,
-                  });
-                  console.log(data);
-                  navigation.navigate('Profile');
->>>>>>> df561fcce2f41199fc0f83f8a585f63ba8e37298
                 } catch (error) {
                   console.log(error);
                 }
