@@ -4,7 +4,11 @@ import InputCode from '@components/InputCode';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 
 const Logo = require('../../assets/Logo.png');
@@ -38,70 +42,78 @@ const VerificationCode: React.FC = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <S.Body>
-      <StatusBar hidden={true} />
-      <S.Logo source={Logo} />
-      <S.ContainerTitle>
-        <S.TitleI>Insira o </S.TitleI>
-        <S.TitleII>código!</S.TitleII>
-      </S.ContainerTitle>
-      <InputCode
-        height="32px"
-        width="240px"
-        placeholder=""
-        value={verificationCode}
-        onChange={async (value) => {
-          setVerificationCode(value);
-          try {
-            const phone = '+5511998821010';
-            const { data } = await api.post('/verify', {
-              phone: phone,
-              code: value,
-            });
-            console.log(data);
-            navigation.navigate('Profile');
-          } catch (error) {
-            console.log(error);
-          }
-        }}
-        keyboardType="numeric"
-      />
-      <S.Descrition>Preencha aqui com o código recebido por SMS</S.Descrition>
-      <TouchableOpacity
-        activeOpacity={1.0}
-        onPress={() => {
-          navigation.navigate('InitialData');
-        }}
-      >
-        <Button
-          width="328px"
-          backgroundColor="#3446E4"
-          borderColor="transparent"
-          hasIcon={true}
-          icon={Message}
-          title="Reenviar código"
-          titleColor="#FAFAFA"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Autentication');
-        }}
-      >
-        <Button
-          width="328px"
-          backgroundColor="#FFFFFF"
-          borderColor="#949494"
-          hasIcon={true}
-          icon={Phone}
-          title="Mudar número"
-          titleColor="#949494"
-        />
-      </TouchableOpacity>
-      <S.SmallCircleLeft />
-      <S.SmallCircleRight />
-      <S.SmallTop />
-    </S.Body>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <S.Wrapper behavior="position">
+        <S.Body>
+          <StatusBar hidden={true} />
+          <S.Content>
+            <S.Logo source={Logo} />
+            <S.ContainerTitle>
+              <S.TitleI>Insira o </S.TitleI>
+              <S.TitleII>código!</S.TitleII>
+            </S.ContainerTitle>
+            <InputCode
+              height="32px"
+              width="240px"
+              placeholder=""
+              value={verificationCode}
+              onChange={async (value) => {
+                setVerificationCode(value);
+                try {
+                  const phone = '+5511998821010';
+                  const { data } = await api.post('/verify', {
+                    phone: phone,
+                    code: value,
+                  });
+                  console.log(data);
+                  navigation.navigate('Profile');
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+              keyboardType="numeric"
+            />
+            <S.Descrition>
+              Preencha aqui com o código recebido por SMS
+            </S.Descrition>
+            <TouchableOpacity
+              activeOpacity={1.0}
+              onPress={() => {
+                navigation.navigate('InitialData');
+              }}
+            >
+              <Button
+                width="328px"
+                backgroundColor="#3446E4"
+                borderColor="transparent"
+                hasIcon={true}
+                icon={Message}
+                title="Reenviar código"
+                titleColor="#FAFAFA"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Autentication');
+              }}
+            >
+              <Button
+                width="328px"
+                backgroundColor="#FFFFFF"
+                borderColor="#949494"
+                hasIcon={true}
+                icon={Phone}
+                title="Mudar número"
+                titleColor="#949494"
+              />
+            </TouchableOpacity>
+          </S.Content>
+          <S.SmallCircleLeft />
+          <S.SmallCircleRight />
+          <S.SmallTop />
+        </S.Body>
+      </S.Wrapper>
+    </TouchableWithoutFeedback>
   );
 };
 

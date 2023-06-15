@@ -13,7 +13,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TouchableOpacity } from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -137,65 +141,69 @@ const InitialData: React.FC = ({ navigation }) => {
   }
 
   return (
-    <S.Wrapper behavior="position" keyboardVerticalOffset={-140}>
-      <S.Body>
-        <StatusBar hidden={true} />
-        <S.Logo source={Logo} />
-        <S.Title>Dados Iniciais</S.Title>
-        <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
-        <TouchableOpacity onPress={() => pickImageFromGallery()}>
-          {imageUser === '' ? (
-            <S.Gallery source={Gallery} resizeMode={'cover'} />
-          ) : (
-            <S.Gallery source={imageUser} resizeMode={'cover'} />
-          )}
-        </TouchableOpacity>
-        <S.Errors>
-          <Controller
-            control={control}
-            name="name"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                arrow={false}
-                height="40px"
-                width="328px"
-                placeholder="Seu nome"
-                value={value}
-                onChange={(e) => {
-                  onChange(e);
-                  setName(e);
-                }}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <S.Wrapper behavior="position" keyboardVerticalOffset={-140}>
+        <S.Body>
+          <StatusBar hidden={true} />
+          <S.Content>
+            <S.Logo source={Logo} />
+            <S.Title>Dados Iniciais</S.Title>
+            <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
+            <TouchableOpacity onPress={() => pickImageFromGallery()}>
+              {imageUser === '' ? (
+                <S.Gallery source={Gallery} resizeMode={'cover'} />
+              ) : (
+                <S.Gallery source={imageUser} resizeMode={'cover'} />
+              )}
+            </TouchableOpacity>
+            <S.Errors>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    arrow={false}
+                    height="40px"
+                    width="328px"
+                    placeholder="Seu nome"
+                    value={value}
+                    onChange={(e) => {
+                      onChange(e);
+                      setName(e);
+                    }}
+                  />
+                )}
               />
-            )}
-          />
-          {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
-        </S.Errors>
-        <S.Empty />
-        <TouchableOpacity onPress={handleSubmit(handlePress)}>
-          <Button
-            width="328px"
-            backgroundColor="#3446E4"
-            borderColor="transparent"
-            hasIcon={false}
-            icon={Message}
-            title="Salvar"
-            titleColor="#FAFAFA"
-          />
-          <ModalCard
-            Open={open}
-            setOpen={setOpen}
-            navigation={navigation}
-            screen="MainScreen"
-            type="Schedule"
-            valueEmail={email}
-            onChangeEmail={(text) => setEmail(text)}
-          />
-        </TouchableOpacity>
-        {/* <S.SmallCircleLeft /> */}
+              {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
+            </S.Errors>
+            <S.Empty />
+            <TouchableOpacity onPress={handleSubmit(handlePress)}>
+              <Button
+                width="328px"
+                backgroundColor="#3446E4"
+                borderColor="transparent"
+                hasIcon={false}
+                icon={Message}
+                title="Salvar"
+                titleColor="#FAFAFA"
+              />
+              <ModalCard
+                Open={open}
+                setOpen={setOpen}
+                navigation={navigation}
+                screen="MainScreen"
+                type="Schedule"
+                valueEmail={email}
+                onChangeEmail={(text) => setEmail(text)}
+              />
+            </TouchableOpacity>
+          </S.Content>
+        </S.Body>
+        <S.SmallCircleLeft />
         <S.SmallCircleRight />
         <S.SmallTop />
-      </S.Body>
-    </S.Wrapper>
+      </S.Wrapper>
+    </TouchableWithoutFeedback>
   );
 };
 

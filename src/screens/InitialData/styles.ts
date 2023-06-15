@@ -9,15 +9,14 @@ export const Wrapper = styled(KeyboardAvoidingView)`
 
 export const Body = styled.View`
   flex: 1;
+  padding: 24px;
   background-color: ${theme.colors.White};
   align-items: center;
-  flex-direction: column;
 `;
 
 export const Logo = styled.Image`
   width: 121px;
   height: 119px;
-  margin-top: 40%;
 `;
 
 export const Title = styled.Text`
@@ -53,8 +52,8 @@ export const SmallCircleLeft = styled.View`
   height: 208px;
   border-radius: 30000px;
   position: absolute;
-  bottom: -104px;
-  left: -104px;
+  bottom: -120px;
+  left: -120px;
   background-color: ${theme.colors.primary.main};
 `;
 
@@ -80,11 +79,18 @@ export const SmallTop = styled.View`
 
 export const TextError = styled.Text`
   color: #ff375b;
-  margin: -10px 0px 10px 0px;
+  margin: -4px 0px -12px 0px;
   font-family: 'Roboto';
 `;
 
 export const Errors = styled.View`
   flex-direction: column;
   align-items: center;
+`;
+
+export const Content = styled.View`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 `;
