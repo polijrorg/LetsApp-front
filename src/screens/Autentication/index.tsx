@@ -3,11 +3,15 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '@services/api';
-import { UserContext } from '@utils/UserContext';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TouchableOpacity } from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -30,7 +34,9 @@ const ValidationSchema = yup.object({
 const Autentication: React.FC = ({ navigation }) => {
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
-  const { setUserId } = useContext(UserContext);
+  const { setPhoneUser } = useContext(ProfileContext);
+
+  const Phone = `+55${DDD}${phone}`;
 
   const {
     control,
@@ -41,98 +47,108 @@ const Autentication: React.FC = ({ navigation }) => {
   });
 
   async function handleSignUp() {
-    // try {
-    //   console.log(DDD);
-    //   console.log(phone);
-    //   const { data } = await api.post('/register', {
-    //     phone: `+55${DDD}${phone}`,
-    //   });
+    try {
+      const { data } = await api.post('/register', {
+        phone: Phone,
+      });
+      setPhoneUser(Phone);
 
-    // const newUserId = data.id;
-    // setUserId(newUserId);
+      console.log(data);
 
-    // console.log(data);
-
-    navigation.navigate('VerificationCode');
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      navigation.navigate('VerificationCode');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
-    <S.Body>
-      <StatusBar hidden={true} />
-      <S.Logo source={Logo} />
-      <S.Title>LetsApp</S.Title>
-      <S.Descrition>
-        Você receberá em breve um SMS com o código de verificação.
-      </S.Descrition>
-      <Input arrow={true} height="32px" width="304px" placeholder="Brasil" />
-      <S.ContainerInputs>
-        <S.Errors>
-          <Controller
-            control={control}
-            name="DDD"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                arrow={false}
-                height="32px"
-                width="60px"
-                placeholder="DDD"
-                value={value}
-                onChange={(e) => {
-                  const inputValue = e;
-                  if (inputValue.length <= 2) {
-                    onChange(inputValue);
-                    setDDD(inputValue);
-                  }
-                }}
-                keyboardType="numeric"
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <S.Wrapper behavior="position" keyboardVerticalOffset={-160}>
+        <S.Body>
+          <StatusBar hidden={true} />
+          <S.Content>
+            <S.Logo source={Logo} />
+            <S.Title>LetsApp</S.Title>
+            <S.Descrition>
+              Você receberá em breve um SMS com o código de verificação.
+            </S.Descrition>
+            <Input
+              arrow={true}
+              height="32px"
+              width="304px"
+              placeholder="Brasil"
+            />
+            <S.ContainerInputs>
+              <S.Errors>
+                <Controller
+                  control={control}
+                  name="DDD"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      arrow={false}
+                      height="32px"
+                      width="60px"
+                      placeholder="DDD"
+                      value={value}
+                      onChange={(e) => {
+                        const inputValue = e;
+                        if (inputValue.length <= 2) {
+                          onChange(inputValue);
+                          setDDD(inputValue);
+                        }
+                      }}
+                      keyboardType="numeric"
+                    />
+                  )}
+                />
+                {errors.DDD && <S.TextError>{errors.DDD?.message}</S.TextError>}
+              </S.Errors>
+              <S.Spacer />
+              <S.Errors>
+                <Controller
+                  control={control}
+                  name="phone"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      arrow={false}
+                      height="32px"
+                      width="238px"
+                      placeholder="Número"
+                      value={value}
+                      onChange={(e) => {
+                        const inputValue = e;
+                        if (inputValue.length <= 9) {
+                          onChange(inputValue);
+                          setPhone(inputValue);
+                        }
+                      }}
+                      keyboardType="numeric"
+                    />
+                  )}
+                />
+                {errors.phone && (
+                  <S.TextError>{errors.phone?.message}</S.TextError>
+                )}
+              </S.Errors>
+            </S.ContainerInputs>
+            <TouchableOpacity onPress={handleSubmit(handleSignUp)}>
+              <Button
+                width="144px"
+                backgroundColor="#3446E4"
+                borderColor="transparent"
+                hasIcon={false}
+                icon={Message}
+                title="Continuar"
+                titleColor="#FAFAFA"
               />
-            )}
-          />
-          {errors.DDD && <S.TextError>{errors.DDD?.message}</S.TextError>}
-        </S.Errors>
-        <S.Errors>
-          <Controller
-            control={control}
-            name="phone"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                arrow={false}
-                height="32px"
-                width="238px"
-                placeholder="Número"
-                value={value}
-                onChange={(e) => {
-                  const inputValue = e;
-                  if (inputValue.length <= 9) {
-                    onChange(inputValue);
-                    setPhone(inputValue);
-                  }
-                }}
-                keyboardType="numeric"
-              />
-            )}
-          />
-          {errors.phone && <S.TextError>{errors.phone?.message}</S.TextError>}
-        </S.Errors>
-      </S.ContainerInputs>
-      <TouchableOpacity onPress={handleSubmit(handleSignUp)}>
-        <Button
-          width="144px"
-          backgroundColor="#3446E4"
-          borderColor="transparent"
-          hasIcon={false}
-          icon={Message}
-          title="Continuar"
-          titleColor="#FAFAFA"
-        />
-      </TouchableOpacity>
-      {/* <S.SmallCircleLeft /> */}
-      <S.SmallCircleRight />
-      <S.SmallTop />
-    </S.Body>
+            </TouchableOpacity>
+          </S.Content>
+          <S.SmallCircleLeft />
+          <S.SmallCircleRight />
+          <S.SmallTop />
+        </S.Body>
+      </S.Wrapper>
+    </TouchableWithoutFeedback>
   );
 };
 

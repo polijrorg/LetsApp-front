@@ -1,11 +1,10 @@
 import * as S from './styles';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
@@ -194,9 +193,11 @@ const events = [
   },
 ];
 
-const MainScreen: React.FC = ({ navigation, route }) => {
-  const { name, imageUser } = route.params;
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+const MainScreen: React.FC = ({ navigation }) => {
+  // const { name, imageUser } = route.params;
+  // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+
+  const { nameUser, imageOfUser } = useContext(ProfileContext);
 
   const [showCompleteCalendar] = useState(false);
 
@@ -414,17 +415,18 @@ const MainScreen: React.FC = ({ navigation, route }) => {
   return (
     <S.Container>
       <S.Header>
-        <S.Name>Olá Rafael!</S.Name>
+        <S.Name>Olá {nameUser}!</S.Name>
         <TouchableOpacity
           onPress={() => {
-            appNavigation.navigate('Profile', {
-              name: name,
-              imageUser: imageUser,
-            });
+            navigation.navigate(
+              'Profile'
+              // name: name,
+              // imageUser: imageUser,
+            );
           }}
         >
-          {imageUser ? (
-            <S.Icon source={imageUser} />
+          {imageOfUser ? (
+            <S.Icon source={imageOfUser} />
           ) : (
             <S.Icon source={IconProfile} />
           )}
@@ -446,55 +448,78 @@ const MainScreen: React.FC = ({ navigation, route }) => {
         <S.ScrollView showsVerticalScrollIndicator={false}>
           {showEvent ? (
             <S.ContainerEvent>
-              {events.map((event, index) => (
+              {/* {events.map((event, index) => (
                 <React.Fragment key={index}>
                   {event.items.map((items, itemIndex) => (
                     <CardsEvent
                       key={itemIndex}
                       adress={items.start.timeZone}
-                      name={items.summary}
+                      nameEvent={items.summary}
                       event="presencial"
-                      image={Event2}
                     />
                   ))}
                 </React.Fragment>
-              ))}
-              {/* <CardsEvent
-                adress="Av. Paulista"
-                name="Marco Rudas"
-                event="presencial"
-                image={Event1}
-              />
+              ))} */}
               <CardsEvent
                 adress="Av. Paulista"
-                name="Marco Rudas"
+                nameEvent="Evento Presencial"
                 event="presencial"
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
                 image={Event2}
               />
               <CardsEvent
                 adress="Av. Paulista"
-                name="Beatriz Brum"
+                nameEvent="Evento Presencial"
                 event="presencial"
-                image={Event1}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                name="Ana Arejano"
-                event="presencial"
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
                 image={Event2}
               />
               <CardsEvent
                 adress="Av. Paulista"
-                name="Marco Rudas"
+                nameEvent="Evento Presencial"
                 event="presencial"
-                image={Event1}
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
+                image={Event2}
               />
               <CardsEvent
                 adress="Av. Paulista"
-                name="Pedro Mendes"
+                nameEvent="Evento Presencial"
                 event="presencial"
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
                 image={Event2}
-              /> */}
+              />
+              <CardsEvent
+                adress="Av. Paulista"
+                nameEvent="Evento Presencial"
+                event="presencial"
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
+                image={Event2}
+              />
+              <CardsEvent
+                adress="Av. Paulista"
+                nameEvent="Evento Presencial"
+                event="presencial"
+                confirmed="11"
+                date="16/09/2021"
+                invites="45"
+                schedule="16h - 18h"
+                image={Event2}
+              />
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
