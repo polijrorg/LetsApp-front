@@ -4,7 +4,7 @@ import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
@@ -38,6 +38,8 @@ const Autentication: React.FC = ({ navigation }) => {
 
   const Phone = `+55${DDD}${phone}`;
 
+  const [isKeyboardActive, setIsKeyboardActive] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -51,7 +53,7 @@ const Autentication: React.FC = ({ navigation }) => {
     //   const { data } = await api.post('/register', {
     //     phone: Phone,
     //   });
-    //   setPhoneUser(Phone);
+    setPhoneUser(Phone);
 
     //   console.log(data);
 
@@ -60,6 +62,30 @@ const Autentication: React.FC = ({ navigation }) => {
     //   console.log(error);
     // }
   }
+
+  // Ouvinte para o teclado ficar ativo
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setIsKeyboardActive(true);
+    }
+  );
+
+  // Ouvinte para o teclado ficar inativo
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setIsKeyboardActive(false);
+    }
+  );
+
+  // Remover os ouvintes de eventos de teclado quando o componente for desmontado
+  useEffect(() => {
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -143,7 +169,7 @@ const Autentication: React.FC = ({ navigation }) => {
               />
             </TouchableOpacity>
           </S.Content>
-          <S.SmallCircleLeft />
+          {!isKeyboardActive && <S.SmallCircleLeft />}
           <S.SmallCircleRight />
           <S.SmallTop />
         </S.Body>

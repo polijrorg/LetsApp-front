@@ -1,31 +1,81 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import { api } from '@services/api';
+import format from 'date-fns/format';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
-const Edition = require('../../assets/Edition.png');
+// const Edition = require('../../assets/Edition.png');
 
 const CreateEvent: React.FC = ({ navigation }) => {
-  const [nameEvent, setNameEvent] = useState('Nome do Evento');
-  const [isEditing, setIsEditing] = useState(false);
+  // const [nameEvent, setNameEvent] = useState('Nome do Evento');
+  // const [isEditing, setIsEditing] = useState(false);
 
-  const handleIconClick = () => {
-    setIsEditing(true);
+  // const handleIconClick = () => {
+  //   setIsEditing(true);
+  // };
+
+  // const handleNameEventBlur = () => {
+  //   setIsEditing(false);
+  //   if (nameEvent === '') {
+  //     setNameEvent('Nome do Evento');
+  //   }
+  // };
+  const [eventP, setEventP] = useState('');
+  const [eventO, setEventO] = useState('');
+  const [descrition, setDescrition] = useState('');
+
+  const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
+  const [isOnline, setIsOnline] = useState(false);
+
+  const { phoneUser, dateStart, dateEnd, timeStart, timeEnd, duration } =
+    useContext(ProfileContext);
+
+  const handleOnlinePress = () => {
+    setSelectedOption('online');
+    setIsOnline(true);
   };
 
-  const handleNameEventBlur = () => {
-    setIsEditing(false);
-    if (nameEvent === '') {
-      setNameEvent('Nome do Evento');
+  const handlePresencialPress = () => {
+    setSelectedOption('presencial');
+    setIsOnline(false);
+  };
+
+  async function createEvent() {
+    try {
+      console.log('Telefone do usuário', phoneUser);
+      console.log('Data de Inicio:', dateStart);
+      console.log('Data de Termino:', dateEnd);
+      console.log(
+        'Inicio do intervalo formatado:',
+        format(timeStart, 'HH:mm:ss')
+      );
+      console.log('Final do intervalo formatado:', format(timeEnd, 'HH:mm:ss'));
+      console.log('Duração:', duration);
+      const { data } = await api.post('/createEvent', {
+        name: isOnline ? eventO : eventP,
+        phone: phoneUser,
+        begin: dateStart,
+        attendees: ['cainagiro@usp.br', 'caiogiro10@gmail.com'],
+        end: dateEnd,
+        adress: eventO,
+        description: descrition,
+        createMeetLink: isOnline,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -42,9 +92,22 @@ const CreateEvent: React.FC = ({ navigation }) => {
             </TouchableOpacity>
             <S.Header>
               <S.ContainerEvent>
-                {/* <S.NameEvent>Nome do Evento</S.NameEvent>
-              <S.Icon source={Edition} onClick={handleIconClick} /> */}
-                {isEditing ? (
+                <TouchableOpacity onPress={handlePresencialPress}>
+                  <S.ContainerNameTypeP selectedOption={selectedOption}>
+                    <S.NameTypeP selectedOption={selectedOption}>
+                      Presencial{' '}
+                    </S.NameTypeP>
+                  </S.ContainerNameTypeP>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleOnlinePress}>
+                  <S.ContainerNameTypeO selectedOption={selectedOption}>
+                    <S.NameTypeO selectedOption={selectedOption}>
+                      {' '}
+                      Online
+                    </S.NameTypeO>
+                  </S.ContainerNameTypeO>
+                </TouchableOpacity>
+                {/* {isEditing ? (
                   <S.ChangeName
                     value={nameEvent}
                     onChangeText={(text) => setNameEvent(text)}
@@ -57,16 +120,35 @@ const CreateEvent: React.FC = ({ navigation }) => {
                       <S.Icon source={Edition} />
                     </TouchableOpacity>
                   </>
-                )}
+                )} */}
               </S.ContainerEvent>
               <S.ContainerContent>
                 <S.Scroll vertical={true}>
-                  <S.Content placeholder="Descrição" multiline={true} />
+                  <S.Content
+                    placeholder="Descrição"
+                    multiline={true}
+                    value={descrition}
+                    onChangeText={(text) => setDescrition(text)}
+                  />
                 </S.Scroll>
               </S.ContainerContent>
-              <S.ContainerLink>
-                <S.Content placeholder="Link/Endereço" />
-              </S.ContainerLink>
+              {selectedOption === 'presencial' ? (
+                <S.ContainerLink>
+                  <S.Content
+                    placeholder="Nome do Evento"
+                    value={eventP}
+                    onChangeText={(text) => setEventP(text)}
+                  />
+                </S.ContainerLink>
+              ) : (
+                <S.ContainerLink>
+                  <S.Content
+                    placeholder="Nome da Reunião"
+                    value={eventO}
+                    onChangeText={(text) => setEventO(text)}
+                  />
+                </S.ContainerLink>
+              )}
               <S.Buttons>
                 <TouchableOpacity
                   onPress={() => {
@@ -83,7 +165,12 @@ const CreateEvent: React.FC = ({ navigation }) => {
                     titleColor="#949494"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    createEvent();
+                    navigation.navigate('MainScreen');
+                  }}
+                >
                   <Button
                     width="136px"
                     backgroundColor="#3446E4"

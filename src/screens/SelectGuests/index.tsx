@@ -1,9 +1,13 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
+import { ModalCard } from '@components/Modal';
+import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
+import * as Contacts from 'expo-contacts';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -14,6 +18,49 @@ const Check = require('../../assets/Check.png');
 const SelectGuests: React.FC = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [email, setEmail] = useState('');
+  const [contacts, setContacts] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [addParticipants, setAddParticipants] = useState([]);
+
+  const { phoneUser } = useContext(ProfileContext);
+
+  const addParticipant = () => {
+    if (name && phoneNumber) {
+      const newParticipant = { name, phoneNumber };
+      setAddParticipants([...addParticipants, newParticipant]);
+      setName('');
+      setPhoneNumber('');
+      addNewParticipant();
+    }
+  };
+
+  async function addNewParticipant() {
+    try {
+      const { data } = await api.post('addContact', {
+        userPhone: phoneUser,
+        phone: phoneNumber,
+        name: name,
+        email: '',
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.PhoneNumbers],
+        });
+        setContacts(data);
+      }
+    })();
+  }, []);
 
   return (
     <S.Body>
@@ -39,41 +86,60 @@ const SelectGuests: React.FC = ({ navigation }) => {
           onChangeText={(texto) => setSearch(texto)}
         />
       </S.ContainerSearch>
-      <S.ContainerEmail>
-        <S.ContainerIcon>
-          <S.IconEmail source={IconEmail} />
-        </S.ContainerIcon>
-        <S.InputEmail
-          placeholder="Email"
-          placeholderTextColor={theme.colors.mediumEmphasis}
-          value={email}
-          onChangeText={(texto) => setEmail(texto)}
-        />
-        <S.ContainerIcon>
+      <TouchableOpacity
+        onPress={() => {
+          setOpen(true);
+        }}
+      >
+        <S.ContainerEmail>
+          <S.ContainerIcon>
+            <S.IconEmail source={IconEmail} />
+          </S.ContainerIcon>
+          <S.Email>
+            <S.AddContact>Adicionar Contato</S.AddContact>
+          </S.Email>
+          {/* <S.ContainerIcon>
           <S.IconSend source={IconSend} />
-        </S.ContainerIcon>
-      </S.ContainerEmail>
+        </S.ContainerIcon> */}
+        </S.ContainerEmail>
+      </TouchableOpacity>
+      <ModalCard
+        Open={open}
+        setOpen={setOpen}
+        navigation={navigation}
+        screen="SelectGuests"
+        type="Contact"
+        name={name}
+        setName={setName}
+        phoneNumber={phoneNumber}
+        setPhoneNumber={setPhoneNumber}
+        addParticipant={addParticipant}
+      />
       <S.Scroll>
         <S.ContainerSubtitle>
-          <S.Subtitle>Contatos Frequentes</S.Subtitle>
+          <S.Subtitle>Contatos Adicionados</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
+        {addParticipants.map((participant, index) => (
+          <React.Fragment key={index}>
+            <Contact
+              name={participant.name}
+              phoneOrEmail={participant.phoneNumber}
+            />
+          </React.Fragment>
+        ))}
         <S.ContainerSubtitle>
           <S.Subtitle>Minha Agenda</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
-        <Contact name="Cainã" phoneOrEmail="11953975915" />
+        {contacts.map((event, index) => (
+          <React.Fragment key={index}>
+            <Contact
+              name={event.name}
+              phoneOrEmail={event.phoneNumbers[0].number}
+            />
+          </React.Fragment>
+        ))}
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity

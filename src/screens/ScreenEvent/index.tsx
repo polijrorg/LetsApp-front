@@ -1,6 +1,8 @@
 import * as S from './styles';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import moment from 'moment';
+import 'moment/locale/pt-br';
+import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 export type CardsInviteProps = {
@@ -17,8 +19,25 @@ const calendar = require('../../assets/CalendarIcon.png');
 const Participants = require('../../assets/Participants.png');
 
 const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const { nameEvent, event, adress, date, schedule, invites, confirmed } =
-    route.params;
+  const {
+    nameEvent,
+    event,
+    adress,
+    date,
+    invites,
+    confirmed,
+    beginHour,
+    endHour,
+    descrition,
+  } = route.params;
+
+  const [numberGuests] = useState(invites.length);
+  const ajustDate = moment(date).format('DD/MM/YYYY');
+  const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
+    .locale('pt-br')
+    .format('ddd');
+  console.log;
+  console.log(ajustDate);
 
   return (
     <S.Body>
@@ -53,8 +72,14 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                 <S.IconDate source={calendar} />
               </S.ContainerIcon>
               <S.Adjust>
-                <S.LocalandDate> Seg - 01/02</S.LocalandDate>
-                <S.Date>{schedule}</S.Date>
+                <S.LocalandDate>
+                  {' '}
+                  {formattedDate.replace(/^\w/, (c) => c.toUpperCase())} -{' '}
+                  {ajustDate.substring(0, 5)}
+                </S.LocalandDate>
+                <S.Date>
+                  {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h
+                </S.Date>
               </S.Adjust>
             </S.Row>
             <S.Row>
@@ -62,7 +87,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                 <S.IconDate source={Participants} />
               </S.ContainerIcon>
               <S.Adjust>
-                <S.LocalandDate>{invites} Convidados</S.LocalandDate>
+                <S.LocalandDate>{numberGuests} Convidados</S.LocalandDate>
                 <S.Confirmed>{confirmed}: Sim</S.Confirmed>
               </S.Adjust>
             </S.Row>
@@ -70,21 +95,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         </S.ContainerContent>
         <S.Line />
         <S.Scroll>
-          <S.Content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sem
-            arcu, malesuada vel orci et, mattis tincidunt enim. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Sed sem arcu, malesuada
-            vel orci et, mattis tincidunt enim. Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Sed sem arcu, malesuada vel orci et,
-            mattis tincidunt enim. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Sed sem arcu, malesuada vel orci et, mattis
-            tincidunt enim. Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Sed sem arcu, malesuada vel orci et, mattis tincidunt enim.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sem
-            arcu, malesuada vel orci et, mattis tincidunt enim. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Sed sem arcu, malesuada
-            vel orci et, mattis tincidunt enim.
-          </S.Content>
+          <S.Content>{descrition}</S.Content>
         </S.Scroll>
       </S.Header>
     </S.Body>

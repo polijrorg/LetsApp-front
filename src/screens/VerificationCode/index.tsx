@@ -20,6 +20,24 @@ const VerificationCode: React.FC = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const { phoneUser } = useContext(ProfileContext);
 
+  const [isKeyboardActive, setIsKeyboardActive] = useState(false);
+
+  // Ouvinte para o teclado ficar ativo
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setIsKeyboardActive(true);
+    }
+  );
+
+  // Ouvinte para o teclado ficar inativo
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setIsKeyboardActive(false);
+    }
+  );
+
   useEffect(() => {
     const handleSmsReceived = async (message) => {
       const verificationCode = message.body.match(/\d{6}/)[0];
@@ -40,6 +58,8 @@ const VerificationCode: React.FC = ({ navigation }) => {
     const subscription = SmsListener.addListener(handleSmsReceived);
     return () => {
       subscription.remove();
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
     };
   }, [navigation]);
 
@@ -109,7 +129,7 @@ const VerificationCode: React.FC = ({ navigation }) => {
               />
             </TouchableOpacity>
           </S.Content>
-          <S.SmallCircleLeft />
+          {!isKeyboardActive && <S.SmallCircleLeft />}
           <S.SmallCircleRight />
           <S.SmallTop />
         </S.Body>

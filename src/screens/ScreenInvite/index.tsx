@@ -1,6 +1,8 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import { StatusBar } from 'expo-status-bar';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
@@ -17,7 +19,12 @@ const presencial = require('../../assets/PresencialEvent.png');
 const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const { name, image, adress, event } = route.params;
+  const { name, image, adress, date, event, descrition, beginHour, endHour } =
+    route.params;
+
+  const formattedDate = moment(date, 'DD/MM/YYYY')
+    .locale('pt-br')
+    .format('ddd');
 
   return (
     <S.Body>
@@ -53,8 +60,15 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   <S.IconDate source={calendar} />
                 </S.ContainerIcon>
                 <S.Adjust>
-                  <S.LocalandDate> Seg - 01/02</S.LocalandDate>
-                  <S.Date>16h00 - 18h00</S.Date>
+                  <S.LocalandDate>
+                    {' '}
+                    {formattedDate.replace(/^\w/, (c) =>
+                      c.toUpperCase()
+                    )} - {date.substring(0, 5)}
+                  </S.LocalandDate>
+                  <S.Date>
+                    {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h
+                  </S.Date>
                 </S.Adjust>
               </S.Row>
             </S.Column>
@@ -65,21 +79,7 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             <S.Descrition>Descrição</S.Descrition>
           </S.ContainerDescrition>
           <S.Scroll>
-            <S.Content>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sem
-              arcu, malesuada vel orci et, mattis tincidunt enim. Lorem ipsum
-              dolor sit amet, consectetur adipiscing elit. Sed sem arcu,
-              malesuada vel orci et, mattis tincidunt enim. Lorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Sed sem arcu, malesuada vel
-              orci et, mattis tincidunt enim. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed sem arcu, malesuada vel orci et,
-              mattis tincidunt enim. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit. Sed sem arcu, malesuada vel orci et, mattis
-              tincidunt enim. Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Sed sem arcu, malesuada vel orci et, mattis tincidunt enim.
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sem
-              arcu, malesuada vel orci et, mattis tincidunt enim.
-            </S.Content>
+            <S.Content>{descrition}</S.Content>
           </S.Scroll>
           <S.Buttons>
             <Button

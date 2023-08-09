@@ -42,6 +42,10 @@ export const ContainerInputs = styled.View`
   flex-direction: row;
 `;
 
+export const ContainerInputsContact = styled.View`
+  flex-direction: column;
+`;
+
 export const ContainerButtons = styled.View`
   flex-direction: row;
   margin-top: 24px;

@@ -10,6 +10,9 @@ export type CardsInviteProps = {
   image: string;
   adress: string;
   date?: string;
+  descrition?: string;
+  beginHour?: string;
+  endHour?: string;
 };
 
 const CardsInvite: React.FC<CardsInviteProps> = ({
@@ -18,6 +21,9 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
   image,
   adress,
   date,
+  descrition,
+  beginHour,
+  endHour,
 }) => {
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const online = require('../../assets/OnlineEvent.png');
@@ -33,6 +39,9 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
             image: image,
             adress: adress,
             date: date,
+            descrition: descrition,
+            beginHour: beginHour,
+            endHour: endHour,
           });
         }}
       >

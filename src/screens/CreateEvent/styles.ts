@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 
 type InviteProps = {
   source: string;
+  selectedOption: 'presencial' | 'online';
 };
 
 export const Wrapper = styled(KeyboardAvoidingView)`
@@ -33,9 +34,49 @@ export const Header = styled.View`
   align-items: center;
 `;
 
+export const ContainerType = styled.View`
+  width: 100px;
+`;
+
 export const ContainerEvent = styled.View`
   flex-direction: row;
   margin-bottom: 32px;
+`;
+
+export const ContainerNameTypeP = styled.View<InviteProps>`
+  background-color: ${(props) =>
+    props.selectedOption === 'presencial' ? '#3446E4' : '#fff'};
+  border-radius: 8px;
+  /* border-width: 1px;
+  border-color: ${(props) =>
+    props.selectedOption === 'presencial' ? 'none' : '#949494'}; */
+`;
+
+export const ContainerNameTypeO = styled.View<InviteProps>`
+  background-color: ${(props) =>
+    props.selectedOption === 'online' ? '#3446E4' : '#fff'};
+  border-radius: 8px;
+  /* border-width: 1px;
+  border-color: ${(props) =>
+    props.selectedOption === 'presencial' ? 'none' : '#949494'}; */
+  align-items: center;
+  justify-content: center;
+`;
+
+export const NameTypeP = styled.Text<InviteProps>`
+  font-size: 16px;
+  font-family: 'RobotoMedium';
+  color: ${(props) =>
+    props.selectedOption === 'presencial' ? '#fafafa' : '#949494'};
+  margin: 4px;
+`;
+
+export const NameTypeO = styled.Text<InviteProps>`
+  font-size: 16px;
+  font-family: 'RobotoMedium';
+  color: ${(props) =>
+    props.selectedOption === 'online' ? '#fafafa' : '#949494'};
+  margin: 4px;
 `;
 
 export const NameEvent = styled.Text`

@@ -14,9 +14,14 @@ type ModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   navigation: any;
   screen?: string;
-  type: 'Schedule' | 'Number' | 'Account';
+  type: 'Schedule' | 'Number' | 'Account' | 'Contact';
   valueEmail?: string;
   onChangeEmail?: (text: string) => void;
+  name?: string;
+  setName?: (text: string) => void;
+  phoneNumber?: string;
+  setPhoneNumber?: (text: string) => void;
+  addParticipant?: () => void;
 };
 
 export const ModalCard: React.FC<ModalProps> = ({
@@ -27,6 +32,11 @@ export const ModalCard: React.FC<ModalProps> = ({
   type,
   onChangeEmail,
   valueEmail,
+  name,
+  setName,
+  phoneNumber,
+  setPhoneNumber,
+  addParticipant,
 }: ModalProps) => {
   const [isSelected, setSelected] = useState(false);
   const [inputs, setInputs] = useState([]);
@@ -78,6 +88,9 @@ export const ModalCard: React.FC<ModalProps> = ({
   } else if (type === 'Account') {
     title = 'Apagar conta';
     descrition = 'Tem certeza que deseja apagar a conta?';
+  } else if (type === 'Contact') {
+    title = 'Adicionar Novo Contato';
+    descrition = '';
   }
 
   return (
@@ -109,6 +122,24 @@ export const ModalCard: React.FC<ModalProps> = ({
                 placeholder="Número"
               />
             </S.ContainerInputs>
+          ) : type === 'Contact' ? (
+            <S.ContainerInputsContact>
+              <Input
+                height="32px"
+                width="278px"
+                placeholder="Nome"
+                value={name}
+                onChange={setName}
+              />
+              <></>
+              <Input
+                height="32px"
+                width="278px"
+                placeholder="Email ou telefone"
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+              />
+            </S.ContainerInputsContact>
           ) : null}
           <S.ContainerDescrition>
             <S.Descrtion type={type}>{descrition}</S.Descrtion>
@@ -131,6 +162,9 @@ export const ModalCard: React.FC<ModalProps> = ({
               handleAddInput(Input);
               handleSendData();
               setOpen(false);
+              if (type === 'Contact') {
+                addParticipant();
+              }
             }}
           >
             {type === 'Account' ? (

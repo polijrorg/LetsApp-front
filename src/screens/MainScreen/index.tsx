@@ -1,8 +1,12 @@
 import * as S from './styles';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
+import { Descrtion } from '@components/Modal/styles';
+import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import moment from 'moment';
+import 'moment/locale/pt-br';
+import React, { useState, useContext, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
 
@@ -197,7 +201,7 @@ const MainScreen: React.FC = ({ navigation }) => {
   // const { name, imageUser } = route.params;
   // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
 
-  const { nameUser, imageOfUser } = useContext(ProfileContext);
+  const { nameUser, imageOfUser, phoneUser } = useContext(ProfileContext);
 
   const [showCompleteCalendar] = useState(false);
 
@@ -399,8 +403,38 @@ const MainScreen: React.FC = ({ navigation }) => {
     return week;
   }
 
+  useEffect(() => {
+    getInvites();
+  }, []);
+
+  async function getInvites() {
+    try {
+      const { data } = await api.post('invites/listInvitesByUser', {
+        phone: phoneUser,
+      });
+      setInvites(data);
+      setNumberInvites(data.length);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const { data } = await api.post('invites/listEventsByUser', {
+        phone: phoneUser,
+      });
+      setEvents(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
+  const [invites, setInvites] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [numberInvites, setNumberInvites] = useState();
 
   const handleEventsPress = () => {
     setSelectedOption('events');
@@ -443,135 +477,54 @@ const MainScreen: React.FC = ({ navigation }) => {
           </S.OptionEvents>
           <S.OptionInvite onPress={handleInvitePress} Option={selectedOption}>
             <S.Invite Option={selectedOption}>Convites</S.Invite>
+            {selectedOption === 'invite' ? (
+              <S.NumberInvites>
+                <S.Number>{numberInvites}</S.Number>
+              </S.NumberInvites>
+            ) : (
+              <></>
+            )}
           </S.OptionInvite>
         </S.ContainerOptions>
         <S.ScrollView showsVerticalScrollIndicator={false}>
           {showEvent ? (
             <S.ContainerEvent>
-              {/* {events.map((event, index) => (
+              {events.map((event, index) => (
                 <React.Fragment key={index}>
-                  {event.items.map((items, itemIndex) => (
-                    <CardsEvent
-                      key={itemIndex}
-                      adress={items.start.timeZone}
-                      nameEvent={items.summary}
-                      event="presencial"
-                    />
-                  ))}
+                  <CardsEvent
+                    adress={event.address}
+                    nameEvent={event.name}
+                    event="presencial"
+                    month={moment(event.date)
+                      .locale('pt-br')
+                      .format('MMM')
+                      .replace(/^\w/, (c) => c.toUpperCase())}
+                    day={moment(event.date).format('DD')}
+                    date={event.date}
+                    descrition={event.description}
+                    beginHour={event.beginHour}
+                    endHour={event.endHour}
+                    invites={event.guests}
+                  />
                 </React.Fragment>
-              ))} */}
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
-              <CardsEvent
-                adress="Av. Paulista"
-                nameEvent="Evento Presencial"
-                event="presencial"
-                confirmed="11"
-                date="16/09/2021"
-                invites="45"
-                schedule="16h - 18h"
-                image={Event2}
-              />
+              ))}
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
-              <CardsInvite
-                adress="R. Legal, 123"
-                name="Ana Arejano"
-                event="presencial"
-                image={Picture1}
-                date="01/02/23"
-              />
-              <CardsInvite
-                adress="Google Meets"
-                name="Beatriz Brum"
-                event="online"
-                image={Picture2}
-                date="02/02/23"
-              />
-              <CardsInvite
-                adress="Google Meets"
-                name="Pedro Mendes"
-                event="online"
-                image={Picture3}
-                date="03/02/23"
-              />
-              <CardsInvite
-                adress="Av. Paulista"
-                name="Marco Rudas"
-                event="presencial"
-                image={Picture4}
-                date="04/02/23"
-              />
-              <CardsInvite
-                adress="Av. Paulista"
-                name="Marco Rudas"
-                event="presencial"
-                image={Picture4}
-                date="04/02/23"
-              />
-              <CardsInvite
-                adress="Av. Paulista"
-                name="Marco Rudas"
-                event="presencial"
-                image={Picture4}
-                date="04/02/23"
-              />
-              <CardsInvite
-                adress="Av. Paulista"
-                name="Marco Rudas"
-                event="presencial"
-                image={Picture4}
-                date="04/02/23"
-              />
+              {invites.map((event, index) => (
+                <React.Fragment key={index}>
+                  <CardsInvite
+                    adress={event.address}
+                    name={event.name}
+                    event="presencial"
+                    image={Picture2}
+                    date={moment(event.date).format('DD/MM/YYYY')}
+                    descrition={event.description}
+                    beginHour={event.beginHour}
+                    endHour={event.endHour}
+                  />
+                </React.Fragment>
+              ))}
             </S.ContainerInvite>
           )}
         </S.ScrollView>
