@@ -42,7 +42,7 @@ const SelectGuests: React.FC = ({ navigation }) => {
         userPhone: phoneUser,
         phone: phoneNumber,
         name: name,
-        email: '',
+        email: 'caiogiro10@gmail.com',
       });
       console.log(data);
     } catch (error) {

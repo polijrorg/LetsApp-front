@@ -63,9 +63,9 @@ const CreateEvent: React.FC = ({ navigation }) => {
       const { data } = await api.post('/createEvent', {
         name: isOnline ? eventO : eventP,
         phone: phoneUser,
-        begin: dateStart,
+        begin: '2023-08-11T20:30:00-03:00',
         attendees: ['cainagiro@usp.br', 'caiogiro10@gmail.com'],
-        end: dateEnd,
+        end: '2023-08-11T21:00:00-03:00',
         adress: eventO,
         description: descrition,
         createMeetLink: isOnline,

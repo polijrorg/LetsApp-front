@@ -5,7 +5,7 @@ type ScheduleProps = {
 };
 
 export const ContainerCard = styled.TouchableOpacity<ScheduleProps>`
-  width: 72px;
+  width: 90px;
   height: 80px;
   border-radius: 12px;
   background-color: ${(props) => (props.isSelected ? '#949494' : '#727FF6')};

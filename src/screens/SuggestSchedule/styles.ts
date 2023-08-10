@@ -30,6 +30,8 @@ export const Subtitle = styled.Text`
 `;
 
 export const ContainerSuggest = styled.View`
+  display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
 `;
 
@@ -40,3 +42,11 @@ export const Buttons = styled.View`
   justify-content: space-between;
   margin-top: 16px;
 `;
+
+export const Scroll = styled.ScrollView`
+  margin-top: 8px;
+  height: 80%;
+  width: 100%;
+`;
+
+export const ScheduleContainer = styled.View``;
