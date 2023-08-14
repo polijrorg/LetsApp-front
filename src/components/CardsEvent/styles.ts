@@ -22,9 +22,26 @@ export const ContainerContentData = styled.View`
   margin-left: 16px;
 `;
 
-export const Image = styled.Image`
-  width: 48px;
-  height: 48px;
+export const Image = styled.View`
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background-color: ${theme.colors.primary.dark};
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+export const Month = styled.Text`
+  font-size: 14px;
+  font-family: 'Roboto';
+  color: ${theme.colors.White};
+`;
+
+export const Day = styled.Text`
+  font-size: 14px;
+  font-family: 'Roboto';
+  color: ${theme.colors.White};
 `;
 
 export const Name = styled.Text`

@@ -18,7 +18,6 @@ export const ContainerContent = styled.View`
 
 export const ContainerContentData = styled.View`
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   margin-left: 16px;
 `;

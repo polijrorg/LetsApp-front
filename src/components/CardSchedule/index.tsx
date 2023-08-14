@@ -1,28 +1,47 @@
 import * as S from './styles';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 export type CardScheduleProps = {
   day: string;
   date: string;
-  schedule: string;
+  start: string;
+  end: string;
+  scheduleStart: string;
+  scheduleEnd: string;
+  isSelected: boolean;
+  onSelect: () => void;
 };
 
-const CardSchedule: React.FC<CardScheduleProps> = ({ day, date, schedule }) => {
-  const [isSelected, setIsSelected] = useState(false);
+const CardSchedule: React.FC<CardScheduleProps> = ({
+  day,
+  date,
+  start,
+  end,
+  scheduleStart,
+  scheduleEnd,
+  isSelected,
+  onSelect,
+}) => {
+  const { setTimeSelectedStart, setTimeSelectedEnd } =
+    useContext(ProfileContext);
 
   const handleClick = () => {
-    if (isSelected === false) {
-      setIsSelected(true);
-    } else {
-      setIsSelected(false);
+    setTimeSelectedStart(scheduleStart);
+    setTimeSelectedEnd(scheduleEnd);
+
+    if (onSelect) {
+      onSelect();
     }
   };
 
   return (
     <S.ContainerCard onPress={handleClick} isSelected={isSelected}>
-      <S.Day>{day}</S.Day>
-      <S.Date>{date}</S.Date>
-      <S.Schedule>{schedule}</S.Schedule>
+      <S.Day>{date}</S.Day>
+      <S.Date>{day}</S.Date>
+      <S.Schedule>
+        {start} às {end}{' '}
+      </S.Schedule>
     </S.ContainerCard>
   );
 };

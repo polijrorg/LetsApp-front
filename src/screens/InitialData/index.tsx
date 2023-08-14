@@ -11,7 +11,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
@@ -42,6 +42,8 @@ const InitialData: React.FC = ({ navigation }) => {
 
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
+
+  const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
   const {
     control,
@@ -117,7 +119,7 @@ const InitialData: React.FC = ({ navigation }) => {
       if (firstRequisition === true) {
         try {
           const phone = phoneUser;
-          const { data } = await api.get(
+          const { data } = await api.post(
             `/getAuthUrl/${encodeURIComponent(phone)}`
           );
           const authUrl = data;
@@ -140,6 +142,31 @@ const InitialData: React.FC = ({ navigation }) => {
       console.log(error);
     }
   }
+
+  // Ouvinte para o teclado ficar ativo
+  const keyboardDidShowListener = Keyboard.addListener(
+    'keyboardDidShow',
+    () => {
+      setIsKeyboardActive(true);
+    }
+  );
+
+  // Ouvinte para o teclado ficar inativo
+  const keyboardDidHideListener = Keyboard.addListener(
+    'keyboardDidHide',
+    () => {
+      setIsKeyboardActive(false);
+    }
+  );
+
+  // Remover os ouvintes de eventos de teclado quando o componente for desmontado
+  useEffect(() => {
+    return () => {
+      console.log('Test', isKeyboardActive);
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -199,7 +226,7 @@ const InitialData: React.FC = ({ navigation }) => {
               />
             </TouchableOpacity>
           </S.Content>
-          <S.SmallCircleLeft />
+          {!isKeyboardActive && <S.SmallCircleLeft />}
           <S.SmallCircleRight />
           <S.SmallTop />
         </S.Body>

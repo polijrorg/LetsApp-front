@@ -43,6 +43,7 @@ export const OptionInvite = styled.TouchableOpacity<OptionProps>`
   border-bottom-color: ${(props) =>
     props.Option === 'invite' ? '#727FF6' : '#949494'};
   align-items: center;
+  flex-direction: row;
 `;
 
 export const OptionEvents = styled.TouchableOpacity<OptionProps>`
@@ -63,6 +64,22 @@ export const Invite = styled.Text<OptionProps>`
   font-size: 20px;
   color: ${(props) => (props.Option === 'invite' ? '#727FF6' : '#949494')};
   font-family: 'Roboto';
+  margin-right: 4px;
+`;
+
+export const NumberInvites = styled.View`
+  width: 20px;
+  height: 20px;
+  border-radius: 32px;
+  background-color: ${theme.colors.primary.dark};
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Number = styled.Text`
+  font-size: 12px;
+  font-family: 'Roboto';
+  color: ${theme.colors.White};
 `;
 
 export const ContainerScroll = styled.View`

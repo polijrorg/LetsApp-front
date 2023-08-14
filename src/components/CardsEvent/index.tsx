@@ -8,10 +8,14 @@ export type CardsEventProps = {
   nameEvent?: string;
   adress?: string;
   date?: string;
-  schedule?: string;
   invites?: string;
   confirmed?: string;
   image?: string;
+  month?: string;
+  day?: string;
+  beginHour?: string;
+  endHour?: string;
+  descrition?: string;
 };
 
 const CardsEvent: React.FC<CardsEventProps> = ({
@@ -19,10 +23,13 @@ const CardsEvent: React.FC<CardsEventProps> = ({
   nameEvent,
   adress,
   date,
-  schedule,
   invites,
   confirmed,
-  image,
+  month,
+  day,
+  beginHour,
+  endHour,
+  descrition,
 }) => {
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const online = require('../../assets/OnlineEvent.png');
@@ -36,14 +43,19 @@ const CardsEvent: React.FC<CardsEventProps> = ({
           nameEvent: nameEvent,
           adress: adress,
           date: date,
-          schedule: schedule,
           invites: invites,
           confirmed: confirmed,
+          beginHour: beginHour,
+          endHour: endHour,
+          descrition: descrition,
         });
       }}
     >
       <S.ContainerContent>
-        <S.Image source={image} />
+        <S.Image>
+          <S.Month>{month}</S.Month>
+          <S.Day>{day}</S.Day>
+        </S.Image>
         <S.ContainerContentData>
           <S.Name>{nameEvent}</S.Name>
           <S.ContainerContent>

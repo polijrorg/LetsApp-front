@@ -61,10 +61,15 @@ export const ContainerEmail = styled.View`
   height: 40px;
   margin-top: 8px;
   padding: 4px 8px 4px 4px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.lowEmphasis};
+  /* border-bottom-width: 1px;
+  border-bottom-color: ${theme.colors.lowEmphasis}; */
+  border-radius: 8px;
+  border-width: 1px;
+  border-color: ${theme.colors.lowEmphasis};
   background-color: ${theme.colors.background};
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const IconEmail = styled.Image`
@@ -77,9 +82,13 @@ export const IconSend = styled.Image`
   height: 16px;
 `;
 
-export const InputEmail = styled.TextInput`
+export const Email = styled.View`
+  align-items: center;
+  justify-content: center;
+`;
+
+export const AddContact = styled.Text`
   font-size: 16px;
-  flex: 1;
   font-family: 'Roboto';
 `;
 

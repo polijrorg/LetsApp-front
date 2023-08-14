@@ -8,6 +8,20 @@ export type ProfileContextDataProps = {
   setNameUser: React.Dispatch<React.SetStateAction<string>>;
   imageOfUser: string;
   setImageOfUser: React.Dispatch<React.SetStateAction<string>>;
+  dateStart: Date;
+  setDateStart: React.Dispatch<React.SetStateAction<Date>>;
+  dateEnd: Date;
+  setDateEnd: React.Dispatch<React.SetStateAction<Date>>;
+  timeStart: Date;
+  setTimeStart: React.Dispatch<React.SetStateAction<Date>>;
+  timeEnd: Date;
+  setTimeEnd: React.Dispatch<React.SetStateAction<Date>>;
+  duration: String;
+  setDuration: React.Dispatch<React.SetStateAction<String>>;
+  timeSelectedStart: string;
+  setTimeSelectedStart: React.Dispatch<React.SetStateAction<string>>;
+  timeSelectedEnd: string;
+  setTimeSelectedEnd: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type ProfileContextProviderProps = {
@@ -24,10 +38,26 @@ export function ProfileContextProvider({
   const [phoneUser, setPhoneUser] = useState<string>(null);
   const [nameUser, setNameUser] = useState<string>(null);
   const [imageOfUser, setImageOfUser] = useState<string>(null);
+  const [dateStart, setDateStart] = useState<Date>(null);
+  const [dateEnd, setDateEnd] = useState<Date>(null);
+  const [timeStart, setTimeStart] = useState<Date>(null);
+  const [timeEnd, setTimeEnd] = useState<Date>(null);
+  const [duration, setDuration] = useState<String>(null);
+  const [timeSelectedStart, setTimeSelectedStart] = useState<string>(null);
+  const [timeSelectedEnd, setTimeSelectedEnd] = useState<string>(null);
 
-  useEffect(() => {
-    console.log('UP', phoneUser, nameUser);
-  }, [phoneUser, nameUser, imageOfUser]);
+  useEffect(() => {}, [
+    phoneUser,
+    nameUser,
+    imageOfUser,
+    dateStart,
+    dateEnd,
+    timeStart,
+    timeEnd,
+    duration,
+    timeSelectedStart,
+    timeSelectedEnd,
+  ]);
 
   return (
     <ProfileContext.Provider
@@ -38,6 +68,20 @@ export function ProfileContextProvider({
         setPhoneUser,
         imageOfUser,
         setImageOfUser,
+        dateStart,
+        setDateStart,
+        dateEnd,
+        setDateEnd,
+        timeStart,
+        setTimeStart,
+        timeEnd,
+        setTimeEnd,
+        duration,
+        setDuration,
+        timeSelectedStart,
+        setTimeSelectedStart,
+        timeSelectedEnd,
+        setTimeSelectedEnd,
       }}
     >
       {children}

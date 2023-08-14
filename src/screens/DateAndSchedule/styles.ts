@@ -69,6 +69,14 @@ export const InputDate = styled(TextInputMask)`
   height: 100%;
 `;
 
+export const inputDate = styled.TextInput`
+  color: ${theme.colors.highEmphasis};
+  font-family: 'Roboto';
+  font-style: normal;
+  font-size: 20px;
+  height: 100%;
+`;
+
 export const Buttons = styled.View`
   width: 100%;
   flex-direction: row;
