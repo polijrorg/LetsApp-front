@@ -36,8 +36,16 @@ const CreateEvent: React.FC = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
   const [isOnline, setIsOnline] = useState(false);
 
-  const { phoneUser, dateStart, dateEnd, timeStart, timeEnd, duration } =
-    useContext(ProfileContext);
+  const {
+    phoneUser,
+    dateStart,
+    dateEnd,
+    timeStart,
+    timeEnd,
+    duration,
+    timeSelectedStart,
+    timeSelectedEnd,
+  } = useContext(ProfileContext);
 
   const handleOnlinePress = () => {
     setSelectedOption('online');
@@ -63,9 +71,9 @@ const CreateEvent: React.FC = ({ navigation }) => {
       const { data } = await api.post('/createEvent', {
         name: isOnline ? eventO : eventP,
         phone: phoneUser,
-        begin: '2023-08-11T20:30:00-03:00',
+        begin: timeSelectedStart,
         attendees: ['cainagiro@usp.br', 'caiogiro10@gmail.com'],
-        end: '2023-08-11T21:00:00-03:00',
+        end: timeSelectedEnd,
         adress: eventO,
         description: descrition,
         createMeetLink: isOnline,

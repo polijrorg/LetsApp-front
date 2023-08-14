@@ -12,8 +12,18 @@ import { TouchableOpacity } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const SuggestSchedule: React.FC = ({ navigation }) => {
-  const { phoneUser, dateStart, dateEnd, timeStart, timeEnd, duration } =
-    useContext(ProfileContext);
+  const {
+    phoneUser,
+    dateStart,
+    dateEnd,
+    timeStart,
+    timeEnd,
+    duration,
+    timeSelectedStart,
+    timeSelectedEnd,
+  } = useContext(ProfileContext);
+
+  console.log('selecionados', timeSelectedStart, timeSelectedEnd);
 
   const [schedules, setSchedules] = useState([]);
 
@@ -44,7 +54,6 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
         mandatoryGuests: [],
       });
       setSchedules(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -66,11 +75,12 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
     return acc;
   }, {});
 
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+    null
+  );
 
-  const handleCardClick = (schedule) => {
-    setSelectedCard(schedule);
-    console.log('teste', schedule);
+  const handleCardSelect = (index: number) => {
+    setSelectedCardIndex(index === selectedCardIndex ? null : index);
   };
 
   return (
@@ -81,40 +91,6 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
       </S.ContainerTitle>
       <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
         <S.Scroll showsVerticalScrollIndicator={false}>
-          {/* <S.Subtitle>Segunda - 30/01 </S.Subtitle>
-        <S.ContainerSuggest>
-          <CardSchedule day="Seg" date="30" schedule="16h às 17h" />
-          <CardSchedule day="Seg" date="30" schedule="17h às 18h" />
-        </S.ContainerSuggest>
-        <S.Subtitle>Quarta - 01/02 </S.Subtitle>
-        <S.ContainerSuggest>
-          <CardSchedule day="Qua" date="01" schedule="18h às 19h" />
-          <CardSchedule day="Qua" date="01" schedule="19h às 20h" />
-        </S.ContainerSuggest> */}
-
-          {/* <S.ContainerSuggest>
-            {schedules.map((schedule, index) => (
-              <React.Fragment key={index}>
-                <S.ContainerSuggest>
-                  <S.Subtitle>
-                    {moment(schedule.start1)
-                      .format('dddd')
-                      .replace(/^\w/, (c) => c.toUpperCase())}{' '}
-                    - {moment(schedule.start1).format('DD/MM')}
-                  </S.Subtitle>
-                  <CardSchedule
-                    day={moment(schedule.start1).format('DD')}
-                    date={moment(schedule.start1)
-                      .format('ddd')
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                    start={moment(schedule.start1).format('HH:mm')}
-                    end={moment(schedule.end1).format('HH:mm')}
-                  />
-                </S.ContainerSuggest>
-              </React.Fragment>
-            ))}
-          </S.ContainerSuggest> */}
-
           {Object.entries(schedulesByDay).map(([day, daySchedules]) => (
             <S.ScheduleContainer key={day}>
               <S.Subtitle>{day}</S.Subtitle>
@@ -128,7 +104,10 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
                       .replace(/^\w/, (c) => c.toUpperCase())}
                     start={moment(schedule.start1).format('HH:mm')}
                     end={moment(schedule.end1).format('HH:mm')}
-                    onClick={() => handleCardClick(schedule)}
+                    scheduleStart={schedule.start1}
+                    scheduleEnd={schedule.end1}
+                    isSelected={index === selectedCardIndex}
+                    onSelect={() => handleCardSelect(index)}
                   />
                 ))}
               </S.ContainerSuggest>

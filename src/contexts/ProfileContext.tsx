@@ -18,6 +18,10 @@ export type ProfileContextDataProps = {
   setTimeEnd: React.Dispatch<React.SetStateAction<Date>>;
   duration: String;
   setDuration: React.Dispatch<React.SetStateAction<String>>;
+  timeSelectedStart: string;
+  setTimeSelectedStart: React.Dispatch<React.SetStateAction<string>>;
+  timeSelectedEnd: string;
+  setTimeSelectedEnd: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type ProfileContextProviderProps = {
@@ -39,10 +43,10 @@ export function ProfileContextProvider({
   const [timeStart, setTimeStart] = useState<Date>(null);
   const [timeEnd, setTimeEnd] = useState<Date>(null);
   const [duration, setDuration] = useState<String>(null);
+  const [timeSelectedStart, setTimeSelectedStart] = useState<string>(null);
+  const [timeSelectedEnd, setTimeSelectedEnd] = useState<string>(null);
 
-  useEffect(() => {
-    console.log('UP', phoneUser, nameUser);
-  }, [
+  useEffect(() => {}, [
     phoneUser,
     nameUser,
     imageOfUser,
@@ -51,6 +55,8 @@ export function ProfileContextProvider({
     timeStart,
     timeEnd,
     duration,
+    timeSelectedStart,
+    timeSelectedEnd,
   ]);
 
   return (
@@ -72,6 +78,10 @@ export function ProfileContextProvider({
         setTimeEnd,
         duration,
         setDuration,
+        timeSelectedStart,
+        setTimeSelectedStart,
+        timeSelectedEnd,
+        setTimeSelectedEnd,
       }}
     >
       {children}

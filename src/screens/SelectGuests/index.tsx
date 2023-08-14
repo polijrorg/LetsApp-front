@@ -132,14 +132,19 @@ const SelectGuests: React.FC = ({ navigation }) => {
           <S.Subtitle>Minha Agenda</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
-        {contacts.map((event, index) => (
-          <React.Fragment key={index}>
-            <Contact
-              name={event.name}
-              phoneOrEmail={event.phoneNumbers[0].number}
-            />
-          </React.Fragment>
-        ))}
+        {contacts &&
+          contacts.map((event, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={event.name}
+                phoneOrEmail={
+                  event.phoneNumbers && event.phoneNumbers[0]
+                    ? event.phoneNumbers[0].number
+                    : 'Nenhum contato disponível'
+                }
+              />
+            </React.Fragment>
+          ))}
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity

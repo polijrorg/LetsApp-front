@@ -3,7 +3,7 @@ import Button from '@components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import React, { useState, useContext } from 'react';
 import {
   Pressable,
@@ -14,7 +14,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
-import moment from 'moment-timezone';
 
 const styles = StyleSheet.create({
   datePicker: {
