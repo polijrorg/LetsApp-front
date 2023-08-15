@@ -45,7 +45,10 @@ const CreateEvent: React.FC = ({ navigation }) => {
     duration,
     timeSelectedStart,
     timeSelectedEnd,
+    contactSelected,
   } = useContext(ProfileContext);
+
+  const emailsArray = contactSelected.map((guest) => guest.email);
 
   const handleOnlinePress = () => {
     setSelectedOption('online');
@@ -72,11 +75,28 @@ const CreateEvent: React.FC = ({ navigation }) => {
         name: isOnline ? eventO : eventP,
         phone: phoneUser,
         begin: timeSelectedStart,
-        attendees: ['cainagiro@usp.br', 'caiogiro10@gmail.com'],
+        attendees: [emailsArray],
         end: timeSelectedEnd,
         adress: eventO,
         description: descrition,
         createMeetLink: isOnline,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      const { data } = await api.post('/invites/create', {
+        name: isOnline ? eventO : eventP,
+        date: dateStart,
+        phone: phoneUser,
+        beginHour: timeSelectedStart,
+        guests: emailsArray,
+        endHour: timeSelectedEnd,
+        adress: eventO,
+        description: descrition,
+        link: 'www.xpto.com',
       });
 
       console.log(data);

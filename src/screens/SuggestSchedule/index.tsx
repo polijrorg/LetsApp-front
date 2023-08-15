@@ -21,9 +21,19 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
     duration,
     timeSelectedStart,
     timeSelectedEnd,
+    contactSelected,
   } = useContext(ProfileContext);
 
-  console.log('selecionados', timeSelectedStart, timeSelectedEnd);
+  console.log(
+    'selecionados',
+    timeStart,
+    phoneUser,
+    dateStart,
+    dateEnd,
+    duration,
+    timeSelectedStart,
+    timeSelectedEnd
+  );
 
   const [schedules, setSchedules] = useState([]);
 
@@ -35,6 +45,8 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
   useEffect(() => {
     getSchedules();
   }, []);
+
+  const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
 
   async function getSchedules() {
     try {
@@ -51,9 +63,10 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
           .startOf('day')
           .format(),
         endHour: format(timeEnd, 'HH:mm:ss'),
-        mandatoryGuests: [],
+        mandatoryGuests: [`+55${phoneNumbersArray}`],
       });
       setSchedules(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -75,12 +88,27 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
     return acc;
   }, {});
 
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
-    null
-  );
+  // const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+  //   null
+  // );
 
-  const handleCardSelect = (index: number) => {
-    setSelectedCardIndex(index === selectedCardIndex ? null : index);
+  // const handleCardSelect = (index: number) => {
+  //   if (selectedCardIndex === index) {
+  //     setSelectedCardIndex(null); // Deselect the currently selected card
+  //   } else {
+  //     setSelectedCardIndex(index);
+  //   }
+  // };
+
+  const [selectedCardsByDay, setSelectedCardsByDay] = useState<{
+    [day: string]: number | null;
+  }>({});
+
+  const handleCardSelect = (day: string, index: number) => {
+    setSelectedCardsByDay((prevSelected) => ({
+      ...prevSelected,
+      [day]: prevSelected[day] === index ? null : index,
+    }));
   };
 
   return (
@@ -91,28 +119,34 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
       </S.ContainerTitle>
       <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
         <S.Scroll showsVerticalScrollIndicator={false}>
-          {Object.entries(schedulesByDay).map(([day, daySchedules]) => (
-            <S.ScheduleContainer key={day}>
-              <S.Subtitle>{day}</S.Subtitle>
-              <S.ContainerSuggest>
-                {(daySchedules as Array<any>).map((schedule, index) => (
-                  <CardSchedule
-                    key={index}
-                    day={moment(schedule.start1).format('DD')}
-                    date={moment(schedule.start1)
-                      .format('ddd')
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                    start={moment(schedule.start1).format('HH:mm')}
-                    end={moment(schedule.end1).format('HH:mm')}
-                    scheduleStart={schedule.start1}
-                    scheduleEnd={schedule.end1}
-                    isSelected={index === selectedCardIndex}
-                    onSelect={() => handleCardSelect(index)}
-                  />
-                ))}
-              </S.ContainerSuggest>
-            </S.ScheduleContainer>
-          ))}
+          {Object.entries(schedulesByDay).map(([day, daySchedules]) => {
+            const selectedDayIndex = selectedCardsByDay[day];
+            return (
+              <S.ScheduleContainer key={day}>
+                <S.Subtitle>{day}</S.Subtitle>
+                <S.ContainerSuggest>
+                  {(daySchedules as Array<any>).map((schedule, index) => {
+                    const isSelected = index === selectedDayIndex;
+                    return (
+                      <CardSchedule
+                        key={index}
+                        day={moment(schedule.start1).format('DD')}
+                        date={moment(schedule.start1)
+                          .format('ddd')
+                          .replace(/^\w/, (c) => c.toUpperCase())}
+                        start={moment(schedule.start1).format('HH:mm')}
+                        end={moment(schedule.end1).format('HH:mm')}
+                        scheduleStart={schedule.start1}
+                        scheduleEnd={schedule.end1}
+                        isSelected={isSelected}
+                        onSelect={() => handleCardSelect(day, index)}
+                      />
+                    );
+                  })}
+                </S.ContainerSuggest>
+              </S.ScheduleContainer>
+            );
+          })}
         </S.Scroll>
       </S.Scroll>
       <S.Buttons>

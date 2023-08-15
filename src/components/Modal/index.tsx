@@ -21,6 +21,8 @@ type ModalProps = {
   setName?: (text: string) => void;
   phoneNumber?: string;
   setPhoneNumber?: (text: string) => void;
+  email?: string;
+  setEmail?: (text: string) => void;
   addParticipant?: () => void;
 };
 
@@ -36,6 +38,8 @@ export const ModalCard: React.FC<ModalProps> = ({
   setName,
   phoneNumber,
   setPhoneNumber,
+  email,
+  setEmail,
   addParticipant,
 }: ModalProps) => {
   const [isSelected, setSelected] = useState(false);
@@ -68,14 +72,6 @@ export const ModalCard: React.FC<ModalProps> = ({
     }
   }
 
-  // async function handlePress() {
-  //   try {
-  //     const result = await handleSendData();
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
   let title;
   let descrition;
 
@@ -135,9 +131,16 @@ export const ModalCard: React.FC<ModalProps> = ({
               <Input
                 height="32px"
                 width="278px"
-                placeholder="Email ou telefone"
+                placeholder="Telefone"
                 value={phoneNumber}
                 onChange={setPhoneNumber}
+              />
+              <Input
+                height="32px"
+                width="278px"
+                placeholder="Email"
+                value={email}
+                onChange={setEmail}
               />
             </S.ContainerInputsContact>
           ) : null}

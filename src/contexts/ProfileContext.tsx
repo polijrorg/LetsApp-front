@@ -22,6 +22,14 @@ export type ProfileContextDataProps = {
   setTimeSelectedStart: React.Dispatch<React.SetStateAction<string>>;
   timeSelectedEnd: string;
   setTimeSelectedEnd: React.Dispatch<React.SetStateAction<string>>;
+  contactSelected: ContactInfo[];
+  setContactSelected: React.Dispatch<React.SetStateAction<ContactInfo[]>>;
+};
+
+export type ContactInfo = {
+  email: string;
+  name: string;
+  phoneNumber: string;
 };
 
 type ProfileContextProviderProps = {
@@ -45,6 +53,7 @@ export function ProfileContextProvider({
   const [duration, setDuration] = useState<String>(null);
   const [timeSelectedStart, setTimeSelectedStart] = useState<string>(null);
   const [timeSelectedEnd, setTimeSelectedEnd] = useState<string>(null);
+  const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
 
   useEffect(() => {}, [
     phoneUser,
@@ -57,6 +66,7 @@ export function ProfileContextProvider({
     duration,
     timeSelectedStart,
     timeSelectedEnd,
+    contactSelected,
   ]);
 
   return (
@@ -82,6 +92,8 @@ export function ProfileContextProvider({
         setTimeSelectedStart,
         timeSelectedEnd,
         setTimeSelectedEnd,
+        contactSelected,
+        setContactSelected,
       }}
     >
       {children}
