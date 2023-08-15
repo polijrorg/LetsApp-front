@@ -6,11 +6,18 @@ import { CheckBox } from 'react-native-elements';
 export type ContactProps = {
   name: string;
   phoneOrEmail: string;
+  email?: string;
+  onPress?: () => void;
 };
 
 const ContactIcon = require('../../assets/Contact.png');
 
-const Contact: React.FC<ContactProps> = ({ name, phoneOrEmail }) => {
+const Contact: React.FC<ContactProps> = ({
+  name,
+  phoneOrEmail,
+  email,
+  onPress,
+}) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
@@ -19,6 +26,10 @@ const Contact: React.FC<ContactProps> = ({ name, phoneOrEmail }) => {
       setIsSelected(true);
     } else {
       setIsSelected(false);
+    }
+
+    if (onPress) {
+      onPress();
     }
     // setHasBorder(!hasBorder);
     // onClick(title);
@@ -33,6 +44,7 @@ const Contact: React.FC<ContactProps> = ({ name, phoneOrEmail }) => {
         <S.Data>
           <S.Name>{name}</S.Name>
           <S.PhoneOrEmail>{phoneOrEmail}</S.PhoneOrEmail>
+          <S.PhoneOrEmail>{email}</S.PhoneOrEmail>
         </S.Data>
       </S.ContainerAll>
       {isSelected ? (

@@ -24,30 +24,30 @@ const SelectGuests: React.FC = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [addParticipants, setAddParticipants] = useState([]);
 
-  const { phoneUser } = useContext(ProfileContext);
+  const { phoneUser, setContactSelected } = useContext(ProfileContext);
 
   const addParticipant = () => {
     if (name && phoneNumber) {
-      const newParticipant = { name, phoneNumber };
+      const newParticipant = { name, phoneNumber, email };
       setAddParticipants([...addParticipants, newParticipant]);
       setName('');
       setPhoneNumber('');
+      setEmail('');
       addNewParticipant();
     }
   };
 
   async function addNewParticipant() {
-    try {
-      const { data } = await api.post('addContact', {
-        userPhone: phoneUser,
-        phone: phoneNumber,
-        name: name,
-        email: 'caiogiro10@gmail.com',
-      });
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const { data } = await api.post('addContact', {
+    //     userPhone: phoneUser,
+    //     phone: phoneNumber,
+    //     name: name,
+    //     email: 'caiogiro10@gmail.com',
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   useEffect(() => {
@@ -61,6 +61,29 @@ const SelectGuests: React.FC = ({ navigation }) => {
       }
     })();
   }, []);
+
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
+  setContactSelected(selectedParticipants);
+
+  const toggleParticipantSelection = (participant) => {
+    // Verifica se o participante já foi selecionado
+    const isSelected = selectedParticipants.some(
+      (p) => p.name === participant.name
+    );
+
+    if (isSelected) {
+      // Remove o participante do array de selecionados
+      setSelectedParticipants((prevParticipants) =>
+        prevParticipants.filter((p) => p.name !== participant.name)
+      );
+    } else {
+      // Adiciona o participante ao array de selecionados
+      setSelectedParticipants((prevParticipants) => [
+        ...prevParticipants,
+        participant,
+      ]);
+    }
+  };
 
   return (
     <S.Body>
@@ -98,9 +121,6 @@ const SelectGuests: React.FC = ({ navigation }) => {
           <S.Email>
             <S.AddContact>Adicionar Contato</S.AddContact>
           </S.Email>
-          {/* <S.ContainerIcon>
-          <S.IconSend source={IconSend} />
-        </S.ContainerIcon> */}
         </S.ContainerEmail>
       </TouchableOpacity>
       <ModalCard
@@ -113,6 +133,8 @@ const SelectGuests: React.FC = ({ navigation }) => {
         setName={setName}
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
+        email={email}
+        setEmail={setEmail}
         addParticipant={addParticipant}
       />
       <S.Scroll>
@@ -125,6 +147,8 @@ const SelectGuests: React.FC = ({ navigation }) => {
             <Contact
               name={participant.name}
               phoneOrEmail={participant.phoneNumber}
+              email={participant.email}
+              onPress={() => toggleParticipantSelection(participant)}
             />
           </React.Fragment>
         ))}
