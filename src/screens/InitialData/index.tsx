@@ -115,29 +115,6 @@ const InitialData: React.FC = ({ navigation }) => {
       const result = await handleSendData({ name, imageUser });
       appNavigation.navigate('MainScreen');
       setFirstRequisition(true);
-
-      if (firstRequisition === true) {
-        try {
-          const phone = phoneUser;
-          const { data } = await api.post(
-            `/getAuthUrl/${encodeURIComponent(phone)}`
-          );
-          const authUrl = data;
-          // const redirectUrl = AuthSession.makeRedirectUri({
-          //   scheme: 'lets-app',
-          // });
-          const response = await AuthSession.startAsync({ authUrl });
-          console.log(data);
-          console.log('Response', response);
-          // const { type, url } = await AuthSession.startAsync({ authUrl });
-
-          // if (type === 'success') {
-          //   Linking.openURL(url);
-          // }
-        } catch (error) {
-          console.log(error);
-        }
-      }
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,7 @@
 import * as S from './styles';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
+import { ModalCalendar } from '@components/ModalCalendar';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
@@ -17,6 +18,7 @@ const Picture2 = require('../../assets/picture2.png');
 const MainScreen: React.FC = ({ navigation }) => {
   const { nameUser, imageOfUser, phoneUser } = useContext(ProfileContext);
 
+  const [open, setOpen] = useState(true);
   const [showCompleteCalendar] = useState(false);
 
   const dates = [15, 16];
@@ -262,6 +264,7 @@ const MainScreen: React.FC = ({ navigation }) => {
 
   return (
     <S.Container>
+      <ModalCalendar Open={open} setOpen={setOpen} />
       <S.Header>
         <S.Name>Olá {nameUser}!</S.Name>
         <TouchableOpacity
