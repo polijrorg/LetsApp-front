@@ -32,7 +32,7 @@ const ValidationSchema = yup.object({
   DDD: yup.string().required('Informe seu DDD').length(2, 'DDD inválido'),
 });
 
-const Autentication: React.FC = ({ navigation }) => {
+const Autentication = ({ navigation }) => {
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
   const { setPhoneUser } = useContext(ProfileContext);
@@ -89,7 +89,7 @@ const Autentication: React.FC = ({ navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  });
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

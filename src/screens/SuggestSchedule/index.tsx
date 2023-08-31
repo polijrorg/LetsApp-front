@@ -11,7 +11,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
 
-const SuggestSchedule: React.FC = ({ navigation }) => {
+const SuggestSchedule = ({ navigation }) => {
   const {
     phoneUser,
     dateStart,
@@ -44,7 +44,7 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
 
   useEffect(() => {
     getSchedules();
-  }, []);
+  });
 
   const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
 

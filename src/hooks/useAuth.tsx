@@ -17,7 +17,7 @@ interface AuthContextData {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({} as User);
   useEffect(() => {
     const getUserData = async () => {

@@ -15,7 +15,7 @@ const IconMore = require('../../assets/IconMore.png');
 
 const Picture2 = require('../../assets/picture2.png');
 
-const MainScreen: React.FC = ({ navigation }) => {
+const MainScreen = ({ navigation }) => {
   const { nameUser, imageOfUser, phoneUser } = useContext(ProfileContext);
 
   const [open, setOpen] = useState(true);
@@ -41,7 +41,7 @@ const MainScreen: React.FC = ({ navigation }) => {
     while (monthIndex < 12) {
       const date = new Date(year, monthIndex, 1);
 
-      while (date.getMonth() == monthIndex) {
+      while (date.getMonth() === monthIndex) {
         result.push(`${date.getDate()}-${names[date.getDay()]}`);
 
         date.setDate(date.getDate() + 1);
@@ -221,7 +221,7 @@ const MainScreen: React.FC = ({ navigation }) => {
 
   useEffect(() => {
     getInvites();
-  }, []);
+  });
 
   async function getInvites() {
     try {

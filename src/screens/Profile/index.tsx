@@ -18,7 +18,7 @@ const IconPhone = require('../../assets/PhoneIconBlack.png');
 const IconProfile = require('../../assets/UserCircle.png');
 const IconDelete = require('../../assets/IconDelete.png');
 
-const Profile: React.FC = ({ navigation }) => {
+const Profile = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);

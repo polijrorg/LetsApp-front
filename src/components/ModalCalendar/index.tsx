@@ -1,7 +1,7 @@
 import * as S from './styles';
 import { api } from '@services/api';
 import * as AuthSession from 'expo-auth-session';
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ProfileContext } from 'src/contexts/ProfileContext';
 
