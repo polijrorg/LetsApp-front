@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
+import { api } from '@services/api';
+import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -19,7 +25,68 @@ const Profile: React.FC = ({ navigation }) => {
 
   // const { name, imageUser } = route.params;
 
-  const { nameUser, imageOfUser } = useContext(ProfileContext);
+  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+
+  type photoProps = {
+    size: number;
+  };
+
+  type FormDataProps = {
+    username: string;
+    imageUser: string;
+  };
+
+  async function pickImageFromGallery() {
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+
+      if (!photoSelected.canceled && photoSelected.assets[0].uri) {
+        const photoInfo = (await FileSystem.getInfoAsync(
+          photoSelected.assets[0].uri
+        )) as photoProps;
+
+        const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+
+        setImageOfUser({
+          name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  }
+
+  async function handleSendData() {
+    try {
+      const form = new FormData();
+      form.append('phone', phoneUser);
+      form.append('name', nameUser);
+      form.append('photo', imageOfUser);
+
+      const { data } = await api.post('/upload', form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      appNavigation.navigate('MainScreen');
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const { nameUser, setNameUser, imageOfUser, setImageOfUser, phoneUser } =
+    useContext(ProfileContext);
 
   return (
     <S.Body>
@@ -27,17 +94,17 @@ const Profile: React.FC = ({ navigation }) => {
       <S.SmallCircleRight />
       <S.SmallTop />
       <S.Header>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('MainScreen');
-          }}
-        >
+        <TouchableOpacity onPress={handleSendData}>
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
         {imageOfUser ? (
-          <S.Icon source={imageOfUser} />
+          <TouchableOpacity onPress={() => pickImageFromGallery()}>
+            <S.Icon source={imageOfUser} />
+          </TouchableOpacity>
         ) : (
-          <S.Icon source={IconProfile} />
+          <TouchableOpacity onPress={() => pickImageFromGallery()}>
+            <S.Icon source={IconProfile} />
+          </TouchableOpacity>
         )}
       </S.Header>
       <S.ContainerInput>

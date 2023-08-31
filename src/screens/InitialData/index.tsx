@@ -38,7 +38,6 @@ const InitialData: React.FC = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState('');
-  const [firstRequisition, setFirstRequisition] = useState(false);
 
   const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
@@ -114,7 +113,6 @@ const InitialData: React.FC = ({ navigation }) => {
     try {
       const result = await handleSendData({ name, imageUser });
       appNavigation.navigate('MainScreen');
-      setFirstRequisition(true);
     } catch (error) {
       console.log(error);
     }

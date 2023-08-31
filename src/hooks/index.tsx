@@ -1,3 +1,4 @@
+// import { AuthProvider } from './useAuth';
 import { theme } from '@styles/default.theme';
 import React from 'react';
 import { ThemeProvider } from 'styled-components/native';
@@ -7,7 +8,10 @@ interface Props {
 }
 
 const AppProvider: React.FC<Props> = ({ children }) => (
-  <ThemeProvider theme={theme}>{children}</ThemeProvider>
+  <ThemeProvider theme={theme}>
+    {/* <AuthProvider>{children}</AuthProvider> */}
+    {children}
+  </ThemeProvider>
 );
 
 export default AppProvider;

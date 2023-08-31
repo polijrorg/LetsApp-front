@@ -75,7 +75,7 @@ const CreateEvent: React.FC = ({ navigation }) => {
         name: isOnline ? eventO : eventP,
         phone: phoneUser,
         begin: timeSelectedStart,
-        attendees: [emailsArray],
+        attendees: 'caiogiro10@gmail.com',
         end: timeSelectedEnd,
         adress: eventO,
         description: descrition,

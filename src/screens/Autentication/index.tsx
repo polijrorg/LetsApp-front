@@ -2,6 +2,7 @@ import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
+import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext, useEffect } from 'react';
@@ -40,6 +41,8 @@ const Autentication: React.FC = ({ navigation }) => {
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
+  const { register } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -53,6 +56,7 @@ const Autentication: React.FC = ({ navigation }) => {
     //   const { data } = await api.post('/register', {
     //     phone: Phone,
     //   });
+    // await register({ phone });
     setPhoneUser(Phone);
 
     //   console.log(data);

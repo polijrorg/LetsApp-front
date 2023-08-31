@@ -51,7 +51,7 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
   async function getSchedules() {
     try {
       const { data } = await api.post('/getRecommededTimes', {
-        phone: phoneUser,
+        phone: '+5511953975915',
         beginDate: moment(dateStart)
           .tz('America/Sao_Paulo')
           .startOf('day')
@@ -63,7 +63,7 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
           .startOf('day')
           .format(),
         endHour: format(timeEnd, 'HH:mm:ss'),
-        mandatoryGuests: [`+55${phoneNumbersArray}`],
+        mandatoryGuests: [],
       });
       setSchedules(data);
       console.log(data);

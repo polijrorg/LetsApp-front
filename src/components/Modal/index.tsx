@@ -7,6 +7,7 @@ import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ProfileContext } from 'src/contexts/ProfileContext';
 
 type ModalProps = {
   color?: string;
@@ -67,6 +68,21 @@ export const ModalCard: React.FC<ModalProps> = ({
       console.log(data);
 
       setOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const { phoneUser } = useContext(ProfileContext);
+
+  async function DeleteAccount() {
+    try {
+      const { data } = await api.delete('/deleteUser', {
+        phone: phoneUser,
+      });
+      console.log(data);
+
+      navigation.navigate('Autentication');
     } catch (error) {
       console.log(error);
     }
@@ -172,24 +188,33 @@ export const ModalCard: React.FC<ModalProps> = ({
           >
             {type === 'Account' ? (
               <S.ContainerButtons>
-                <Button
-                  backgroundColor="#FAFAFA"
-                  width="112px"
-                  title="Cancelar"
-                  titleColor="#FF0000"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Message}
-                />
-                <Button
-                  backgroundColor="#FF0000"
-                  width="112px"
-                  title="Apagar"
-                  titleColor="#FAFAFA"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Message}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Profile');
+                    setOpen(false);
+                  }}
+                >
+                  <Button
+                    backgroundColor="#FAFAFA"
+                    width="112px"
+                    title="Cancelar"
+                    titleColor="#FF0000"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Message}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={DeleteAccount}>
+                  <Button
+                    backgroundColor="#FF0000"
+                    width="112px"
+                    title="Apagar"
+                    titleColor="#FAFAFA"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Message}
+                  />
+                </TouchableOpacity>
               </S.ContainerButtons>
             ) : (
               <Icon name="check" size={30} color="#3446E4" />
