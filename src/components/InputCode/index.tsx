@@ -1,5 +1,5 @@
 import * as S from './styles';
-import React, { useState } from 'react';
+import React from 'react';
 
 export type InputProps = {
   width: string;

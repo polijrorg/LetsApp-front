@@ -1,5 +1,4 @@
 import * as S from './styles';
-import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { CheckBox } from 'react-native-elements';
 

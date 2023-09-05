@@ -15,7 +15,7 @@ const IconEmail = require('../../assets/Email.png');
 const IconSend = require('../../assets/Send.png');
 const Check = require('../../assets/Check.png');
 
-const SelectGuests: React.FC = ({ navigation }) => {
+const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [email, setEmail] = useState('');
   const [contacts, setContacts] = useState([]);

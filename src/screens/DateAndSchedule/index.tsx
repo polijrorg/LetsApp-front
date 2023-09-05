@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DateAndSchedule: React.FC = ({ navigation }) => {
+const DateAndSchedule = ({ navigation }) => {
   const IconClock = require('../../assets/ClockIcon.png');
   const IconDate = require('../../assets/DateIcon.png');
 

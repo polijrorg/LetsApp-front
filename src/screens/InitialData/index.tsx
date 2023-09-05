@@ -33,7 +33,7 @@ const ValidationSchema = yup.object({
   name: yup.string().required('Informe o nome de usuário'),
 });
 
-const InitialData: React.FC = ({ navigation }) => {
+const InitialData = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -141,7 +141,7 @@ const InitialData: React.FC = ({ navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  });
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

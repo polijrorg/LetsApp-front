@@ -16,7 +16,7 @@ const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 const Phone = require('../../assets/PhoneIcon.png');
 
-const VerificationCode: React.FC = ({ navigation }) => {
+const VerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const { phoneUser } = useContext(ProfileContext);
 
@@ -61,6 +61,7 @@ const VerificationCode: React.FC = ({ navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   return (

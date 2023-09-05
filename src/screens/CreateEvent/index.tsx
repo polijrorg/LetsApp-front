@@ -15,7 +15,7 @@ const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
 // const Edition = require('../../assets/Edition.png');
 
-const CreateEvent: React.FC = ({ navigation }) => {
+const CreateEvent = ({ navigation }) => {
   // const [nameEvent, setNameEvent] = useState('Nome do Evento');
   // const [isEditing, setIsEditing] = useState(false);
 
