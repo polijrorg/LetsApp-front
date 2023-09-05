@@ -7,22 +7,18 @@ interface IRegisterRequest {
   phone: string;
 }
 
-interface IRegisterResponse {
-  token: string;
-  user: User;
-}
-
 export default class UserServices {
-  static async register(data: IRegisterRequest): Promise<IRegisterResponse> {
-    const response: AxiosResponse<IRegisterResponse> = await api.post(
-      '/register',
-      data
-    );
+  static async register(data: IRegisterRequest): Promise<User> {
+    try {
+      const response: AxiosResponse<User> = await api.post('/register', data);
 
-    setCookie(undefined, '@letsApp:token', response.data.token);
-    setCookie(undefined, '@letsApp:userId', response.data.user.id);
+      // setCookie(undefined, '@letsApp:token', response.data.token);
+      // setCookie(undefined, '@letsApp:userId', response.data.user.id);
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   static logout() {

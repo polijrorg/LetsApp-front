@@ -1,14 +1,29 @@
+import PrivateRoutes from './PrivateRoutes';
 import PublicRoutes from './PublicRoutes';
+import useAuth from '@hooks/useAuth';
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
-import { ProfileContextProvider } from 'src/contexts/ProfileContext';
+import React, { useEffect, useState } from 'react';
 
 const Routes = () => {
+  const { user, loading } = useAuth();
+
+  const [route, setRoute] = useState<'public' | 'private'>();
+
+  const routes = {
+    private: <PrivateRoutes />,
+    public: <PublicRoutes />,
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) setRoute('private');
+      else setRoute('public');
+    }
+  }, [loading, user]);
+
   return (
     <NavigationContainer independent={true}>
-      <ProfileContextProvider>
-        <PublicRoutes />
-      </ProfileContextProvider>
+      {routes[route]}
     </NavigationContainer>
   );
 };

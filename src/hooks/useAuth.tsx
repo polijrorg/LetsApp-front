@@ -1,6 +1,6 @@
 import { User } from '@interfaces/User';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserService from '@services/UserServices';
-import { api } from '@services/api';
 import { destroyCookie, parseCookies } from 'nookies';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
@@ -10,15 +10,19 @@ interface IRegisterRequest {
 
 interface AuthContextData {
   user: User;
+  phone: string;
   register: (data: IRegisterRequest) => void;
   logout: () => void;
-  setUser: (data: User) => void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({} as User);
+  const [phone, setPhone] = useState<string>();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const getUserData = async () => {
       const { '@letsApp:userId': userId } = parseCookies();
@@ -32,9 +36,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await UserService.register(data);
 
-      (api.defaults.headers as any).Authorization = `Bearer ${response.token}`;
+      setUser(response);
+      setPhone(response.phone);
 
-      setUser(response.user);
+      await AsyncStorage.setItem('letsApp:phone', response.phone);
+      await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -45,8 +51,26 @@ export const AuthProvider = ({ children }) => {
     destroyCookie(undefined, '@letsApp:userId');
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const getUser = async () => {
+      const userStorage = JSON.parse(
+        await AsyncStorage.getItem('letsApp:user')
+      );
+      const phoneStorage = await AsyncStorage.getItem('letsApp:phone');
+
+      if (userStorage) setUser(userStorage);
+      if (phoneStorage) setPhone(phoneStorage);
+
+      setLoading(false);
+    };
+
+    if (!user || !phone) getUser();
+    else setLoading(false);
+  });
+
   return (
-    <AuthContext.Provider value={{ user, register, logout, setUser }}>
+    <AuthContext.Provider value={{ user, phone, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

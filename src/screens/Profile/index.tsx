@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';

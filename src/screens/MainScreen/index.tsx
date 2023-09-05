@@ -253,11 +253,13 @@ const MainScreen = ({ navigation }) => {
   const [numberInvites, setNumberInvites] = useState();
 
   const handleEventsPress = () => {
+    console.log('events');
     setSelectedOption('events');
     setShowEvent(true);
   };
 
   const handleInvitePress = () => {
+    console.log('invite');
     setSelectedOption('invite');
     setShowEvent(false);
   };

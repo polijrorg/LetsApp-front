@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -137,7 +136,6 @@ const InitialData = ({ navigation }) => {
   // Remover os ouvintes de eventos de teclado quando o componente for desmontado
   useEffect(() => {
     return () => {
-      console.log('Test', isKeyboardActive);
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
