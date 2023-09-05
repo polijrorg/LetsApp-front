@@ -230,7 +230,7 @@ const MainScreen = ({ navigation }) => {
       });
       setInvites(data);
       setNumberInvites(data.length);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -240,7 +240,7 @@ const MainScreen = ({ navigation }) => {
         phone: phoneUser,
       });
       setEvents(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }

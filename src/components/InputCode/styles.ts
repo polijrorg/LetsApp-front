@@ -24,4 +24,5 @@ export const Input = styled.TextInput`
   letter-spacing: 12px;
   padding-left: 12px;
   text-align: center;
+  width: 100%;
 `;
