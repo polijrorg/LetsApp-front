@@ -3,8 +3,8 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
+// import { useNavigation } from '@react-navigation/native';
+// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { api } from '@services/api';
 import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
@@ -38,7 +38,7 @@ const InitialData = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState('');
 
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+  // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
@@ -111,7 +111,7 @@ const InitialData = ({ navigation }) => {
   async function handlePress() {
     try {
       const result = await handleSendData({ name, imageUser });
-      appNavigation.navigate('MainScreen');
+      navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }

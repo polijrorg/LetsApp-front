@@ -5,14 +5,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -33,15 +32,13 @@ const ValidationSchema = yup.object({
 });
 
 const Autentication = ({ navigation }) => {
+  const { register } = useAuth();
+
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
-  const { setPhoneUser } = useContext(ProfileContext);
-
-  const Phone = `+55${DDD}${phone}`;
+  // const { setPhoneUser } = useContext(ProfileContext);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
-
-  const { register } = useAuth();
 
   const {
     control,
@@ -52,19 +49,18 @@ const Autentication = ({ navigation }) => {
   });
 
   async function handleSignUp() {
-    // try {
-    //   const { data } = await api.post('/register', {
-    //     phone: Phone,
-    //   });
-    // await register({ phone });
-    setPhoneUser(Phone);
+    try {
+      const formattedPhone = `+55${DDD}${phone}`;
+      // const { data } = await api.post('/register', {
+      //   phone: formattedPhone,
+      // });
+      await register({ phone: formattedPhone });
+      // setPhoneUser(formattedPhone);
 
-    //   console.log(data);
-
-    navigation.navigate('VerificationCode');
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      navigation.navigate('VerificationCode');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Ouvinte para o teclado ficar ativo

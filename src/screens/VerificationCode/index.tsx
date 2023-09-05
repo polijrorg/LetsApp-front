@@ -40,8 +40,8 @@ const VerificationCode = ({ navigation }) => {
 
   useEffect(() => {
     const handleSmsReceived = async (message) => {
-      const verificationCode = message.body.match(/\d{6}/)[0];
-      setVerificationCode(verificationCode);
+      const code = message.body.match(/\d{6}/)[0];
+      setVerificationCode(code);
       try {
         const { data } = await api.post('/verify', {
           verificationCode,
@@ -51,9 +51,6 @@ const VerificationCode = ({ navigation }) => {
       } catch (error) {
         console.log(error);
       }
-      // if (verificationCode === '111111') {
-      //   navigation.navigate('Home');
-      // }
     };
     const subscription = SmsListener.addListener(handleSmsReceived);
     return () => {
