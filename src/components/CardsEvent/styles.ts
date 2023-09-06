@@ -7,7 +7,7 @@ export const ContainerCard = styled.TouchableOpacity`
   margin: 0px;
   border-radius: 8px;
   border-top-width: 1px;
-  border-top-color: ${theme.colors.lowEmphasis};
+  border-top-color: ${theme.colors.divider};
   background-color: ${theme.colors.background};
   justify-content: center;
 `;

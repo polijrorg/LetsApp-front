@@ -8,13 +8,13 @@ interface Props {
 
 export const Wrapper = styled(View)`
   width: 100%;
-  height: 100px;
+  height: 92px;
   flex-direction: row;
   justify-content: space-between;
 `;
 
 export const DayWrapper = styled(View)<Props>`
-  width: 17.5%;
+  width: 18%;
   height: 100%;
   border-radius: 12px;
   background-color: ${({ selected }) =>

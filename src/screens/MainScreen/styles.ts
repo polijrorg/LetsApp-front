@@ -7,18 +7,17 @@ type OptionProps = {
 };
 
 export const Body = styled.View`
-  padding: 0px 24px 0px;
   background-color: ${theme.colors.background};
   display: flex;
   flex: 1;
+  margin-top: 32px;
 `;
 
 export const Header = styled.View`
-  margin: 10% 0% 5%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0px 16px 0px;
+  margin-bottom: 24px;
 `;
 
 export const Icon = styled.Image`
@@ -34,21 +33,22 @@ export const Name = styled.Text`
 export const ContainerOptions = styled.View`
   flex-direction: row;
   justify-content: space-evenly;
-  margin-bottom: 5%;
+  margin-bottom: 24px;
 `;
 
 export const OptionInvite = styled.TouchableOpacity<OptionProps>`
-  width: 30%;
-  border-bottom-width: 1px;
+  width: 40%;
+  border-bottom-width: 2px;
   border-bottom-color: ${(props) =>
     props.Option === 'invite' ? '#727FF6' : '#949494'};
   align-items: center;
+  justify-content: center;
   flex-direction: row;
 `;
 
 export const OptionEvents = styled.TouchableOpacity<OptionProps>`
-  width: 30%;
-  border-bottom-width: 1px;
+  width: 40%;
+  border-bottom-width: 2px;
   border-bottom-color: ${(props) =>
     props.Option === 'events' ? '#727FF6' : '#949494'};
   align-items: center;
@@ -57,14 +57,15 @@ export const OptionEvents = styled.TouchableOpacity<OptionProps>`
 export const Events = styled.Text<OptionProps>`
   font-size: 20px;
   color: ${(props) => (props.Option === 'events' ? '#727FF6' : '#949494')};
-  font-family: 'Roboto';
+  font-family: 'RobotoMedium';
+  /* border: 2px solid red; */
 `;
 
 export const Invite = styled.Text<OptionProps>`
   font-size: 20px;
   color: ${(props) => (props.Option === 'invite' ? '#727FF6' : '#949494')};
-  font-family: 'Roboto';
-  margin-right: 4px;
+  font-family: 'RobotoMedium';
+  /* margin-right: 4px; */
 `;
 
 export const NumberInvites = styled.View`
@@ -74,6 +75,7 @@ export const NumberInvites = styled.View`
   background-color: ${theme.colors.primary.dark};
   align-items: center;
   justify-content: center;
+  margin-left: 8px;
 `;
 
 export const Number = styled.Text`
@@ -117,7 +119,8 @@ type Props = {
 
 export const Container = styled.View`
   flex: 1;
-  padding-top: 12px;
+  padding: 12px 24px;
+  padding-top: 60px;
   background-color: ${theme.colors.background};
 `;
 
@@ -140,12 +143,8 @@ export const ButtonText = styled.Text`
   font-family: 'Roboto';
 `;
 
-export const CalendarContainer = styled.View`
-  margin-bottom: 5%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  height: 85px;
+export const Divider = styled.View`
+  margin-top: 24px;
   border-bottom-width: 1px;
   border-bottom-color: ${theme.colors.primary.light};
 `;
@@ -182,8 +181,8 @@ export const DayText = styled.Text`
 export const Border = styled.View`
   width: 0;
   height: 40px;
-  border-right-width: 2px;
-  border-right-color: ${theme.colors.highEmphasis};
+  border-width: 2px;
+  border-color: ${theme.colors.highEmphasis};
 `;
 
 export const CalendarImg = styled(MaterialCommunityIcons)`

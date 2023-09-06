@@ -4,15 +4,7 @@ import moment from 'moment';
 import 'moment/locale/pt-br';
 import React, { useEffect, useState } from 'react';
 
-export type Props = {
-  width: string;
-  hasIcon: boolean;
-  icon?: string;
-  backgroundColor: string;
-  title: string;
-  titleColor: string;
-  borderColor: string;
-};
+export type Props = {};
 
 function formatNumber(number: number) {
   const formattedNumber = number < 10 ? `0${number}` : `${number}`;
