@@ -1,5 +1,6 @@
 import { theme } from '@styles/default.theme';
-import styled from 'styled-components/native';
+import { Platform } from 'react-native';
+import styled, { css } from 'styled-components/native';
 
 export const Body = styled.View`
   flex: 1;
@@ -11,13 +12,18 @@ export const Body = styled.View`
 export const Header = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 6%;
+  margin-top: 8%;
 `;
 
-export const Icon = styled.Image`
-  width: 124px;
-  height: 124px;
-  border-radius: 248px;
+export const Icon = styled.ImageBackground`
+  width: 156px;
+  height: 156px;
+  border-radius: 3248px;
+  margin-left: -4%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 export const IconBack = styled.Image`
@@ -26,9 +32,50 @@ export const IconBack = styled.Image`
   margin-right: 22%;
 `;
 
+export const PencilIcon = styled.Image``;
+
+export const PencilIconCircle = styled.View`
+  height: 40px;
+  width: 40px;
+  border-radius: 3000px;
+  background-color: ${theme.colors.primary.dark};
+  margin-right: 10%;
+  margin-bottom: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const IconBackContainer = styled.View`
+  margin-top: -32%;
+`;
+
 export const ContainerInput = styled.View`
   justify-content: center;
   align-items: flex-start;
+`;
+
+export const InputAndXContainer = styled.View`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const FlexibleInputContainer = styled.View`
+  flex: 1;
+`;
+
+export const InvisibleNotEditableIcon = styled.View`
+  height: 24px;
+  width: 24px;
+  margin: 4px;
+`;
+
+export const NotEditableIcon = styled.Image`
+  height: 24px;
+  width: 24px;
+  margin: 4px;
 `;
 
 export const NameInput = styled.Text`
@@ -53,7 +100,7 @@ export const Line = styled.View`
   width: 100%;
   height: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.lowEmphasis};
+  border-bottom-color: ${theme.colors.divider};
   margin-bottom: 8px;
 `;
 
@@ -97,9 +144,13 @@ export const SmallCircleRight = styled.View`
   height: 208px;
   border-radius: 30000px;
   position: absolute;
-  top: -104px;
+  top: -103px;
   right: 280px;
   background-color: ${theme.colors.primary.main};
+  shadow-color: '#000';
+  shadow-offset: 3px 5px;
+  shadow-opacity: 0.2;
+  elevation: 2;
 `;
 
 export const SmallTop = styled.View`
@@ -110,4 +161,22 @@ export const SmallTop = styled.View`
   top: -54px;
   right: 240px;
   background-color: ${theme.colors.primary.light};
+  shadow-color: '#000';
+  shadow-offset: 3px 5px;
+  shadow-opacity: 0.2;
+  elevation: 2;
+`;
+
+export const SmallBottom = styled.View`
+  width: 104px;
+  height: 104px;
+  border-radius: 30000px;
+  position: absolute;
+  bottom: -76px;
+  left: 320px;
+  background-color: ${theme.colors.primary.light};
+  shadow-color: '#000';
+  shadow-offset: 3px 5px;
+  shadow-opacity: 0.2;
+  elevation: 2;
 `;
