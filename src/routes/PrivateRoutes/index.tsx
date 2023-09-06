@@ -29,7 +29,7 @@ const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 function PrivateRoutes() {
   return (
     <Navigator
-      initialRouteName="InvitedGuests"
+      initialRouteName="MainScreen"
       screenOptions={{
         headerShown: false,
       }}
