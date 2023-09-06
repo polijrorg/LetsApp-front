@@ -7,15 +7,18 @@ export type ContactProps = {
   phoneOrEmail: string;
   email?: string;
   onPress?: () => void;
+  isDisabled?: boolean;
 };
 
 const ContactIcon = require('../../assets/Contact.png');
+const InvitedContactIcon = require('../../assets/BlueUserCircle.png');
 
 const Contact: React.FC<ContactProps> = ({
   name,
   phoneOrEmail,
   email,
   onPress,
+  isDisabled,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
@@ -35,10 +38,14 @@ const Contact: React.FC<ContactProps> = ({
   };
 
   return (
-    <S.ContainerContact onPress={handleClick} isSelected={isSelected}>
+    <S.ContainerContact
+      onPress={handleClick}
+      isSelected={!isDisabled && isSelected}
+      activeOpacity={isDisabled ? 1 : 0.2}
+    >
       <S.ContainerAll>
         <S.ContainerIcon>
-          <S.Icon source={ContactIcon} />
+          <S.Icon source={isDisabled ? InvitedContactIcon : ContactIcon} />
         </S.ContainerIcon>
         <S.Data>
           <S.Name>{name}</S.Name>
@@ -46,7 +53,7 @@ const Contact: React.FC<ContactProps> = ({
           <S.PhoneOrEmail>{email}</S.PhoneOrEmail>
         </S.Data>
       </S.ContainerAll>
-      {isSelected ? (
+      {!isDisabled && isSelected ? (
         <CheckBox
           checkedIcon="check"
           uncheckedIcon="square-o"
@@ -54,6 +61,7 @@ const Contact: React.FC<ContactProps> = ({
           uncheckedColor="#3446E4"
           checked={isPressed}
           onPress={() => setIsPressed(!isPressed)}
+          disabled={isDisabled}
         />
       ) : null}
     </S.ContainerContact>
