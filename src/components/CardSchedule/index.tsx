@@ -1,6 +1,6 @@
 import * as S from './styles';
 import React, { useState, useContext } from 'react';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import { ProfileContext } from 'src/contexts/useProfile';
 
 export type CardScheduleProps = {
   day: string;

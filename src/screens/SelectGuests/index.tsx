@@ -1,13 +1,12 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
 import { ModalCard } from '@components/Modal';
-import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+// import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -24,7 +23,7 @@ const SelectGuests = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [addParticipants, setAddParticipants] = useState([]);
 
-  const { phoneUser, setContactSelected } = useContext(ProfileContext);
+  const { setContactSelected } = useContext(ProfileContext);
 
   const addParticipant = () => {
     if (name && phoneNumber) {

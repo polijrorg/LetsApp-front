@@ -51,12 +51,9 @@ const Autentication = ({ navigation }) => {
   async function handleSignUp() {
     try {
       const formattedPhone = `+55${DDD}${phone}`;
-      // const { data } = await api.post('/register', {
-      //   phone: formattedPhone,
-      // });
       await register({ phone: formattedPhone });
       // setPhoneUser(formattedPhone);
-
+      console.log('ue');
       navigation.navigate('VerificationCode');
     } catch (error) {
       console.log(error);

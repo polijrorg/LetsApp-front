@@ -1,7 +1,6 @@
-/* eslint-disable react/react-in-jsx-scope */
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export type ProfileContextDataProps = {
+export type ProfileContextData = {
   phoneUser: string;
   setPhoneUser: React.Dispatch<React.SetStateAction<string>>;
   nameUser: string;
@@ -32,17 +31,13 @@ export type ContactInfo = {
   phoneNumber: string;
 };
 
-type ProfileContextProviderProps = {
-  children: ReactNode;
-};
-
-export const ProfileContext = createContext<ProfileContextDataProps>(
-  {} as ProfileContextDataProps
+const ProfileContext = createContext<ProfileContextData>(
+  {} as ProfileContextData
 );
 
-export function ProfileContextProvider({
-  children,
-}: ProfileContextProviderProps) {
+export const ProfileContextProvider: React.FC<{
+  children?: React.ReactNode | undefined;
+}> = ({ children }) => {
   const [phoneUser, setPhoneUser] = useState<string>(null);
   const [nameUser, setNameUser] = useState<string>(null);
   const [imageOfUser, setImageOfUser] = useState<string>(null);
@@ -99,4 +94,6 @@ export function ProfileContextProvider({
       {children}
     </ProfileContext.Provider>
   );
-}
+};
+
+export default () => useContext(ProfileContext);

@@ -9,7 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import { ProfileContext } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBack.png');
 const Agenda = require('../../assets/Calendar.png');

@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import { ProfileContext } from 'src/contexts/useProfile';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');

@@ -9,7 +9,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 import React, { useState, useContext, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import { ProfileContext } from 'src/contexts/useProfile';
 
 const SuggestSchedule = ({ navigation }) => {
   const {

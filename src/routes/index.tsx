@@ -21,6 +21,10 @@ const Routes = () => {
     }
   }, [loading, user]);
 
+  if (user) {
+    console.log('aaaaaaaaaaaaa');
+  }
+
   return (
     <NavigationContainer independent={true}>
       {routes[route]}

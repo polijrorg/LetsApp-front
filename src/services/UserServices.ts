@@ -1,6 +1,4 @@
 import { api } from './api';
-import { User } from '@interfaces/User';
-import { setCookie, destroyCookie } from 'nookies';
 
 interface IRegisterRequest {
   phone: string;
@@ -11,7 +9,7 @@ interface IVerifyCodeRequest {
   code: number;
 }
 
-interface IDeleteUserRequest {
+export interface IDeleteUserRequest {
   phone: string;
 }
 
@@ -38,9 +36,15 @@ export default class UserServices {
     } catch (error) {
       console.log(error);
     }
+  }
 
-    destroyCookie(undefined, '@letsApp:token');
-    destroyCookie(undefined, '@letsApp:userId');
+  static async addNameAndImage(data: FormData): Promise<User> {
+    const response = await api.post('/upload', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
   }
 
   static async getUserById(id: string): Promise<User> {

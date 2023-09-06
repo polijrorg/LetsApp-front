@@ -1,6 +1,7 @@
 import User from '@interfaces/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserService from '@services/UserServices';
+import UserServices from '@services/UserServices';
+import UserService, { IDeleteUserRequest } from '@services/UserServices';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
 interface IRegisterRequest {
@@ -11,8 +12,10 @@ interface AuthContextData {
   user: User;
   phone: string;
   register: (data: IRegisterRequest) => Promise<void>;
-  deleteUser: () => void;
+  deleteUser: (data: IDeleteUserRequest) => Promise<void>;
   loading: boolean;
+  addNameAndImage: (data: FormData) => Promise<void>;
+  initialUser: User;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -20,7 +23,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC<{
   children?: React.ReactNode | undefined;
 }> = ({ children }) => {
-  const [user, setUser] = useState({} as User);
+  const [initialUser, setInitialUser] = useState({} as User);
+  const [user, setUser] = useState<User | null>(null);
   const [phone, setPhone] = useState<string>();
   const [loading, setLoading] = useState(true);
 
@@ -38,23 +42,32 @@ export const AuthProvider: React.FC<{
       console.log('entrou aqui');
       const response = await UserService.register(data);
 
-      setUser(response);
+      setInitialUser(response);
       setPhone(response.phone);
 
       await AsyncStorage.setItem('letsApp:phone', response.phone);
-      await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
     } catch (error) {
       throw new Error((error as Error).message);
     }
   };
 
-  const deleteUser = async () => {
-    const response = await UserService.deleteUser(data);
+  const deleteUser = async (data: IDeleteUserRequest) => {
+    await UserService.deleteUser(data);
     await AsyncStorage.clear();
 
     setUser(null);
     setPhone(null);
     setLoading(false);
+
+    console.log('deletouu');
+  };
+
+  const addNameAndImage = async (data: FormData) => {
+    const response = await UserServices.addNameAndImage(data);
+
+    setUser(response);
+    console.log('user', response);
+    await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +90,15 @@ export const AuthProvider: React.FC<{
 
   return (
     <AuthContext.Provider
-      value={{ user, phone, register, deleteUser, loading }}
+      value={{
+        user,
+        phone,
+        register,
+        deleteUser,
+        loading,
+        initialUser,
+        addNameAndImage,
+      }}
     >
       {children}
     </AuthContext.Provider>

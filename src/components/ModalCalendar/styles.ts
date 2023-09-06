@@ -1,10 +1,10 @@
 import { theme } from '@styles/default.theme';
-import { Modal } from 'react-native';
+import { Modal, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 export const ModalContainer = styled(Modal)``;
 
-export const ModalView = styled.TouchableOpacity`
+export const ModalView = styled(TouchableOpacity)`
   flex: 1;
   align-items: center;
   justify-content: center;
