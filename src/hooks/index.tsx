@@ -11,7 +11,9 @@ interface Props {
 
 const AppProvider: React.FC<Props> = ({ children }) => (
   <ThemeProvider theme={theme}>
-    <AuthProvider>{children}</AuthProvider>
+    <AuthProvider>
+      <ProfileContextProvider>{children}</ProfileContextProvider>
+    </AuthProvider>
   </ThemeProvider>
 );
 

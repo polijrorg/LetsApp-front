@@ -1,6 +1,7 @@
 import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
+import useAuth from '@hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import { api } from '@services/api';
@@ -9,7 +10,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBack.png');
 const Agenda = require('../../assets/Calendar.png');
@@ -22,9 +22,7 @@ const Profile = ({ navigation }) => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
-  // const { name, imageUser } = route.params;
-
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+  const { user, addNameAndImage } = useAuth();
 
   type photoProps = {
     size: number;
@@ -66,26 +64,19 @@ const Profile = ({ navigation }) => {
   async function handleSendData() {
     try {
       const form = new FormData();
-      form.append('phone', phoneUser);
-      form.append('name', nameUser);
+      form.append('phone', user.phone);
+      form.append('name', user.name);
       form.append('photo', imageOfUser);
 
-      const { data } = await api.post('/upload', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      addNameAndImage(form);
 
-      appNavigation.navigate('MainScreen');
+      navigation.navigate('MainScreen');
 
       console.log(data);
     } catch (error) {
       console.log(error);
     }
   }
-
-  const { nameUser, setNameUser, imageOfUser, setImageOfUser, phoneUser } =
-    useContext(ProfileContext);
 
   return (
     <S.Body>

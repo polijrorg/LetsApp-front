@@ -6,7 +6,7 @@ import * as Contacts from 'expo-contacts';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-// import { ProfileContext } from 'src/contexts/ProfileContext';
+import useProfile from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -23,7 +23,7 @@ const SelectGuests = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [addParticipants, setAddParticipants] = useState([]);
 
-  const { setContactSelected } = useContext(ProfileContext);
+  const { setContactSelected } = useProfile();
 
   const addParticipant = () => {
     if (name && phoneNumber) {

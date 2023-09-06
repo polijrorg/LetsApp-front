@@ -12,14 +12,13 @@ import useAuth from '@hooks/useAuth';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/useProfile';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -43,7 +42,7 @@ const InitialData = ({ navigation }) => {
   const { addNameAndImage, phone } = useAuth();
 
   // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
-  const { setNameUser, setImageOfUser } = useContext(ProfileContext);
+  // const { setNameUser, setImageOfUser } = useContext(ProfileContext);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -108,8 +107,8 @@ const InitialData = ({ navigation }) => {
       //     'Content-Type': 'multipart/form-data',
       //   },
       // });
-      setNameUser(name);
-      setImageOfUser(imageUser);
+      // setNameUser(name);
+      // setImageOfUser(imageUser);
     } catch (error) {
       console.log(error);
     }

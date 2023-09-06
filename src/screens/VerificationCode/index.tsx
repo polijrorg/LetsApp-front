@@ -1,16 +1,16 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import InputCode from '@components/InputCode';
+import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
-import { ProfileContext } from 'src/contexts/useProfile';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
@@ -18,7 +18,7 @@ const Phone = require('../../assets/PhoneIcon.png');
 
 const VerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
-  const { phoneUser } = useContext(ProfileContext);
+  const { user } = useAuth();
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -81,7 +81,7 @@ const VerificationCode = ({ navigation }) => {
                 setVerificationCode(value);
                 try {
                   const { data } = await api.post('/verify', {
-                    phone: phoneUser,
+                    phone: user.phone,
                     code: parseInt(value, 10),
                   });
                   console.log(data);

@@ -2,14 +2,13 @@ import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import useAuth from '@hooks/useAuth';
-import UserServices, { IDeleteUserRequest } from '@services/UserServices';
+import { IDeleteUserRequest } from '@services/UserServices';
 import { api } from '@services/api';
 import { UserContext } from '@utils/UserContext';
 import React, { useState, useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ProfileContext } from 'src/contexts/useProfile';
 
 type ModalProps = {
   color?: string;
@@ -49,7 +48,7 @@ export const ModalCard: React.FC<ModalProps> = ({
   const [inputs, setInputs] = useState([]);
   const Message = require('../../assets/MessageIcon.png');
 
-  const { deleteUser } = useAuth();
+  const { deleteUser, user } = useAuth();
 
   const handleAddInput = (value) => {
     setInputs([...inputs, value]);
@@ -77,15 +76,11 @@ export const ModalCard: React.FC<ModalProps> = ({
     }
   }
 
-  const { phoneUser } = useContext(ProfileContext);
-
   async function DeleteAccount() {
     try {
       await deleteUser({
-        phone: phoneUser,
+        phone: user.phone,
       } as IDeleteUserRequest);
-      console.log(response);
-
     } catch (error) {
       console.log(error);
     }

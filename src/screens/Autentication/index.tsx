@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
-import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -36,7 +35,6 @@ const Autentication = ({ navigation }) => {
 
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
-  // const { setPhoneUser } = useContext(ProfileContext);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 

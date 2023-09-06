@@ -1,4 +1,5 @@
 import { api } from './api';
+import User from '@interfaces/User';
 
 interface IRegisterRequest {
   phone: string;
