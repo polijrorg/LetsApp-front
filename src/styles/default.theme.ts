@@ -10,7 +10,6 @@ export const theme = {
     highEmphasis: '#322E1E',
     mediumEmphasis: '#545454',
     lowEmphasis: '#949494',
-    dividerColor: '#EDE6E6',
 
     White: '#FFFFFF',
     divider: '#EDECE6',

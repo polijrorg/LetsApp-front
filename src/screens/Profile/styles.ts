@@ -100,7 +100,7 @@ export const Line = styled.View`
   width: 100%;
   height: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.dividerColor};
+  border-bottom-color: ${theme.colors.divider};
   margin-bottom: 8px;
 `;
 
