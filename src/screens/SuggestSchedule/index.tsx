@@ -2,18 +2,18 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
+import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import format from 'date-fns/format';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import useProfile from 'src/contexts/useProfile';
 
 const SuggestSchedule = ({ navigation }) => {
   const {
-    phoneUser,
     dateStart,
     dateEnd,
     timeStart,
@@ -22,12 +22,14 @@ const SuggestSchedule = ({ navigation }) => {
     timeSelectedStart,
     timeSelectedEnd,
     contactSelected,
-  } = useContext(ProfileContext);
+  } = useProfile();
+
+  const { user } = useAuth();
 
   console.log(
     'selecionados',
     timeStart,
-    phoneUser,
+    user.phone,
     dateStart,
     dateEnd,
     duration,

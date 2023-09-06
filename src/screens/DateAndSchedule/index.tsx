@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Pressable,
   Keyboard,
@@ -13,7 +13,7 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import useProfile from 'src/contexts/useProfile';
 
 const styles = StyleSheet.create({
   datePicker: {
@@ -36,7 +36,7 @@ const DateAndSchedule = ({ navigation }) => {
   const [durations, setDurations] = useState('');
 
   const { setDateStart, setDateEnd, setTimeStart, setTimeEnd, setDuration } =
-    useContext(ProfileContext);
+    useProfile();
 
   const sendData = () => {
     setDateStart(date);

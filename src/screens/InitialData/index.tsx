@@ -3,21 +3,22 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
-import { api } from '@services/api';
-import * as AuthSession from 'expo-auth-session';
+import useAuth from '@hooks/useAuth';
+// import UserServices from '@services/UserServices';
+// import { useNavigation } from '@react-navigation/native';
+// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
+// import { api } from '@services/api';
+// import * as AuthSession from 'expo-auth-session';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -38,8 +39,10 @@ const InitialData = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState('');
 
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
-  const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
+  const { addNameAndImage, phone } = useAuth();
+
+  // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+  // const { setNameUser, setImageOfUser } = useContext(ProfileContext);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -91,18 +94,21 @@ const InitialData = ({ navigation }) => {
   async function handleSendData({ name, imageUser }: FormDataProps) {
     try {
       const form = new FormData();
-      form.append('phone', phoneUser);
+      form.append('phone', phone);
       form.append('name', name);
       form.append('photo', imageUser);
 
-      const { data } = await api.post('/upload', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setNameUser(name);
-      setImageOfUser(imageUser);
-      console.log(data);
+      console.log('form', form);
+
+      addNameAndImage(form);
+
+      // const { data } = await api.post('/upload', form, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+      // setNameUser(name);
+      // setImageOfUser(imageUser);
     } catch (error) {
       console.log(error);
     }
@@ -111,7 +117,7 @@ const InitialData = ({ navigation }) => {
   async function handlePress() {
     try {
       const result = await handleSendData({ name, imageUser });
-      appNavigation.navigate('MainScreen');
+      // navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }

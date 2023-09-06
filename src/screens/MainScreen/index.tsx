@@ -2,13 +2,13 @@ import * as S from './styles';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
 import { ModalCalendar } from '@components/ModalCalendar';
+import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import 'moment/locale/pt-br';
-import React, { useState, useContext, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import React, { useState, useEffect } from 'react';
+import { Modal, TouchableOpacity } from 'react-native';
 
 const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
@@ -16,7 +16,7 @@ const IconMore = require('../../assets/IconMore.png');
 const Picture2 = require('../../assets/picture2.png');
 
 const MainScreen = ({ navigation }) => {
-  const { nameUser, imageOfUser, phoneUser } = useContext(ProfileContext);
+  const { user } = useAuth();
 
   const [open, setOpen] = useState(true);
   const [showCompleteCalendar] = useState(false);
@@ -226,7 +226,7 @@ const MainScreen = ({ navigation }) => {
   async function getInvites() {
     try {
       const { data } = await api.post('invites/listInvitesByUser', {
-        phone: phoneUser,
+        phone: user.phone,
       });
       setInvites(data);
       setNumberInvites(data.length);
@@ -237,7 +237,7 @@ const MainScreen = ({ navigation }) => {
 
     try {
       const { data } = await api.post('invites/listEventsByUser', {
-        phone: phoneUser,
+        phone: user.phone,
       });
       setEvents(data);
       // console.log(data);
@@ -266,9 +266,11 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <S.Container>
-      <ModalCalendar Open={open} setOpen={setOpen} />
+      <Modal transparent visible={open}>
+        <ModalCalendar setOpen={setOpen} />
+      </Modal>
       <S.Header>
-        <S.Name>Olá {nameUser}!</S.Name>
+        <S.Name>Olá {user.name}!</S.Name>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate(
@@ -278,8 +280,8 @@ const MainScreen = ({ navigation }) => {
             );
           }}
         >
-          {imageOfUser ? (
-            <S.Icon source={imageOfUser} />
+          {user.photo ? (
+            <S.Icon source={user.photo} />
           ) : (
             <S.Icon source={IconProfile} />
           )}

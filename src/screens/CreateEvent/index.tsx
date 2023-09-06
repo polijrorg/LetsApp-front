@@ -1,15 +1,16 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import format from 'date-fns/format';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import useProfile from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
@@ -37,7 +38,6 @@ const CreateEvent = ({ navigation }) => {
   const [isOnline, setIsOnline] = useState(false);
 
   const {
-    phoneUser,
     dateStart,
     dateEnd,
     timeStart,
@@ -46,7 +46,9 @@ const CreateEvent = ({ navigation }) => {
     timeSelectedStart,
     timeSelectedEnd,
     contactSelected,
-  } = useContext(ProfileContext);
+  } = useProfile();
+
+  const { user } = useAuth();
 
   const emailsArray = contactSelected.map((guest) => guest.email);
 
@@ -62,7 +64,7 @@ const CreateEvent = ({ navigation }) => {
 
   async function createEvent() {
     try {
-      console.log('Telefone do usuário', phoneUser);
+      console.log('Telefone do usuário', user.phone);
       console.log('Data de Inicio:', dateStart);
       console.log('Data de Termino:', dateEnd);
       console.log(
@@ -73,7 +75,7 @@ const CreateEvent = ({ navigation }) => {
       console.log('Duração:', duration);
       const { data } = await api.post('/createEvent', {
         name: isOnline ? eventO : eventP,
-        phone: phoneUser,
+        phone: user.phone,
         begin: timeSelectedStart,
         attendees: 'caiogiro10@gmail.com',
         end: timeSelectedEnd,
@@ -90,7 +92,7 @@ const CreateEvent = ({ navigation }) => {
       const { data } = await api.post('/invites/create', {
         name: isOnline ? eventO : eventP,
         date: dateStart,
-        phone: phoneUser,
+        phone: user.phone,
         beginHour: timeSelectedStart,
         guests: emailsArray,
         endHour: timeSelectedEnd,

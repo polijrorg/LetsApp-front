@@ -1,7 +1,7 @@
-import { User } from '@interfaces/User';
+import User from '@interfaces/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import UserService from '@services/UserServices';
-import { destroyCookie, parseCookies } from 'nookies';
+import UserServices from '@services/UserServices';
+import UserService, { IDeleteUserRequest } from '@services/UserServices';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
 interface IRegisterRequest {
@@ -11,44 +11,63 @@ interface IRegisterRequest {
 interface AuthContextData {
   user: User;
   phone: string;
-  register: (data: IRegisterRequest) => void;
-  logout: () => void;
+  register: (data: IRegisterRequest) => Promise<void>;
+  deleteUser: (data: IDeleteUserRequest) => Promise<void>;
   loading: boolean;
+  addNameAndImage: (data: FormData) => Promise<void>;
+  initialUser: User;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({} as User);
+export const AuthProvider: React.FC<{
+  children?: React.ReactNode | undefined;
+}> = ({ children }) => {
+  const [initialUser, setInitialUser] = useState({} as User);
+  const [user, setUser] = useState<User | null>(null);
   const [phone, setPhone] = useState<string>();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      const { '@letsApp:userId': userId } = parseCookies();
-      const response = await UserService.getUserById(userId);
-      setUser(response);
-    };
-    getUserData();
-  }, []);
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     const { '@letsApp:userId': userId } = parseCookies();
+  //     const response = await UserService.getUserById(userId);
+  //     setUser(response);
+  //   };
+  //   getUserData();
+  // }, []);
 
   const register = async (data: IRegisterRequest) => {
     try {
+      console.log('entrou aqui');
       const response = await UserService.register(data);
 
-      setUser(response);
+      setInitialUser(response);
       setPhone(response.phone);
 
       await AsyncStorage.setItem('letsApp:phone', response.phone);
-      await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
     } catch (error) {
       throw new Error((error as Error).message);
     }
   };
 
-  const logout = () => {
-    destroyCookie(undefined, '@letsApp:token');
-    destroyCookie(undefined, '@letsApp:userId');
+  const deleteUser = async (data: IDeleteUserRequest) => {
+    await UserService.deleteUser(data);
+    await AsyncStorage.clear();
+
+    setUser(null);
+    setPhone(null);
+    setLoading(false);
+
+    console.log('deletouu');
+  };
+
+  const addNameAndImage = async (data: FormData) => {
+    const response = await UserServices.addNameAndImage(data);
+
+    setUser(response);
+    console.log('user', response);
+    await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +89,17 @@ export const AuthProvider = ({ children }) => {
   });
 
   return (
-    <AuthContext.Provider value={{ user, phone, register, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        phone,
+        register,
+        deleteUser,
+        loading,
+        initialUser,
+        addNameAndImage,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

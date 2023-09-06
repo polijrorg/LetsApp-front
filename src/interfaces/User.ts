@@ -1,4 +1,4 @@
-export interface User {
+export default interface User {
   id: string;
   name: string;
   phone: string;
@@ -12,7 +12,7 @@ export interface User {
   tokens: string;
 }
 
-export interface Profile {
+export default interface Profile {
   user: User;
   calendar_found: boolean;
 }

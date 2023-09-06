@@ -1,6 +1,6 @@
 import * as S from './styles';
-import React, { useState, useContext } from 'react';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import React from 'react';
+import useProfile from 'src/contexts/useProfile';
 
 export type CardScheduleProps = {
   day: string;
@@ -23,8 +23,7 @@ const CardSchedule: React.FC<CardScheduleProps> = ({
   isSelected,
   onSelect,
 }) => {
-  const { setTimeSelectedStart, setTimeSelectedEnd } =
-    useContext(ProfileContext);
+  const { setTimeSelectedStart, setTimeSelectedEnd } = useProfile();
 
   const handleClick = () => {
     setTimeSelectedStart(scheduleStart);
