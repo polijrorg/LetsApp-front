@@ -83,27 +83,45 @@ const Profile = ({ navigation }) => {
       <StatusBar hidden={true} />
       <S.SmallCircleRight />
       <S.SmallTop />
+      <S.SmallBottom />
       <S.Header>
-        <TouchableOpacity onPress={handleSendData}>
-          <S.IconBack source={IconArrow} />
-        </TouchableOpacity>
+        <S.IconBackContainer>
+          <TouchableOpacity onPress={handleSendData}>
+            <S.IconBack source={IconArrow} />
+          </TouchableOpacity>
+        </S.IconBackContainer>
         {user.photo ? (
-          <TouchableOpacity onPress={() => pickImageFromGallery()}>
-            <S.Icon source={user.photo} />
-          </TouchableOpacity>
+          <S.Icon source={user.photo}>
+            <TouchableOpacity onPress={() => pickImageFromGallery()}>
+              <S.PencilIconCircle>
+                <S.PencilIcon source={require('../../assets/Pencil.png')} />
+              </S.PencilIconCircle>
+            </TouchableOpacity>
+          </S.Icon>
         ) : (
-          <TouchableOpacity onPress={() => pickImageFromGallery()}>
-            <S.Icon source={IconProfile} />
-          </TouchableOpacity>
+          <S.Icon source={IconProfile}>
+            <TouchableOpacity onPress={() => pickImageFromGallery()}>
+              <S.PencilIconCircle>
+                <S.PencilIcon source={require('../../assets/Pencil.png')} />
+              </S.PencilIconCircle>
+            </TouchableOpacity>
+          </S.Icon>
         )}
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>
-        <Input width="304px" height="32px" placeholder="" />
+        <S.InputAndXContainer>
+          <S.FlexibleInputContainer>
+            <Input width="100%" height="40px" placeholder="Nome" />
+          </S.FlexibleInputContainer>
+        </S.InputAndXContainer>
         <S.Line />
         <S.NameInput>Agendas</S.NameInput>
-        <Input width="304px" height="32px" placeholder="" />
-        <Input width="304px" height="32px" placeholder="" />
+        <S.InputAndXContainer>
+          <S.FlexibleInputContainer>
+            <Input width="100%" height="40px" placeholder="E-mail" />
+          </S.FlexibleInputContainer>
+        </S.InputAndXContainer>
         <TouchableOpacity
           onPress={() => {
             setOpen(true);
@@ -123,7 +141,11 @@ const Profile = ({ navigation }) => {
         </TouchableOpacity>
         <S.Line />
         <S.NameInput>Números</S.NameInput>
-        <Input width="304px" height="32px" placeholder="" />
+        <S.InputAndXContainer>
+          <S.FlexibleInputContainer>
+            <Input width="100%" height="40px" placeholder="Telefone" />
+          </S.FlexibleInputContainer>
+        </S.InputAndXContainer>
         <TouchableOpacity
           onPress={() => {
             setOpen1(true);
@@ -141,7 +163,6 @@ const Profile = ({ navigation }) => {
             type="Number"
           />
         </TouchableOpacity>
-        <S.Line />
       </S.ContainerInput>
       <TouchableOpacity
         onPress={() => {
