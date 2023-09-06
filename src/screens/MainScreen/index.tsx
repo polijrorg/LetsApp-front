@@ -164,7 +164,7 @@ const MainScreen = ({ navigation }) => {
 
   function getWeekCalendar() {
     const allWeeks = getWeeks();
-    console.log(allWeeks);
+    // console.log(allWeeks);
 
     const dayOfYear = daysIntoYear(new Date());
 
