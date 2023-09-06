@@ -8,7 +8,7 @@ import useAuth from '@hooks/useAuth';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBack.png');
@@ -17,14 +17,14 @@ const IconPhone = require('../../assets/PhoneIconBlack.png');
 const IconProfile = require('../../assets/UserCircle.png');
 const IconDelete = require('../../assets/IconDelete.png');
 
-const Profile = ({ navigation, router }) => {
+const Profile = ({ navigation, route }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
   const { user, addNameAndImage } = useAuth();
 
-  const { name, userPhoto } = route.params;
+  const { name, imageUser, email, phone } = route.params;
 
   type photoProps = {
     size: number;
@@ -86,42 +86,49 @@ const Profile = ({ navigation, router }) => {
       <S.SmallCircleRight />
       <S.SmallTop />
       <S.SmallBottom />
+      <S.IconBackContainer>
+        <TouchableOpacity onPress={handleSendData}>
+          <S.IconBack source={IconArrow} />
+        </TouchableOpacity>
+      </S.IconBackContainer>
       <S.Header>
-        <S.IconBackContainer>
-          <TouchableOpacity onPress={handleSendData}>
-            <S.IconBack source={IconArrow} />
-          </TouchableOpacity>
-        </S.IconBackContainer>
-        {user.photo ? (
-          <S.Icon source={user.photo}>
-            <TouchableOpacity onPress={() => pickImageFromGallery()}>
-              <S.PencilIconCircle>
-                <S.PencilIcon source={require('../../assets/Pencil.png')} />
-              </S.PencilIconCircle>
-            </TouchableOpacity>
-          </S.Icon>
+        {imageUser ? (
+          <S.ProfileContainer onPress={() => pickImageFromGallery()}>
+            <S.Icon source={{ uri: imageUser }} />
+            <S.PencilIconCircle>
+              <S.PencilIcon source={require('../../assets/Pencil.png')} />
+            </S.PencilIconCircle>
+          </S.ProfileContainer>
         ) : (
-          <S.Icon source={IconProfile}>
-            <TouchableOpacity onPress={() => pickImageFromGallery()}>
-              <S.PencilIconCircle>
-                <S.PencilIcon source={require('../../assets/Pencil.png')} />
-              </S.PencilIconCircle>
-            </TouchableOpacity>
-          </S.Icon>
+          <S.ProfileContainer onPress={() => pickImageFromGallery()}>
+            <S.Icon source={IconProfile} />
+            <S.PencilIconCircle>
+              <S.PencilIcon source={require('../../assets/Pencil.png')} />
+            </S.PencilIconCircle>
+          </S.ProfileContainer>
         )}
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>
-        <S.InputAndXContainer>
-          <S.FlexibleInputContainer>
-            <Input width="100%" height="40px" placeholder="Nome" />
-          </S.FlexibleInputContainer>
-        </S.InputAndXContainer>
+        <S.EditInput>
+          <Input
+            width="100%"
+            height="40px"
+            placeholder={name}
+            pencil
+            editable={false}
+          />
+        </S.EditInput>
         <S.Line />
-        <S.NameInput>Agendas</S.NameInput>
+        <S.NameInput>Agenda</S.NameInput>
         <S.InputAndXContainer>
           <S.FlexibleInputContainer>
-            <Input width="100%" height="40px" placeholder="E-mail" />
+            <Input
+              width="100%"
+              height="40px"
+              placeholder={email}
+              editable={false}
+            />
           </S.FlexibleInputContainer>
         </S.InputAndXContainer>
         <TouchableOpacity
@@ -129,10 +136,10 @@ const Profile = ({ navigation, router }) => {
             setOpen(true);
           }}
         >
-          <S.ContainerAdd>
+          {/* <S.ContainerAdd>
             <S.IconAdd source={Agenda} />
             <S.TextAdd>Vincular nova agenda</S.TextAdd>
-          </S.ContainerAdd>
+          </S.ContainerAdd> */}
           <ModalCard
             Open={open}
             setOpen={setOpen}
@@ -142,10 +149,15 @@ const Profile = ({ navigation, router }) => {
           />
         </TouchableOpacity>
         <S.Line />
-        <S.NameInput>Números</S.NameInput>
+        <S.NameInput>Número</S.NameInput>
         <S.InputAndXContainer>
           <S.FlexibleInputContainer>
-            <Input width="100%" height="40px" placeholder="Telefone" />
+            <Input
+              width="100%"
+              height="40px"
+              placeholder={phone}
+              editable={false}
+            />
           </S.FlexibleInputContainer>
         </S.InputAndXContainer>
         <TouchableOpacity
@@ -153,10 +165,10 @@ const Profile = ({ navigation, router }) => {
             setOpen1(true);
           }}
         >
-          <S.ContainerAdd>
+          {/* <S.ContainerAdd>
             <S.IconAdd source={IconPhone} />
             <S.TextAdd>Adicionar outro número</S.TextAdd>
-          </S.ContainerAdd>
+          </S.ContainerAdd> */}
           <ModalCard
             Open={open1}
             setOpen={setOpen1}

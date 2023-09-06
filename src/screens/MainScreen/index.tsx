@@ -99,6 +99,8 @@ const MainScreen = ({ navigation }) => {
             navigation.navigate('Profile', {
               name: user.name,
               imageUser: completeUser?.user.photo,
+              email: completeUser?.user.email,
+              phone: user.phone,
             });
           }}
         >
