@@ -117,6 +117,7 @@ const DateAndSchedule = ({ navigation }) => {
                   display="spinner"
                   value={date}
                   onChange={onChangeStart}
+                  themeVariant="light"
                 />
               )}
               <S.ContainerInputDate>
