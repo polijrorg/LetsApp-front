@@ -1,6 +1,4 @@
 import * as S from './styles';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import React from 'react';
 
 export type CardsEventProps = {
@@ -16,6 +14,7 @@ export type CardsEventProps = {
   beginHour?: string;
   endHour?: string;
   descrition?: string;
+  navigation: any;
 };
 
 const CardsEvent: React.FC<CardsEventProps> = ({
@@ -30,15 +29,15 @@ const CardsEvent: React.FC<CardsEventProps> = ({
   beginHour,
   endHour,
   descrition,
+  navigation,
 }) => {
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
 
   return (
     <S.ContainerCard
       onPress={() => {
-        appNavigation.navigate('ScreenEvent', {
+        navigation.navigate('ScreenEvent', {
           event: event,
           nameEvent: nameEvent,
           adress: adress,

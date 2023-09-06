@@ -7,7 +7,7 @@ export const ContainerCard = styled.TouchableOpacity`
   margin: 0px;
   border-radius: 8px;
   border-top-width: 1px;
-  border-top-color: ${theme.colors.lowEmphasis};
+  border-top-color: ${theme.colors.divider};
   background-color: ${theme.colors.background};
   justify-content: center;
 `;
@@ -35,13 +35,13 @@ export const Image = styled.View`
 export const Month = styled.Text`
   font-size: 14px;
   font-family: 'Roboto';
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const Day = styled.Text`
   font-size: 14px;
   font-family: 'Roboto';
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const Name = styled.Text`

@@ -19,7 +19,7 @@ export const ContentContainer = styled.View`
   width: 336px;
   border-radius: 24px;
   padding: 20px;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
   align-items: center;
   justify-content: center;
 `;

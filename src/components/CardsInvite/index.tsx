@@ -1,6 +1,4 @@
 import * as S from './styles';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
@@ -13,6 +11,7 @@ export type CardsInviteProps = {
   descrition?: string;
   beginHour?: string;
   endHour?: string;
+  navigation: any;
 };
 
 const CardsInvite: React.FC<CardsInviteProps> = ({
@@ -24,8 +23,8 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
   descrition,
   beginHour,
   endHour,
+  navigation,
 }) => {
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
   const calendar = require('../../assets/CalendarIcon.png');
@@ -34,7 +33,7 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
     <S.ContainerCard>
       <TouchableOpacity
         onPress={() => {
-          appNavigation.navigate('ScreenInvite', {
+          navigation.navigate('ScreenInvite', {
             name: name,
             image: image,
             adress: adress,

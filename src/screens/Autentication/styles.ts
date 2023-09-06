@@ -4,13 +4,13 @@ import styled from 'styled-components/native';
 
 export const Wrapper = styled(KeyboardAvoidingView)`
   align-items: center;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const Body = styled.View`
   flex: 1;
   padding: 24px;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
   align-items: center;
 `;
 

@@ -11,7 +11,7 @@ export const theme = {
     mediumEmphasis: '#545454',
     lowEmphasis: '#949494',
 
-    White: '#FFFFFF',
+    white: '#FFFFFF',
     divider: '#EDECE6',
     background: '#FAFAFA',
   },
