@@ -1,3 +1,5 @@
+import Contacts from './Contacts';
+
 export default interface User {
   id: string;
   name: string;
@@ -10,6 +12,7 @@ export default interface User {
   created_at: Date;
   updated_at: Date;
   tokens: string;
+  contatos: Contacts[];
 }
 
 export default interface Profile {
