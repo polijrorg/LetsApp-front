@@ -39,3 +39,8 @@ export const Arrow = styled.Image`
   width: 14px;
   height: 7px;
 `;
+
+export const Pen = styled.Image`
+  width: 20px;
+  height: 20px;
+`;

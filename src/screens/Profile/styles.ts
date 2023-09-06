@@ -1,6 +1,6 @@
 import { theme } from '@styles/default.theme';
-import { Platform } from 'react-native';
-import styled, { css } from 'styled-components/native';
+import { Image, TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
 
 export const Body = styled.View`
   flex: 1;
@@ -9,21 +9,22 @@ export const Body = styled.View`
   display: flex;
 `;
 
+export const ProfileContainer = styled(TouchableOpacity)`
+  width: 124px;
+  height: 124px;
+`;
+
 export const Header = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-top: 8%;
+  justify-content: center;
+  margin-top: 18%;
 `;
 
-export const Icon = styled.ImageBackground`
-  width: 156px;
-  height: 156px;
-  border-radius: 3248px;
-  margin-left: -4%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
+export const Icon = styled(Image)`
+  width: 112px;
+  height: 112px;
+  border-radius: 78px;
 `;
 
 export const IconBack = styled.Image`
@@ -35,19 +36,22 @@ export const IconBack = styled.Image`
 export const PencilIcon = styled.Image``;
 
 export const PencilIconCircle = styled.View`
-  height: 40px;
-  width: 40px;
-  border-radius: 3000px;
+  height: 32px;
+  width: 32px;
+  border-radius: 16px;
   background-color: ${theme.colors.primary.dark};
-  margin-right: 10%;
-  margin-bottom: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  bottom: 16px;
+  right: 0px;
 `;
 
 export const IconBackContainer = styled.View`
-  margin-top: -32%;
+  position: absolute;
+  top: 40px;
+  left: 32px;
 `;
 
 export const ContainerInput = styled.View`
@@ -64,6 +68,10 @@ export const InputAndXContainer = styled.View`
 
 export const FlexibleInputContainer = styled.View`
   flex: 1;
+`;
+
+export const EditInput = styled(TouchableOpacity)`
+  width: 100%;
 `;
 
 export const InvisibleNotEditableIcon = styled.View`
@@ -122,7 +130,7 @@ export const ContainerDelete = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  margin-top: 8%;
+  margin-top: 12%;
   margin-bottom: 4%;
 `;
 

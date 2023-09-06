@@ -57,10 +57,10 @@ const CardsEvent: React.FC<CardsEventProps> = ({
         </S.Image>
         <S.ContainerContentData>
           <S.Name>{nameEvent}</S.Name>
-          <S.ContainerContent>
+          <S.AddressView>
             <S.IconAdress source={event === 'online' ? online : presencial} />
             <S.Adress>{adress}</S.Adress>
-          </S.ContainerContent>
+          </S.AddressView>
         </S.ContainerContentData>
       </S.ContainerContent>
     </S.ContainerCard>

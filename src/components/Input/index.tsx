@@ -7,6 +7,7 @@ export type InputProps = {
   height: string;
   placeholder: string;
   arrow?: boolean;
+  pencil?: boolean;
   value?: string;
   onChange?: (text: string) => void;
   keyboardType?: string;
@@ -14,9 +15,11 @@ export type InputProps = {
 };
 
 const ImageArrow = require('../../assets/ArrowInput.png');
+const ImagePen = require('../../assets/Pen.png');
 
 const Input: React.FC<InputProps> = ({
   arrow = false,
+  pencil = false,
   width,
   height,
   placeholder,
@@ -37,6 +40,9 @@ const Input: React.FC<InputProps> = ({
       />
       <S.ContainerArrow arrow={arrow}>
         <S.Arrow source={ImageArrow} />
+      </S.ContainerArrow>
+      <S.ContainerArrow arrow={pencil}>
+        <S.Pen source={ImagePen} />
       </S.ContainerArrow>
     </S.ContainerInput>
   );

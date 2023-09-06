@@ -1,4 +1,6 @@
 import { api } from './api';
+import Event from '@interfaces/Events';
+import Invite from '@interfaces/Invites';
 import User from '@interfaces/User';
 
 interface IAddContact {
@@ -19,6 +21,22 @@ export default class CalendarServices {
       phone: data.phone,
       name: data.name,
       email: data.email,
+    });
+
+    return response.data;
+  }
+
+  static async getUserEvents(email: string): Promise<Event[]> {
+    const response = await api.post('invites/listEventsByUser', {
+      email,
+    });
+
+    return response.data;
+  }
+
+  static async getUserInvites(email: string): Promise<Invite[]> {
+    const response = await api.post('invites/listInvitesByUser', {
+      email,
     });
 
     return response.data;
