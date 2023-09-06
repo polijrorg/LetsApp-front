@@ -2,6 +2,7 @@ import { ModalCard } from '@components/Modal';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreateEvent from '@screens/CreateEvent';
 import DateAndSchedule from '@screens/DateAndSchedule';
+import InvitedGuests from '@screens/InvitedGuests';
 import MainScreen from '@screens/MainScreen';
 import Profile from '@screens/Profile';
 import ScreenEvent from '@screens/ScreenEvent';
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   SelectGuests: undefined;
   SuggestSchedule: undefined;
   ModalCard: undefined;
+  InvitedGuests: undefined;
 };
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
@@ -27,7 +29,7 @@ const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 function PrivateRoutes() {
   return (
     <Navigator
-      initialRouteName="MainScreen"
+      initialRouteName="InvitedGuests"
       screenOptions={{
         headerShown: false,
       }}
@@ -41,6 +43,7 @@ function PrivateRoutes() {
       <Screen name="SelectGuests" component={SelectGuests} />
       <Screen name="SuggestSchedule" component={SuggestSchedule} />
       <Screen name="ModalCard" component={ModalCard} />
+      <Screen name="InvitedGuests" component={InvitedGuests} />
     </Navigator>
   );
 }
