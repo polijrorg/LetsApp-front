@@ -4,6 +4,10 @@ import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
 import { ModalCalendar } from '@components/ModalCalendar';
 import useAuth from '@hooks/useAuth';
+import Event from '@interfaces/Events';
+import Invite from '@interfaces/Invites';
+import Profile from '@interfaces/User';
+import CalendarServices from '@services/CalendarServices';
 import { api } from '@services/api';
 import moment from 'moment';
 import 'moment/locale/pt-br';
@@ -19,48 +23,66 @@ const MainScreen = ({ navigation }) => {
   const { user } = useAuth();
 
   const [open, setOpen] = useState(true);
+  const [completeUser, setCompleteUser] = useState<Profile>(null);
 
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        setCompleteUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const getInvites = async () => {
+      try {
+        if (completeUser !== null) {
+          const response = await CalendarServices.getUserInvites(
+            completeUser.user.email
+          );
+          setInvites(response);
+          setNumberInvites(response.length);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getInvites();
-  });
+  }, [completeUser]);
 
-  async function getInvites() {
-    try {
-      const { data } = await api.post('invites/listInvitesByUser', {
-        phone: user.phone,
-      });
-      setInvites(data);
-      setNumberInvites(data.length);
-      // console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-
-    try {
-      const { data } = await api.post('invites/listEventsByUser', {
-        phone: user.phone,
-      });
-      setEvents(data);
-      // console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  useEffect(() => {
+    const getEvents = async () => {
+      try {
+        if (completeUser !== null) {
+          const response = await CalendarServices.getUserEvents(
+            completeUser.user.email
+          );
+          setEvents(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getEvents();
+  }, [completeUser]);
 
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
-  const [invites, setInvites] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [numberInvites, setNumberInvites] = useState();
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [numberInvites, setNumberInvites] = useState<number>(null);
 
   const handleEventsPress = () => {
-    console.log('events');
     setSelectedOption('events');
     setShowEvent(true);
   };
 
   const handleInvitePress = () => {
-    console.log('invite');
     setSelectedOption('invite');
     setShowEvent(false);
   };
@@ -74,15 +96,14 @@ const MainScreen = ({ navigation }) => {
         <S.Name>Olá {user.name}!</S.Name>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate(
-              'Profile'
-              // name: name,
-              // imageUser: imageUser,
-            );
+            navigation.navigate('Profile', {
+              name: user.name,
+              imageUser: completeUser?.user.photo,
+            });
           }}
         >
-          {user.photo ? (
-            <S.Icon source={user.photo} />
+          {completeUser?.user.photo ? (
+            <S.Icon source={{ uri: completeUser.user.photo }} />
           ) : (
             <S.Icon source={IconProfile} />
           )}
@@ -132,14 +153,14 @@ const MainScreen = ({ navigation }) => {
               {invites.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsInvite
-                    adress={event.address}
-                    name={event.name}
+                    adress={event.element.address}
+                    name={event.element.name}
                     event="presencial"
-                    image={Picture2}
-                    date={moment(event.date).format('DD/MM/YYYY')}
-                    descrition={event.description}
-                    beginHour={event.beginHour}
-                    endHour={event.endHour}
+                    organizerPhoto={event.element.organizerPhoto}
+                    organizerName={event.element.organizerName}
+                    begin={event.element.begin}
+                    end={event.element.end}
+                    descrition={event.element.description}
                     navigation={navigation}
                   />
                 </React.Fragment>

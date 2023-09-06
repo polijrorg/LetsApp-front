@@ -1,29 +1,30 @@
 import * as S from './styles';
+import moment from 'moment';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 export type CardsInviteProps = {
   event: 'online' | 'presencial';
   name: string;
-  image: string;
+  organizerPhoto: string;
   adress: string;
-  date?: string;
+  begin?: Date;
+  end?: Date;
   descrition?: string;
-  beginHour?: string;
-  endHour?: string;
   navigation: any;
+  organizerName: string;
 };
 
 const CardsInvite: React.FC<CardsInviteProps> = ({
   event,
   name,
-  image,
+  organizerPhoto,
   adress,
-  date,
+  begin,
+  end,
   descrition,
-  beginHour,
-  endHour,
   navigation,
+  organizerName,
 }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
@@ -31,34 +32,29 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
 
   return (
     <S.ContainerCard>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('ScreenInvite', {
             name: name,
-            image: image,
+            organizerPhoto: organizerPhoto,
             adress: adress,
-            date: date,
             descrition: descrition,
-            beginHour: beginHour,
-            endHour: endHour,
           });
         }}
-      >
+      > */}
+      <S.Image source={{ uri: organizerPhoto }} />
+      <S.InfoWrapper>
+        <S.Name>{name}</S.Name>
         <S.ContainerContent>
-          <S.Image source={image} />
-          <S.ContainerContentData>
-            <S.Name>{name}</S.Name>
-            <S.ContainerContent>
-              <S.IconAdress source={event === 'online' ? online : presencial} />
-              <S.Adress>{adress}</S.Adress>
-            </S.ContainerContent>
-            <S.ContainerContent>
-              <S.IconDate source={calendar} />
-              <S.Date>{date}</S.Date>
-            </S.ContainerContent>
-          </S.ContainerContentData>
+          <S.Icon source={event === 'online' ? online : presencial} />
+          <S.Adress>{adress}</S.Adress>
         </S.ContainerContent>
-      </TouchableOpacity>
+        <S.ContainerContent>
+          <S.Icon source={calendar} />
+          <S.Date>{moment(begin).format('DD/MM/YYYY')}</S.Date>
+        </S.ContainerContent>
+      </S.InfoWrapper>
+      {/* </TouchableOpacity> */}
     </S.ContainerCard>
   );
 };

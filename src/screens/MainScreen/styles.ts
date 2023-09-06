@@ -104,8 +104,8 @@ export const IconMore = styled.View`
   flex-direction: row;
   justify-content: flex-end;
   position: absolute;
-  top: 85%;
-  right: 10%;
+  bottom: 56px;
+  right: 12px;
 `;
 
 export const More = styled.Image`
