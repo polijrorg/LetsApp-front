@@ -31,7 +31,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
     descrition,
   } = route.params;
 
-  const [numberGuests] = useState(invites.length);
+  // const [numberGuests] = useState(invites.length);
   const ajustDate = moment(date).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')
@@ -78,7 +78,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   {ajustDate.substring(0, 5)}
                 </S.LocalandDate>
                 <S.Date>
-                  {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h
+                  {/* {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h */}
                 </S.Date>
               </S.Adjust>
             </S.Row>
@@ -87,7 +87,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                 <S.IconDate source={Participants} />
               </S.ContainerIcon>
               <S.Adjust>
-                <S.LocalandDate>{numberGuests} Convidados</S.LocalandDate>
+                <S.LocalandDate>{} Convidados</S.LocalandDate>
                 <S.Confirmed>{confirmed}: Sim</S.Confirmed>
               </S.Adjust>
             </S.Row>

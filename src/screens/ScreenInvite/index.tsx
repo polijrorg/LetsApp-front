@@ -67,7 +67,7 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                     )} - {date.substring(0, 5)}
                   </S.LocalandDate>
                   <S.Date>
-                    {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h
+                    {/* {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h */}
                   </S.Date>
                 </S.Adjust>
               </S.Row>

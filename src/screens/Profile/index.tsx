@@ -2,9 +2,9 @@ import * as S from './styles';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import useAuth from '@hooks/useAuth';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
-import { api } from '@services/api';
+// import { useNavigation } from '@react-navigation/native';
+// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
+// import { api } from '@services/api';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
@@ -49,11 +49,11 @@ const Profile = ({ navigation }) => {
 
         const fileExtension = photoSelected.assets[0].uri.split('.').pop();
 
-        setImageOfUser({
-          name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
-          uri: photoSelected.assets[0].uri,
-          type: `${photoSelected.assets[0].type}/${fileExtension}`,
-        } as any);
+        // setImageOfUser({
+        //   name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
+        //   uri: photoSelected.assets[0].uri,
+        //   type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        // } as any);
       }
     } catch (error) {
       console.log(error);
@@ -66,13 +66,13 @@ const Profile = ({ navigation }) => {
       const form = new FormData();
       form.append('phone', user.phone);
       form.append('name', user.name);
-      form.append('photo', imageOfUser);
+      // form.append('photo', imageOfUser);
 
       addNameAndImage(form);
 
       navigation.navigate('MainScreen');
 
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -87,9 +87,9 @@ const Profile = ({ navigation }) => {
         <TouchableOpacity onPress={handleSendData}>
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
-        {imageOfUser ? (
+        {user.photo ? (
           <TouchableOpacity onPress={() => pickImageFromGallery()}>
-            <S.Icon source={imageOfUser} />
+            <S.Icon source={user.photo} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => pickImageFromGallery()}>
