@@ -4,7 +4,8 @@ import { TextInputMask } from 'react-native-masked-text';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
-  flex: 1;
+  width: 100%;
+  height: 100%;
   padding: 16px 40px 0px;
   background-color: ${theme.colors.White};
 `;

@@ -10,6 +10,13 @@ interface IVerifyCodeRequest {
   code: number;
 }
 
+interface IAddContact {
+  userPhone: string;
+  phone: string;
+  name: string;
+  email: string;
+}
+
 export interface IDeleteUserRequest {
   phone: string;
 }

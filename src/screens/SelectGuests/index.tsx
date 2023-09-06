@@ -1,6 +1,8 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
 import { ModalCard } from '@components/Modal';
+import useAuth from '@hooks/useAuth';
+import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +13,6 @@ import useProfile from 'src/contexts/useProfile';
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
 const IconEmail = require('../../assets/Email.png');
-const IconSend = require('../../assets/Send.png');
 const Check = require('../../assets/Check.png');
 
 const SelectGuests = ({ navigation }) => {
@@ -25,6 +26,8 @@ const SelectGuests = ({ navigation }) => {
 
   const { setContactSelected } = useProfile();
 
+  const { user } = useAuth();
+
   const addParticipant = () => {
     if (name && phoneNumber) {
       const newParticipant = { name, phoneNumber, email };
@@ -37,16 +40,16 @@ const SelectGuests = ({ navigation }) => {
   };
 
   async function addNewParticipant() {
-    // try {
-    //   const { data } = await api.post('addContact', {
-    //     userPhone: phoneUser,
-    //     phone: phoneNumber,
-    //     name: name,
-    //     email: 'caiogiro10@gmail.com',
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      await CalendarServices.addContact({
+        userPhone: user.phone,
+        phone: phoneNumber,
+        name: name,
+        email: email,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -55,6 +58,7 @@ const SelectGuests = ({ navigation }) => {
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
           fields: [Contacts.Fields.PhoneNumbers],
+          sort: Contacts.SortTypes.FirstName,
         });
         setContacts(data);
       }

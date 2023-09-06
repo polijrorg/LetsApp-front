@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export type ProfileContextData = {
-  phoneUser: string;
-  setPhoneUser: React.Dispatch<React.SetStateAction<string>>;
-  nameUser: string;
-  setNameUser: React.Dispatch<React.SetStateAction<string>>;
-  imageOfUser: string;
-  setImageOfUser: React.Dispatch<React.SetStateAction<string>>;
   dateStart: Date;
   setDateStart: React.Dispatch<React.SetStateAction<Date>>;
   dateEnd: Date;
@@ -38,9 +32,6 @@ const ProfileContext = createContext<ProfileContextData>(
 export const ProfileContextProvider: React.FC<{
   children?: React.ReactNode | undefined;
 }> = ({ children }) => {
-  const [phoneUser, setPhoneUser] = useState<string>(null);
-  const [nameUser, setNameUser] = useState<string>(null);
-  const [imageOfUser, setImageOfUser] = useState<string>(null);
   const [dateStart, setDateStart] = useState<Date>(null);
   const [dateEnd, setDateEnd] = useState<Date>(null);
   const [timeStart, setTimeStart] = useState<Date>(null);
@@ -51,9 +42,6 @@ export const ProfileContextProvider: React.FC<{
   const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
 
   useEffect(() => {}, [
-    phoneUser,
-    nameUser,
-    imageOfUser,
     dateStart,
     dateEnd,
     timeStart,
@@ -67,12 +55,6 @@ export const ProfileContextProvider: React.FC<{
   return (
     <ProfileContext.Provider
       value={{
-        nameUser,
-        setNameUser,
-        phoneUser,
-        setPhoneUser,
-        imageOfUser,
-        setImageOfUser,
         dateStart,
         setDateStart,
         dateEnd,
