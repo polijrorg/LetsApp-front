@@ -7,7 +7,7 @@ export const Body = styled.View`
   width: 100%;
   height: 100%;
   padding: 16px 40px 0px;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const ContainerTitle = styled.View`
@@ -87,7 +87,7 @@ export const Buttons = styled.View`
 
 export const Wrapper = styled(KeyboardAvoidingView)`
   align-items: center;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const Content = styled.View`

@@ -79,7 +79,7 @@ export const NumberInvites = styled.View`
 export const Number = styled.Text`
   font-size: 12px;
   font-family: 'Roboto';
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const ContainerScroll = styled.View`
@@ -213,7 +213,7 @@ export const ChevronButton = styled.TouchableOpacity`
 
 export const ChevronIcon = styled(MaterialCommunityIcons)`
   size: 24px;
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const DateTitle = styled.Text`

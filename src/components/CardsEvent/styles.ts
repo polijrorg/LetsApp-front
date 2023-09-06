@@ -35,13 +35,13 @@ export const Image = styled.View`
 export const Month = styled.Text`
   font-size: 14px;
   font-family: 'Roboto';
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const Day = styled.Text`
   font-size: 14px;
   font-family: 'Roboto';
-  color: ${theme.colors.White};
+  color: ${theme.colors.white};
 `;
 
 export const Name = styled.Text`

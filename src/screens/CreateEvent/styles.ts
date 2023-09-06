@@ -9,11 +9,11 @@ type InviteProps = {
 
 export const Wrapper = styled(KeyboardAvoidingView)`
   align-items: center;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const Body = styled.View`
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
   display: flex;
 `;
 
@@ -25,7 +25,7 @@ export const Back = styled.ImageBackground<InviteProps>`
 `;
 
 export const Header = styled.View`
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
   margin-top: 75%;
   flex: 1;
   border-top-left-radius: 72px;
