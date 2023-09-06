@@ -35,7 +35,7 @@ const CardSchedule: React.FC<CardScheduleProps> = ({
   };
 
   return (
-    <S.ContainerCard onPress={handleClick} isSelected={isSelected}>
+    <S.ContainerCard onPress={handleClick} isSelected={!isSelected}>
       <S.Day>{date}</S.Day>
       <S.Date>{day}</S.Date>
       <S.Schedule>
