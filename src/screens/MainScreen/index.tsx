@@ -129,6 +129,7 @@ const MainScreen = ({ navigation }) => {
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
+                    key={event.id}
                     location="presencial"
                     event={event}
                     navigation={navigation}
@@ -138,17 +139,12 @@ const MainScreen = ({ navigation }) => {
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
-              {invites.map((event, index) => (
+              {invites.map((invite, index) => (
                 <React.Fragment key={index}>
                   <CardsInvite
-                    adress={event.element.address}
-                    name={event.element.name}
-                    event="presencial"
-                    organizerPhoto={event.element.organizerPhoto}
-                    organizerName={event.element.organizerName}
-                    begin={event.element.begin}
-                    end={event.element.end}
-                    description={event.element.description}
+                    key={invite.element.id}
+                    invite={invite}
+                    location="presencial"
                     navigation={navigation}
                   />
                 </React.Fragment>

@@ -29,6 +29,7 @@ const CardsEvent: React.FC<CardsEventProps> = ({
       onPress={() => {
         navigation.navigate('ScreenEvent', {
           event: event,
+          location: location,
         });
       }}
     >

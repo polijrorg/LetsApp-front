@@ -1,7 +1,8 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import Invite from '@interfaces/Invites';
 import { StatusBar } from 'expo-status-bar';
-import moment from 'moment';
+// import moment from 'moment';
 import 'moment/locale/pt-br';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -19,12 +20,12 @@ const presencial = require('../../assets/PresencialEvent.png');
 const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const { name, image, adress, date, event, description, beginHour, endHour } =
-    route.params;
+  const invite: Invite = route.params.invite;
+  const location = route.params.location;
 
-  const formattedDate = moment(date, 'DD/MM/YYYY')
-    .locale('pt-br')
-    .format('ddd');
+  // const formattedDate = moment(date, 'DD/MM/YYYY')
+  //   .locale('pt-br')
+  //   .format('ddd');
 
   return (
     <S.Body>
@@ -39,20 +40,20 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         </TouchableOpacity>
         <S.Header>
           <S.ContainerContent>
-            <S.Image source={image} />
-            <S.Name>Convidado por {name}</S.Name>
+            <S.Image source={invite.element.organizerPhoto} />
+            <S.Name>Convidado por {invite.element.name}</S.Name>
           </S.ContainerContent>
           <S.ContainerContent>
             <S.Column>
               <S.Row>
                 <S.ContainerIcon>
                   <S.IconAdress
-                    source={event === 'online' ? online : presencial}
+                    source={location === 'online' ? online : presencial}
                   />
                 </S.ContainerIcon>
                 <S.Adjust>
                   <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-                  <S.Adress>{adress}</S.Adress>
+                  <S.Adress>{invite.element.address}</S.Adress>
                 </S.Adjust>
               </S.Row>
               <S.Row>
@@ -62,9 +63,9 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                 <S.Adjust>
                   <S.LocalandDate>
                     {' '}
-                    {formattedDate.replace(/^\w/, (c) =>
+                    {/* {formattedDate.replace(/^\w/, (c) =>
                       c.toUpperCase()
-                    )} - {date.substring(0, 5)}
+                    )} - {date.substring(0, 5)} */}
                   </S.LocalandDate>
                   <S.Date>
                     {/* {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h */}
@@ -79,7 +80,7 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             <S.Description>Descrição</S.Description>
           </S.ContainerDescrition>
           <S.Scroll>
-            <S.Content>{description}</S.Content>
+            <S.Content>{invite.element.description}</S.Content>
           </S.Scroll>
           <S.Buttons>
             <Button

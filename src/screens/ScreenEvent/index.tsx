@@ -1,8 +1,9 @@
 import * as S from './styles';
+import Event from '@interfaces/Events';
 import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import 'moment/locale/pt-br';
-import React, { useState } from 'react';
+import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 export type CardsInviteProps = {
@@ -19,19 +20,10 @@ const calendar = require('../../assets/CalendarIcon.png');
 const Participants = require('../../assets/Participants.png');
 
 const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const {
-    nameEvent,
-    event,
-    adress,
-    date,
-    invites,
-    confirmed,
-    beginHour,
-    endHour,
-    description,
-  } = route.params;
+  const event: Event = route.params.event;
+  const location = route.params.event;
 
-  const ajustDate = moment(date).format('DD/MM/YYYY');
+  const ajustDate = moment(event.begin).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')
     .format('ddd');
@@ -52,18 +44,18 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         <S.Image source={Office} />
       </S.ContainerImage>
       <S.Header>
-        <S.Name>{nameEvent}</S.Name>
+        <S.Name>{event.name}</S.Name>
         <S.ContainerContent>
           <S.Column>
             <S.Row>
               <S.ContainerIcon>
                 <S.IconAdress
-                  source={event === 'online' ? online : presencial}
+                  source={location === 'online' ? online : presencial}
                 />
               </S.ContainerIcon>
               <S.Adjust>
                 <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-                <S.Adress>{adress}</S.Adress>
+                <S.Adress>{event.address}</S.Adress>
               </S.Adjust>
             </S.Row>
             <S.Row>
@@ -77,7 +69,8 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   {ajustDate.substring(0, 5)}
                 </S.LocalandDate>
                 <S.Date>
-                  {/* {beginHour.substring(0, 5)}h - {endHour.substring(0, 5)}h */}
+                  {moment(event.begin).format('HH:mm')} -{' '}
+                  {moment(event.end).format('HH:mm')}
                 </S.Date>
               </S.Adjust>
             </S.Row>
@@ -87,14 +80,14 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
               </S.ContainerIcon>
               <S.Adjust>
                 <S.LocalandDate>{} Convidados</S.LocalandDate>
-                <S.Confirmed>{confirmed}: Sim</S.Confirmed>
+                <S.Confirmed>: Sim</S.Confirmed>
               </S.Adjust>
             </S.Row>
           </S.Column>
         </S.ContainerContent>
         <S.Line />
         <S.Scroll>
-          <S.Content>{description}</S.Content>
+          <S.Content>{event.description}</S.Content>
         </S.Scroll>
       </S.Header>
     </S.Body>
