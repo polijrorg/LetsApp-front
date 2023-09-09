@@ -28,7 +28,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
     confirmed,
     beginHour,
     endHour,
-    descrition,
+    description,
   } = route.params;
 
   // const [numberGuests] = useState(invites.length);
@@ -95,7 +95,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         </S.ContainerContent>
         <S.Line />
         <S.Scroll>
-          <S.Content>{descrition}</S.Content>
+          <S.Content>{description}</S.Content>
         </S.Scroll>
       </S.Header>
     </S.Body>

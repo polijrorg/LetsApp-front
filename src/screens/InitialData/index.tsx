@@ -155,7 +155,7 @@ const InitialData = ({ navigation }) => {
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>Dados Iniciais</S.Title>
-            <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
+            <S.Description>Preencha aqui com a sua foto e seu nome</S.Description>
             <TouchableOpacity onPress={() => pickImageFromGallery()}>
               {imageUser === '' ? (
                 <S.Gallery source={Gallery} resizeMode={'cover'} />

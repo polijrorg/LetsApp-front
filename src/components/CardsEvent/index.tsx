@@ -13,7 +13,7 @@ export type CardsEventProps = {
   day?: string;
   beginHour?: string;
   endHour?: string;
-  descrition?: string;
+  description?: string;
   navigation: any;
 };
 
@@ -28,7 +28,7 @@ const CardsEvent: React.FC<CardsEventProps> = ({
   day,
   beginHour,
   endHour,
-  descrition,
+  description,
   navigation,
 }) => {
   const online = require('../../assets/OnlineEvent.png');
@@ -46,7 +46,7 @@ const CardsEvent: React.FC<CardsEventProps> = ({
           confirmed: confirmed,
           beginHour: beginHour,
           endHour: endHour,
-          descrition: descrition,
+          description: description,
         });
       }}
     >

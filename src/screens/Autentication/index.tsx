@@ -90,9 +90,9 @@ const Autentication = ({ navigation }) => {
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>LetsApp</S.Title>
-            <S.Descrition>
+            <S.Description>
               Você receberá em breve um SMS com o código de verificação.
-            </S.Descrition>
+            </S.Description>
             <Input
               arrow={true}
               height="32px"

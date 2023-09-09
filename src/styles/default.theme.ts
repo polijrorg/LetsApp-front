@@ -14,5 +14,6 @@ export const theme = {
     white: '#FFFFFF',
     divider: '#EDECE6',
     background: '#FAFAFA',
+    lightGrey: '#F0F0F0',
   },
 };

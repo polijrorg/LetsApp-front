@@ -2,6 +2,10 @@ import { theme } from '@styles/default.theme';
 import { Image, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
+interface Props {
+  image: boolean;
+}
+
 export const Body = styled.View`
   flex: 1;
   padding: 16px;
@@ -10,8 +14,8 @@ export const Body = styled.View`
 `;
 
 export const ProfileContainer = styled(TouchableOpacity)`
-  width: 124px;
-  height: 124px;
+  width: 120px;
+  height: 120px;
 `;
 
 export const Header = styled.View`
@@ -21,10 +25,13 @@ export const Header = styled.View`
   margin-top: 18%;
 `;
 
-export const Icon = styled(Image)`
+export const Icon = styled(Image)<Props>`
   width: 112px;
   height: 112px;
   border-radius: 78px;
+  border: 6px solid
+    ${({ image }) =>
+      image ? theme.colors.primary.main : theme.colors.lightGrey};
 `;
 
 export const IconBack = styled.Image`
@@ -44,7 +51,7 @@ export const PencilIconCircle = styled.View`
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: 16px;
+  bottom: 24px;
   right: 0px;
 `;
 

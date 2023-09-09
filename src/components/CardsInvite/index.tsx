@@ -10,7 +10,7 @@ export type CardsInviteProps = {
   adress: string;
   begin?: Date;
   end?: Date;
-  descrition?: string;
+  description?: string;
   navigation: any;
   organizerName: string;
 };
@@ -22,7 +22,7 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
   adress,
   begin,
   end,
-  descrition,
+  description,
   navigation,
   organizerName,
 }) => {
@@ -38,7 +38,7 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
             name: name,
             organizerPhoto: organizerPhoto,
             adress: adress,
-            descrition: descrition,
+            description: description,
           });
         }}
       > */}

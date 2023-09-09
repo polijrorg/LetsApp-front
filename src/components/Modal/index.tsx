@@ -87,20 +87,20 @@ export const ModalCard: React.FC<ModalProps> = ({
   }
 
   let title;
-  let descrition;
+  let description;
 
   if (type === 'Schedule') {
     title = 'Vincular Nova Agenda';
-    descrition = 'Concordo com os termos de uso.';
+    description = 'Concordo com os termos de uso.';
   } else if (type === 'Number') {
     title = 'Adicionar Novo Número';
-    descrition = '';
+    description = '';
   } else if (type === 'Account') {
     title = 'Apagar conta';
-    descrition = 'Tem certeza que deseja apagar a conta?';
+    description = 'Tem certeza que deseja apagar a conta?';
   } else if (type === 'Contact') {
     title = 'Adicionar Novo Contato';
-    descrition = '';
+    description = '';
   }
 
   return (
@@ -159,7 +159,7 @@ export const ModalCard: React.FC<ModalProps> = ({
             </S.ContainerInputsContact>
           ) : null}
           <S.ContainerDescrition>
-            <S.Descrtion type={type}>{descrition}</S.Descrtion>
+            <S.Descrtion type={type}>{description}</S.Descrtion>
             {type === 'Schedule' ? (
               <CheckBox
                 checkedIcon="check"

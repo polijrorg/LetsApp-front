@@ -21,13 +21,13 @@ export const Header = styled.View`
 `;
 
 export const Icon = styled.Image`
-  width: 48px;
-  height: 48px;
-  border-radius: 96px;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
 `;
 
 export const Name = styled.Text`
-  font-size: 36px;
+  font-size: 26px;
 `;
 
 export const ContainerOptions = styled.View`

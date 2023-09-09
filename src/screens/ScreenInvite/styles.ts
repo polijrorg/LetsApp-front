@@ -136,7 +136,7 @@ export const ContainerDescrition = styled.View`
   width: 100%;
 `;
 
-export const Descrition = styled.Text`
+export const Description = styled.Text`
   font-size: 16px;
   /* font-weight: 700; */
   font-family: 'RobotoBold';

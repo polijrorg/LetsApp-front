@@ -92,9 +92,9 @@ const VerificationCode = ({ navigation }) => {
               }}
               keyboardType="numeric"
             />
-            <S.Descrition>
+            <S.Description>
               Preencha aqui com o código recebido por SMS
-            </S.Descrition>
+            </S.Description>
             <TouchableOpacity
               activeOpacity={1.0}
               onPress={() => {

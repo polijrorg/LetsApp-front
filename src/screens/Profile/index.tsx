@@ -94,14 +94,14 @@ const Profile = ({ navigation, route }) => {
       <S.Header>
         {imageUser ? (
           <S.ProfileContainer onPress={() => pickImageFromGallery()}>
-            <S.Icon source={{ uri: imageUser }} />
+            <S.Icon source={{ uri: imageUser }} image={imageUser} />
             <S.PencilIconCircle>
               <S.PencilIcon source={require('../../assets/Pencil.png')} />
             </S.PencilIconCircle>
           </S.ProfileContainer>
         ) : (
           <S.ProfileContainer onPress={() => pickImageFromGallery()}>
-            <S.Icon source={IconProfile} />
+            <S.Icon source={IconProfile} image={imageUser} />
             <S.PencilIconCircle>
               <S.PencilIcon source={require('../../assets/Pencil.png')} />
             </S.PencilIconCircle>

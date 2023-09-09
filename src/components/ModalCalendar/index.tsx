@@ -34,10 +34,10 @@ export const ModalCalendar: React.FC<ModalProps> = ({
     <S.ModalView onPress={() => setOpen(false)}>
       <S.ContentContainer>
         <S.Title>Vincular Agenda</S.Title>
-        <S.Descrition>
+        <S.Description>
           Vincule sua agenda Google ou Outlook para possuir a experiência
           completa do aplicativo!
-        </S.Descrition>
+        </S.Description>
         <S.ContainerButtons>
           <TouchableOpacity onPress={handleSendData}>
             <S.Input>

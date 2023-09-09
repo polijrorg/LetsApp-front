@@ -24,9 +24,7 @@ const Calendar: React.FC<Props> = ({}) => {
 
       // get days after today
       for (let index = today.isoWeekday() + 1; index <= 5; index++) {
-        // console.log(index); 3 4 5
         const daysAfter = index - today.isoWeekday();
-        // console.log(daysAfter);
         const day = today.add(daysAfter, 'days');
         daysOfWeek[day.isoWeekday()] = day.date();
       }

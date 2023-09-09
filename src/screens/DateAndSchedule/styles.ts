@@ -37,7 +37,7 @@ export const AllDescrition = styled.View`
   margin-bottom: 48px;
 `;
 
-export const Descrition = styled.View`
+export const Description = styled.View`
   flex-direction: row;
   align-items: center;
 `;

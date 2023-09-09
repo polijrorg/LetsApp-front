@@ -32,7 +32,7 @@ const CreateEvent = ({ navigation }) => {
   // };
   const [eventP, setEventP] = useState('');
   const [eventO, setEventO] = useState('');
-  const [descrition, setDescrition] = useState('');
+  const [description, setDescrition] = useState('');
 
   const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
   const [isOnline, setIsOnline] = useState(false);
@@ -80,7 +80,7 @@ const CreateEvent = ({ navigation }) => {
         attendees: 'caiogiro10@gmail.com',
         end: timeSelectedEnd,
         adress: eventO,
-        description: descrition,
+        description: description,
         createMeetLink: isOnline,
       });
 
@@ -97,7 +97,7 @@ const CreateEvent = ({ navigation }) => {
         guests: emailsArray,
         endHour: timeSelectedEnd,
         adress: eventO,
-        description: descrition,
+        description: description,
         link: 'www.xpto.com',
       });
 
@@ -157,7 +157,7 @@ const CreateEvent = ({ navigation }) => {
                   <S.Content
                     placeholder="Descrição"
                     multiline={true}
-                    value={descrition}
+                    value={description}
                     onChangeText={(text) => setDescrition(text)}
                   />
                 </S.Scroll>

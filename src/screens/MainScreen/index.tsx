@@ -17,8 +17,6 @@ import { Modal, TouchableOpacity } from 'react-native';
 const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
 
-const Picture2 = require('../../assets/picture2.png');
-
 const MainScreen = ({ navigation }) => {
   const { user } = useAuth();
 
@@ -141,7 +139,7 @@ const MainScreen = ({ navigation }) => {
                       .replace(/^\w/, (c) => c.toUpperCase())}
                     day={moment(event.date).format('DD')}
                     date={event.date}
-                    descrition={event.description}
+                    description={event.description}
                     beginHour={event.beginHour}
                     endHour={event.endHour}
                     invites={event.guests}
@@ -162,7 +160,7 @@ const MainScreen = ({ navigation }) => {
                     organizerName={event.element.organizerName}
                     begin={event.element.begin}
                     end={event.element.end}
-                    descrition={event.element.description}
+                    description={event.element.description}
                     navigation={navigation}
                   />
                 </React.Fragment>

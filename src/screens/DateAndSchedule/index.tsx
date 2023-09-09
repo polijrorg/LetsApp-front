@@ -110,7 +110,7 @@ const DateAndSchedule = ({ navigation }) => {
             </S.ContainerTitle>
             <S.AllDescrition>
               <S.Subtitle>Intervalo de Datas</S.Subtitle>
-              <S.Descrition>
+              <S.Description>
                 <S.Icon source={IconDate} />
                 <S.Text>Início:</S.Text>
                 {showStartPicker && (
@@ -135,8 +135,8 @@ const DateAndSchedule = ({ navigation }) => {
                     </Pressable>
                   )}
                 </S.ContainerInputDate>
-              </S.Descrition>
-              <S.Descrition>
+              </S.Description>
+              <S.Description>
                 <S.Icon source={IconDate} />
                 <S.Text>Fim:</S.Text>
                 {showEndPicker && (
@@ -166,11 +166,11 @@ const DateAndSchedule = ({ navigation }) => {
                     </Pressable>
                   )}
                 </S.ContainerInputDate>
-              </S.Descrition>
+              </S.Description>
             </S.AllDescrition>
             <S.AllDescrition>
               <S.Subtitle>Intervalo de Tempo</S.Subtitle>
-              <S.Descrition>
+              <S.Description>
                 <S.Icon source={IconClock} />
                 <S.Text>De:</S.Text>
                 {showTimeStart && (
@@ -195,8 +195,8 @@ const DateAndSchedule = ({ navigation }) => {
                     </Pressable>
                   )}
                 </S.ContainerInputDate>
-              </S.Descrition>
-              <S.Descrition>
+              </S.Description>
+              <S.Description>
                 <S.Icon source={IconClock} />
                 <S.Text>Até:</S.Text>
                 {showTimeEnd && (
@@ -221,11 +221,11 @@ const DateAndSchedule = ({ navigation }) => {
                     </Pressable>
                   )}
                 </S.ContainerInputDate>
-              </S.Descrition>
+              </S.Description>
             </S.AllDescrition>
             <S.AllDescrition>
               <S.Subtitle>Duração Estimada</S.Subtitle>
-              <S.Descrition>
+              <S.Description>
                 <S.Icon source={IconClock} />
                 <S.Text>Tempo:</S.Text>
                 <S.ContainerInputDate>
@@ -241,7 +241,7 @@ const DateAndSchedule = ({ navigation }) => {
                     }}
                   />
                 </S.ContainerInputDate>
-              </S.Descrition>
+              </S.Description>
             </S.AllDescrition>
             <S.Buttons>
               <TouchableOpacity

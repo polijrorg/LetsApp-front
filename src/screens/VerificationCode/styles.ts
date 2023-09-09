@@ -38,7 +38,7 @@ export const TitleII = styled.Text`
   font-family: 'Roboto';
 `;
 
-export const Descrition = styled.Text`
+export const Description = styled.Text`
   text-align: center;
   font-size: 16px;
   font-family: 'Roboto';

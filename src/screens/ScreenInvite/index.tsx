@@ -19,7 +19,7 @@ const presencial = require('../../assets/PresencialEvent.png');
 const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const { name, image, adress, date, event, descrition, beginHour, endHour } =
+  const { name, image, adress, date, event, description, beginHour, endHour } =
     route.params;
 
   const formattedDate = moment(date, 'DD/MM/YYYY')
@@ -76,10 +76,10 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
           </S.ContainerContent>
           <S.Line />
           <S.ContainerDescrition>
-            <S.Descrition>Descrição</S.Descrition>
+            <S.Description>Descrição</S.Description>
           </S.ContainerDescrition>
           <S.Scroll>
-            <S.Content>{descrition}</S.Content>
+            <S.Content>{description}</S.Content>
           </S.Scroll>
           <S.Buttons>
             <Button

@@ -25,7 +25,7 @@ export const Title = styled.Text`
   font-family: 'Roboto';
 `;
 
-export const Descrition = styled.Text`
+export const Description = styled.Text`
   text-align: center;
   font-size: 16px;
   color: ${theme.colors.highEmphasis};
