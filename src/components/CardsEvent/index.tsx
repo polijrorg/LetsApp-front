@@ -1,66 +1,55 @@
 import * as S from './styles';
+import Event from '@interfaces/Events';
+import moment from 'moment';
 import React from 'react';
 
 export type CardsEventProps = {
-  event: 'online' | 'presencial';
-  nameEvent?: string;
-  adress?: string;
-  date?: string;
-  invites?: string;
-  confirmed?: string;
-  image?: string;
-  month?: string;
-  day?: string;
-  beginHour?: string;
-  endHour?: string;
-  description?: string;
+  location: 'online' | 'presencial';
+  event: Event;
   navigation: any;
 };
 
 const CardsEvent: React.FC<CardsEventProps> = ({
+  location,
   event,
-  nameEvent,
-  adress,
-  date,
-  invites,
-  confirmed,
-  month,
-  day,
-  beginHour,
-  endHour,
-  description,
   navigation,
 }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
+  console.log(
+    moment(event.begin)
+      .locale('pt-br')
+      .format('MMM')
+      .replace(/^\w/, (c) => c.toUpperCase())
+  );
+  console.log(event.begin);
 
   return (
     <S.ContainerCard
       onPress={() => {
         navigation.navigate('ScreenEvent', {
           event: event,
-          nameEvent: nameEvent,
-          adress: adress,
-          date: date,
-          invites: invites,
-          confirmed: confirmed,
-          beginHour: beginHour,
-          endHour: endHour,
-          description: description,
         });
       }}
     >
       <S.ContainerContent>
         <S.Image>
-          <S.Month>{month}</S.Month>
-          <S.Day>{day}</S.Day>
+          <S.Month>
+            {moment(event.begin)
+              .locale('pt-br')
+              .format('MMM')
+              .replace(/^\w/, (c) => c.toUpperCase())}
+          </S.Month>
+          <S.Day>{moment(event.begin).format('DD')}</S.Day>
         </S.Image>
         <S.ContainerContentData>
-          <S.Name>{nameEvent}</S.Name>
-          <S.AddressView>
-            <S.IconAdress source={event === 'online' ? online : presencial} />
-            <S.Adress>{adress}</S.Adress>
-          </S.AddressView>
+          <S.Name>{event.name}</S.Name>
+          <S.ContainerContent>
+            <S.IconAdress
+              source={location === 'online' ? online : presencial}
+            />
+            <S.Adress>{event.address}</S.Adress>
+          </S.ContainerContent>
         </S.ContainerContentData>
       </S.ContainerContent>
     </S.ContainerCard>

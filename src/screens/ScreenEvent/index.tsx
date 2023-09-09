@@ -31,7 +31,6 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
     description,
   } = route.params;
 
-  // const [numberGuests] = useState(invites.length);
   const ajustDate = moment(date).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')

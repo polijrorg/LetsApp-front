@@ -9,7 +9,6 @@ import Invite from '@interfaces/Invites';
 import Profile from '@interfaces/User';
 import CalendarServices from '@services/CalendarServices';
 import { api } from '@services/api';
-import moment from 'moment';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
@@ -130,19 +129,8 @@ const MainScreen = ({ navigation }) => {
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
-                    adress={event.address}
-                    nameEvent={event.name}
-                    event="presencial"
-                    month={moment(event.date)
-                      .locale('pt-br')
-                      .format('MMM')
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                    day={moment(event.date).format('DD')}
-                    date={event.date}
-                    description={event.description}
-                    beginHour={event.beginHour}
-                    endHour={event.endHour}
-                    invites={event.guests}
+                    location="presencial"
+                    event={event}
                     navigation={navigation}
                   />
                 </React.Fragment>
