@@ -98,6 +98,7 @@ const Autentication = ({ navigation }) => {
               height="32px"
               width="304px"
               placeholder="Brasil"
+              editable={false}
             />
             <S.ContainerInputs>
               <S.Errors>

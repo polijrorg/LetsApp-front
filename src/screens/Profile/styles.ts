@@ -195,3 +195,8 @@ export const SmallBottom = styled.View`
   shadow-opacity: 0.2;
   elevation: 2;
 `;
+
+export const Gap = styled.View`
+  width: 100%;
+  height: 32px;
+`;

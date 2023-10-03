@@ -1,19 +1,15 @@
 import * as S from './styles';
+import FixedButton from '@components/FixedButton';
+import FixedInput from '@components/FixedInput';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import useAuth from '@hooks/useAuth';
-// import { useNavigation } from '@react-navigation/native';
-// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
-// import { api } from '@services/api';
-import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBack.png');
-const Agenda = require('../../assets/Calendar.png');
-const IconPhone = require('../../assets/PhoneIconBlack.png');
 const IconProfile = require('../../assets/UserCircle.png');
 const IconDelete = require('../../assets/IconDelete.png');
 
@@ -22,18 +18,14 @@ const Profile = ({ navigation, route }) => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
 
+  const [name, setName] = useState(null);
+  const [image, setImage] = useState(null);
+
+  console.log('image', image);
+
   const { user, addNameAndImage } = useAuth();
 
-  const { name, imageUser, email, phone } = route.params;
-
-  type photoProps = {
-    size: number;
-  };
-
-  type FormDataProps = {
-    username: string;
-    imageUser: string;
-  };
+  const { imageUser } = route.params;
 
   async function pickImageFromGallery() {
     try {
@@ -44,18 +36,29 @@ const Profile = ({ navigation, route }) => {
         allowsEditing: true,
       });
 
+      console.log(photoSelected.assets[0]);
+
       if (!photoSelected.canceled && photoSelected.assets[0].uri) {
-        const photoInfo = (await FileSystem.getInfoAsync(
-          photoSelected.assets[0].uri
-        )) as photoProps;
+        // const photoInfo = (await FileSystem.getInfoAsync(
+        //   photoSelected.assets[0].uri
+        // )) as photoProps;
 
         const fileExtension = photoSelected.assets[0].uri.split('.').pop();
 
-        // setImageOfUser({
-        //   name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
-        //   uri: photoSelected.assets[0].uri,
-        //   type: `${photoSelected.assets[0].type}/${fileExtension}`,
-        // } as any);
+        console.log('entrou');
+        console.log({
+          name: `random-file-name`,
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        });
+
+        // setImage(photoSelected);
+
+        setImage({
+          name: `random-file-name`,
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any);
       }
     } catch (error) {
       console.log(error);
@@ -66,11 +69,15 @@ const Profile = ({ navigation, route }) => {
   async function handleSendData() {
     try {
       const form = new FormData();
-      form.append('phone', user.phone);
-      form.append('name', user.name);
-      // form.append('photo', imageOfUser);
+      console.log('photo', image || user.photo);
 
-      addNameAndImage(form);
+      form.append('phone', user.phone);
+      form.append('name', name || user.name);
+      form.append('photo', image || user.photo);
+
+      console.log(form);
+
+      await addNameAndImage(form);
 
       navigation.navigate('MainScreen');
 
@@ -87,14 +94,17 @@ const Profile = ({ navigation, route }) => {
       <S.SmallTop />
       <S.SmallBottom />
       <S.IconBackContainer>
-        <TouchableOpacity onPress={handleSendData}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
           <S.IconBack source={IconArrow} />
         </TouchableOpacity>
       </S.IconBackContainer>
       <S.Header>
-        {imageUser ? (
+        {image || imageUser ? (
           <S.ProfileContainer onPress={() => pickImageFromGallery()}>
-            <S.Icon source={{ uri: imageUser }} image={imageUser} />
+            <S.Icon
+              source={{ uri: image ? image.uri : imageUser }}
+              image={image || imageUser}
+            />
             <S.PencilIconCircle>
               <S.PencilIcon source={require('../../assets/Pencil.png')} />
             </S.PencilIconCircle>
@@ -110,15 +120,14 @@ const Profile = ({ navigation, route }) => {
       </S.Header>
       <S.ContainerInput>
         <S.NameInput>Pessoal</S.NameInput>
-        <S.EditInput>
-          <Input
-            width="100%"
-            height="40px"
-            placeholder={name}
-            pencil
-            editable={false}
-          />
-        </S.EditInput>
+        <FixedInput
+          width="100%"
+          height="40px"
+          value={name || user.name}
+          setValue={setName}
+          pencil
+          placeholder="Insira seu nome"
+        />
         <S.Line />
         <S.NameInput>Agenda</S.NameInput>
         <S.InputAndXContainer>
@@ -126,7 +135,7 @@ const Profile = ({ navigation, route }) => {
             <Input
               width="100%"
               height="40px"
-              placeholder={email}
+              placeholder={user.email}
               editable={false}
             />
           </S.FlexibleInputContainer>
@@ -155,11 +164,13 @@ const Profile = ({ navigation, route }) => {
             <Input
               width="100%"
               height="40px"
-              placeholder={phone}
+              placeholder={user.phone}
               editable={false}
             />
           </S.FlexibleInputContainer>
         </S.InputAndXContainer>
+        <S.Gap />
+        <FixedButton width="100%" title="Salvar" onPress={handleSendData} />
         <TouchableOpacity
           onPress={() => {
             setOpen1(true);

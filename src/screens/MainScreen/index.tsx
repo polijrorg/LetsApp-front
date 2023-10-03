@@ -7,6 +7,7 @@ import useAuth from '@hooks/useAuth';
 import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import Profile from '@interfaces/User';
+import { useIsFocused } from '@react-navigation/native';
 import CalendarServices from '@services/CalendarServices';
 import { api } from '@services/api';
 import 'moment/locale/pt-br';
@@ -22,18 +23,23 @@ const MainScreen = ({ navigation }) => {
   const [open, setOpen] = useState(true);
   const [completeUser, setCompleteUser] = useState<Profile>(null);
 
+  const isFocused = useIsFocused();
+
+  console.log(user);
+
   useEffect(() => {
     const getUser = async () => {
       try {
+        console.log('getUser');
         const response = await api.get(`GetUserByPhone/${user.phone}`);
+        console.log(response.data.user.photo);
         setCompleteUser(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user, isFocused]);
 
   useEffect(() => {
     const getInvites = async () => {
@@ -90,19 +96,19 @@ const MainScreen = ({ navigation }) => {
         <ModalCalendar setOpen={setOpen} />
       </Modal>
       <S.Header>
-        <S.Name>Olá {user.name}!</S.Name>
+        <S.Name>Olá {user?.name}!</S.Name>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Profile', {
-              name: user.name,
-              imageUser: completeUser?.user.photo,
+              name: user?.name,
+              imageUser: user?.photo,
               email: completeUser?.user.email,
               phone: user.phone,
             });
           }}
         >
-          {completeUser?.user.photo ? (
-            <S.Icon source={{ uri: completeUser.user.photo }} />
+          {user?.photo ? (
+            <S.Icon source={{ uri: user.photo }} />
           ) : (
             <S.Icon source={IconProfile} />
           )}

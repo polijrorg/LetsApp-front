@@ -47,12 +47,16 @@ export default class UserServices {
   }
 
   static async addNameAndImage(data: FormData): Promise<User> {
-    const response = await api.post('/upload', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+    try {
+      const response = await api.post('/upload', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   static async getUserById(id: string): Promise<User> {

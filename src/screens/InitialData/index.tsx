@@ -9,7 +9,6 @@ import useAuth from '@hooks/useAuth';
 // import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
 // import { api } from '@services/api';
 // import * as AuthSession from 'expo-auth-session';
-import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
@@ -41,9 +40,6 @@ const InitialData = ({ navigation }) => {
 
   const { addNameAndImage, phone } = useAuth();
 
-  // const appNavigation = useNavigation<AppNavigatorRoutesProps>();
-  // const { setNameUser, setImageOfUser } = useContext(ProfileContext);
-
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
   const {
@@ -54,35 +50,28 @@ const InitialData = ({ navigation }) => {
     resolver: yupResolver(ValidationSchema),
   });
 
-  type photoProps = {
-    size: number;
-  };
-
-  type FormDataProps = {
-    name: string;
-    imageUser: string;
-  };
-
   async function pickImageFromGallery() {
     try {
-      const photoSelected = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 1,
-        aspect: [4, 4],
-        allowsEditing: true,
-      });
+      const result: ImagePicker.ImagePickerResult =
+        await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 1,
+          aspect: [4, 4],
+          allowsEditing: true,
+        });
 
-      if (!photoSelected.canceled && photoSelected.assets[0].uri) {
-        const photoInfo = (await FileSystem.getInfoAsync(
-          photoSelected.assets[0].uri
-        )) as photoProps;
+      if (!result.canceled) {
+        console.log('result', result);
+        // const photoInfo = (await FileSystem.getInfoAsync(
+        //   result.assets[0].uri
+        // )) as photoProps;
 
-        const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+        const fileExtension = result.assets[0].uri.split('.').pop();
 
         setImageUser({
           name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
-          uri: photoSelected.assets[0].uri,
-          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+          uri: result.assets[0].uri,
+          type: `${result.assets[0].type}/${fileExtension}`,
         } as any);
       }
     } catch (error) {
@@ -91,7 +80,7 @@ const InitialData = ({ navigation }) => {
     }
   }
 
-  async function handleSendData({ name, imageUser }: FormDataProps) {
+  async function handleSendData() {
     try {
       const form = new FormData();
       form.append('phone', phone);
@@ -100,7 +89,7 @@ const InitialData = ({ navigation }) => {
 
       console.log('form', form);
 
-      addNameAndImage(form);
+      await addNameAndImage(form);
 
       // const { data } = await api.post('/upload', form, {
       //   headers: {
@@ -116,7 +105,7 @@ const InitialData = ({ navigation }) => {
 
   async function handlePress() {
     try {
-      const result = await handleSendData({ name, imageUser });
+      const result = await handleSendData();
       // navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
@@ -155,7 +144,9 @@ const InitialData = ({ navigation }) => {
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>Dados Iniciais</S.Title>
-            <S.Description>Preencha aqui com a sua foto e seu nome</S.Description>
+            <S.Description>
+              Preencha aqui com a sua foto e seu nome
+            </S.Description>
             <TouchableOpacity onPress={() => pickImageFromGallery()}>
               {imageUser === '' ? (
                 <S.Gallery source={Gallery} resizeMode={'cover'} />
