@@ -43,12 +43,14 @@ const Contact: React.FC<ContactProps> = ({
       isSelected={!isDisabled && isSelected}
       activeOpacity={isDisabled ? 1 : 0.2}
     >
-      <S.Icon source={isDisabled ? InvitedContactIcon : ContactIcon} />
-      <S.Data>
-        <S.Name>{name}</S.Name>
-        <S.PhoneOrEmail>{phoneOrEmail}</S.PhoneOrEmail>
-        {/* <S.PhoneOrEmail>{email}</S.PhoneOrEmail> */}
-      </S.Data>
+      <S.ContentWrapper>
+        <S.Icon source={isDisabled ? InvitedContactIcon : ContactIcon} />
+        <S.Data>
+          <S.Name>{name}</S.Name>
+          <S.PhoneOrEmail>{phoneOrEmail}</S.PhoneOrEmail>
+          {/* <S.PhoneOrEmail>{email}</S.PhoneOrEmail> */}
+        </S.Data>
+      </S.ContentWrapper>
       {!isDisabled && isSelected ? (
         <CheckBox
           checkedIcon="check"

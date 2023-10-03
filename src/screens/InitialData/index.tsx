@@ -35,7 +35,7 @@ const InitialData = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [imageUser, setImageUser] = useState('');
+  const [imageUser, setImageUser] = useState(null);
 
   const { addNameAndImage, phone } = useAuth();
 
@@ -59,16 +59,11 @@ const InitialData = ({ navigation }) => {
           allowsEditing: true,
         });
 
-      if (!result.canceled) {
-        console.log('result', result);
-        // const photoInfo = (await FileSystem.getInfoAsync(
-        //   result.assets[0].uri
-        // )) as photoProps;
-
+      if (!result.canceled && result.assets[0].uri) {
         const fileExtension = result.assets[0].uri.split('.').pop();
 
         setImageUser({
-          name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
+          name: `random-file-name`,
           uri: result.assets[0].uri,
           type: `${result.assets[0].type}/${fileExtension}`,
         } as any);
@@ -86,26 +81,7 @@ const InitialData = ({ navigation }) => {
       form.append('name', name);
       form.append('photo', imageUser);
 
-      console.log('form', form);
-
       await addNameAndImage(form);
-
-      // const { data } = await api.post('/upload', form, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // });
-      // setNameUser(name);
-      // setImageOfUser(imageUser);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handlePress() {
-    try {
-      const result = await handleSendData();
-      // navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }
@@ -146,10 +122,13 @@ const InitialData = ({ navigation }) => {
               Preencha aqui com a sua foto e seu nome
             </S.Description>
             <TouchableOpacity onPress={() => pickImageFromGallery()}>
-              {imageUser === '' ? (
-                <S.Gallery source={Gallery} resizeMode={'cover'} />
+              {imageUser ? (
+                <S.Gallery
+                  source={{ uri: imageUser.uri }}
+                  resizeMode={'cover'}
+                />
               ) : (
-                <S.Gallery source={imageUser} resizeMode={'cover'} />
+                <S.Gallery source={Gallery} resizeMode={'cover'} />
               )}
             </TouchableOpacity>
             <S.Errors>
@@ -173,7 +152,7 @@ const InitialData = ({ navigation }) => {
               {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
             </S.Errors>
             <S.Empty />
-            <TouchableOpacity onPress={handleSubmit(handlePress)}>
+            <TouchableOpacity onPress={handleSubmit(handleSendData)}>
               <Button
                 width="328px"
                 backgroundColor="#3446E4"

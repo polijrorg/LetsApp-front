@@ -15,6 +15,7 @@ export const ContainerContact = styled.TouchableOpacity<ContactProps>`
   background-color: ${(props) => (props.isSelected ? '#f0f0f0' : '#FAFAFA')};
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const ContainerIcon = styled(View)`
@@ -47,6 +48,6 @@ export const PhoneOrEmail = styled.Text`
   letter-spacing: 0.25px;
 `;
 
-export const ContainerAll = styled(View)`
+export const ContentWrapper = styled(View)`
   flex-direction: row;
 `;

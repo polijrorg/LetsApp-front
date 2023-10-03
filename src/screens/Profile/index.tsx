@@ -35,23 +35,8 @@ const Profile = ({ navigation, route }) => {
         allowsEditing: true,
       });
 
-      console.log(photoSelected.assets[0]);
-
       if (!photoSelected.canceled && photoSelected.assets[0].uri) {
-        // const photoInfo = (await FileSystem.getInfoAsync(
-        //   photoSelected.assets[0].uri
-        // )) as photoProps;
-
         const fileExtension = photoSelected.assets[0].uri.split('.').pop();
-
-        console.log('entrou');
-        console.log({
-          name: `random-file-name`,
-          uri: photoSelected.assets[0].uri,
-          type: `${photoSelected.assets[0].type}/${fileExtension}`,
-        });
-
-        // setImage(photoSelected);
 
         setImage({
           name: `random-file-name`,
@@ -71,8 +56,6 @@ const Profile = ({ navigation, route }) => {
       form.append('phone', user.phone);
       form.append('name', name || user.name);
       image && form.append('photo', image);
-
-      console.log(form);
 
       await addNameAndImage(form);
 

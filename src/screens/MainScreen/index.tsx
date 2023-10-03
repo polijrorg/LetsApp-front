@@ -25,14 +25,10 @@ const MainScreen = ({ navigation }) => {
 
   const isFocused = useIsFocused();
 
-  console.log(user);
-
   useEffect(() => {
     const getUser = async () => {
       try {
-        console.log('getUser');
         const response = await api.get(`GetUserByPhone/${user.phone}`);
-        console.log(response.data.user.photo);
         setCompleteUser(response.data);
       } catch (error) {
         console.log(error);
