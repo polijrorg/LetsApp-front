@@ -90,7 +90,6 @@ const InvitedGuests = ({ navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.Header>
         <TouchableOpacity
           onPress={() => {

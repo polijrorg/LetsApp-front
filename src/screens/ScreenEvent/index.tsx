@@ -40,56 +40,51 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
       >
         <S.IconBack source={IconArrow} />
       </TouchableOpacity>
-      <S.ContainerImage>
+      <S.ContainerInfo>
         <S.Image source={Office} />
-      </S.ContainerImage>
-      <S.Header>
         <S.Name>{event.name}</S.Name>
         <S.ContainerContent>
-          <S.Column>
-            <S.Row>
-              <S.ContainerIcon>
-                <S.IconAdress
-                  source={location === 'online' ? online : presencial}
-                />
-              </S.ContainerIcon>
-              <S.Adjust>
-                <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-                <S.Adress>{event.address}</S.Adress>
-              </S.Adjust>
-            </S.Row>
-            <S.Row>
-              <S.ContainerIcon>
-                <S.IconDate source={calendar} />
-              </S.ContainerIcon>
-              <S.Adjust>
-                <S.LocalandDate>
-                  {' '}
-                  {formattedDate.replace(/^\w/, (c) => c.toUpperCase())} -{' '}
-                  {ajustDate.substring(0, 5)}
-                </S.LocalandDate>
-                <S.Date>
-                  {moment(event.begin).format('HH:mm')} -{' '}
-                  {moment(event.end).format('HH:mm')}
-                </S.Date>
-              </S.Adjust>
-            </S.Row>
-            <S.Row>
-              <S.ContainerIcon>
-                <S.IconDate source={Participants} />
-              </S.ContainerIcon>
-              <S.Adjust>
-                <S.LocalandDate>{} Convidados</S.LocalandDate>
-                <S.Confirmed>: Sim</S.Confirmed>
-              </S.Adjust>
-            </S.Row>
-          </S.Column>
+          <S.Row>
+            <S.ContainerIcon>
+              <S.IconAdress
+                source={location === 'online' ? online : presencial}
+              />
+            </S.ContainerIcon>
+            <S.Adjust>
+              <S.LocalandDate>São Paulo - SP</S.LocalandDate>
+              <S.Adress>{event.address}</S.Adress>
+            </S.Adjust>
+          </S.Row>
+          <S.Row>
+            <S.ContainerIcon>
+              <S.IconDate source={calendar} />
+            </S.ContainerIcon>
+            <S.Adjust>
+              <S.LocalandDate>
+                {formattedDate.replace(/^\w/, (c) => c.toUpperCase())} -{' '}
+                {ajustDate.substring(0, 5)}
+              </S.LocalandDate>
+              <S.Date>
+                {moment(event.begin).format('HH:mm')} -{' '}
+                {moment(event.end).format('HH:mm')}
+              </S.Date>
+            </S.Adjust>
+          </S.Row>
+          <S.Row>
+            <S.ContainerIcon>
+              <S.IconDate source={Participants} />
+            </S.ContainerIcon>
+            <S.Adjust>
+              <S.LocalandDate>{} Convidados</S.LocalandDate>
+              <S.Confirmed>: Sim</S.Confirmed>
+            </S.Adjust>
+            <S.InfoButton onPress={() => navigation.navigate('InvitedGuests')}>
+              <S.InfoText>MAIS INFORMAÇÕES</S.InfoText>
+            </S.InfoButton>
+          </S.Row>
         </S.ContainerContent>
-        <S.Line />
-        <S.Scroll>
-          <S.Content>{event.description}</S.Content>
-        </S.Scroll>
-      </S.Header>
+        <S.Content>{event.description}</S.Content>
+      </S.ContainerInfo>
     </S.Body>
   );
 };

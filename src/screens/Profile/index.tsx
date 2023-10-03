@@ -69,11 +69,9 @@ const Profile = ({ navigation, route }) => {
   async function handleSendData() {
     try {
       const form = new FormData();
-      console.log('photo', image || user.photo);
-
       form.append('phone', user.phone);
       form.append('name', name || user.name);
-      form.append('photo', image || user.photo);
+      image && form.append('photo', image);
 
       console.log(form);
 
