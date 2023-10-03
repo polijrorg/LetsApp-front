@@ -5,13 +5,7 @@ import * as AuthSession from 'expo-auth-session';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
-type ModalProps = {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export const ModalCalendar: React.FC<ModalProps> = ({
-  setOpen,
-}: ModalProps) => {
+export const ModalCalendar: React.FC = () => {
   const GoogleCalendar = require('../../assets/GoogleCalendar.png');
   const Outlook = require('../../assets/Outlook.png');
 
@@ -31,7 +25,7 @@ export const ModalCalendar: React.FC<ModalProps> = ({
   async function handleGetOutlookUrl() {}
 
   return (
-    <S.ModalView onPress={() => setOpen(false)}>
+    <S.ModalView>
       <S.ContentContainer>
         <S.Title>Vincular Agenda</S.Title>
         <S.Description>

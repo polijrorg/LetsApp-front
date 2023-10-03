@@ -92,7 +92,7 @@ const MainScreen = ({ navigation }) => {
   return (
     <S.Container>
       <Modal transparent visible={open}>
-        <ModalCalendar setOpen={setOpen} />
+        <ModalCalendar />
       </Modal>
       <S.Header>
         <S.Name>Olá {user?.name}!</S.Name>
