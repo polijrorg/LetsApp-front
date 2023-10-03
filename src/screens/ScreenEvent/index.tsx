@@ -1,6 +1,5 @@
 import * as S from './styles';
 import Event from '@interfaces/Events';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import React from 'react';
@@ -31,7 +30,6 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('MainScreen');

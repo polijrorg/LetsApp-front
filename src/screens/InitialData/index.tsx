@@ -10,7 +10,6 @@ import useAuth from '@hooks/useAuth';
 // import { api } from '@services/api';
 // import * as AuthSession from 'expo-auth-session';
 import * as ImagePicker from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -140,7 +139,6 @@ const InitialData = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-220}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>Dados Iniciais</S.Title>

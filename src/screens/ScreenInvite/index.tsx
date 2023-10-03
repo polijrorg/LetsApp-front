@@ -1,7 +1,6 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import Invite from '@interfaces/Invites';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment';
 // import moment from 'moment';
 import 'moment/locale/pt-br';
@@ -32,7 +31,6 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.Back source={Office}>
         <S.GradientTop colors={['black', 'transparent']} />
         <S.Header>

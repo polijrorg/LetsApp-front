@@ -5,7 +5,6 @@ import CardSchedule from '@components/CardSchedule';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import format from 'date-fns/format';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
@@ -115,7 +114,6 @@ const SuggestSchedule = ({ navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.ContainerTitle>
         <S.Title>Sugerir Horário</S.Title>
       </S.ContainerTitle>

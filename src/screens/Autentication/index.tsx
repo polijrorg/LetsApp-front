@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -86,7 +85,6 @@ const Autentication = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-160}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>LetsApp</S.Title>

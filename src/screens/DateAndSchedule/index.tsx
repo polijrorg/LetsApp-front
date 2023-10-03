@@ -2,7 +2,6 @@ import * as S from './styles';
 import Button from '@components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
@@ -104,7 +103,6 @@ const DateAndSchedule = ({ navigation }) => {
       <ScrollView>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <S.Body>
-            <StatusBar hidden={true} />
             <S.ContainerTitle>
               <S.Title>Criar Novo Evento</S.Title>
             </S.ContainerTitle>

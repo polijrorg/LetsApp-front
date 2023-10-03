@@ -5,7 +5,6 @@ import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import useAuth from '@hooks/useAuth';
 import * as ImagePicker from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
@@ -87,7 +86,6 @@ const Profile = ({ navigation, route }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.SmallCircleRight />
       <S.SmallTop />
       <S.SmallBottom />

@@ -5,7 +5,6 @@ import useAuth from '@hooks/useAuth';
 import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import useProfile from 'src/contexts/useProfile';
@@ -90,7 +89,6 @@ const SelectGuests = ({ navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.Header>
         <TouchableOpacity
           onPress={() => {

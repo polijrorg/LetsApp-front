@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import InputCode from '@components/InputCode';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
   Keyboard,
@@ -65,7 +64,6 @@ const VerificationCode = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-200}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.ContainerTitle>

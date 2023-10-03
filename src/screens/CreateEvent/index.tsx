@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import format from 'date-fns/format';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
   Keyboard,
@@ -111,7 +110,6 @@ const CreateEvent = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position">
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Back source={Office}>
             <TouchableOpacity
               onPress={() => {
