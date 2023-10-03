@@ -17,7 +17,7 @@ const Phone = require('../../assets/PhoneIcon.png');
 
 const VerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
-  const { user } = useAuth();
+  const { initialUser } = useAuth();
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -38,6 +38,7 @@ const VerificationCode = ({ navigation }) => {
   );
 
   useEffect(() => {
+    console.log(initialUser);
     const handleSmsReceived = async (message) => {
       const code = message.body.match(/\d{6}/)[0];
       setVerificationCode(code);
@@ -79,7 +80,7 @@ const VerificationCode = ({ navigation }) => {
                 setVerificationCode(value);
                 try {
                   const { data } = await api.post('/verify', {
-                    phone: user.phone,
+                    phone: initialUser.phone,
                     code: parseInt(value, 10),
                   });
                   console.log(data);

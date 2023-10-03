@@ -30,6 +30,9 @@ const MainScreen = ({ navigation }) => {
       try {
         const response = await api.get(`GetUserByPhone/${user.phone}`);
         setCompleteUser(response.data);
+        setOpen(!response.data.calendar_found);
+        console.log('completeUser', response.data);
+        console.log('user', user);
       } catch (error) {
         console.log(error);
       }
@@ -51,8 +54,8 @@ const MainScreen = ({ navigation }) => {
         console.log(error);
       }
     };
-    getInvites();
-  }, [completeUser]);
+    user.email && getInvites();
+  }, [completeUser, user.email]);
 
   useEffect(() => {
     const getEvents = async () => {
@@ -67,8 +70,8 @@ const MainScreen = ({ navigation }) => {
         console.log(error);
       }
     };
-    getEvents();
-  }, [completeUser]);
+    user.email && getEvents();
+  }, [completeUser, user.email]);
 
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
@@ -118,10 +121,12 @@ const MainScreen = ({ navigation }) => {
           </S.OptionEvents>
           <S.OptionInvite onPress={handleInvitePress} Option={selectedOption}>
             <S.Invite Option={selectedOption}>Convites</S.Invite>
-            {numberInvites && (
+            {numberInvites ? (
               <S.NumberInvites>
                 <S.Number>{numberInvites}</S.Number>
               </S.NumberInvites>
+            ) : (
+              <></>
             )}
           </S.OptionInvite>
         </S.ContainerOptions>

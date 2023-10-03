@@ -2,6 +2,7 @@ import User from '@interfaces/User';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserServices from '@services/UserServices';
 import UserService, { IDeleteUserRequest } from '@services/UserServices';
+import { api } from '@services/api';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
 interface IRegisterRequest {
@@ -12,6 +13,7 @@ interface AuthContextData {
   user: User;
   phone: string;
   register: (data: IRegisterRequest) => Promise<void>;
+  updateUser: () => Promise<void>;
   deleteUser: (data: IDeleteUserRequest) => Promise<void>;
   loading: boolean;
   addNameAndImage: (data: FormData) => Promise<void>;
@@ -62,6 +64,19 @@ export const AuthProvider: React.FC<{
     console.log('deletouu');
   };
 
+  const updateUser = async () => {
+    try {
+      const response = await api.get(`GetUserByPhone/${user.phone}`);
+      setUser(response.data.user);
+      await AsyncStorage.setItem(
+        'letsApp:user',
+        JSON.stringify(response.data.user)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const addNameAndImage = async (data: FormData) => {
     const response = await UserServices.addNameAndImage(data);
 
@@ -95,6 +110,7 @@ export const AuthProvider: React.FC<{
         phone,
         register,
         deleteUser,
+        updateUser,
         loading,
         initialUser,
         addNameAndImage,

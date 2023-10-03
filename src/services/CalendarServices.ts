@@ -41,4 +41,9 @@ export default class CalendarServices {
 
     return response.data;
   }
+
+  static async getGoogleUrl(phone: string): Promise<string> {
+    const response = await api.post(`/getGoogleAuthUrl/${phone}`);
+    return response.data;
+  }
 }

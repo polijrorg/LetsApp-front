@@ -1,5 +1,6 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import FixedInput from '@components/FixedInput';
 import Input from '@components/Input';
 import useAuth from '@hooks/useAuth';
 import { IDeleteUserRequest } from '@services/UserServices';
@@ -54,12 +55,10 @@ export const ModalCard: React.FC<ModalProps> = ({
     setInputs([...inputs, value]);
   };
 
-  const { userId } = useContext(UserContext);
-
   async function handleSendData() {
     try {
       const form = new FormData();
-      form.append('id', userId);
+      form.append('id', user.id);
       form.append('email', valueEmail);
 
       const { data } = await api.post('/updateEmail', form, {
@@ -134,27 +133,26 @@ export const ModalCard: React.FC<ModalProps> = ({
             </S.ContainerInputs>
           ) : type === 'Contact' ? (
             <S.ContainerInputsContact>
-              <Input
+              <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Nome"
                 value={name}
-                onChange={setName}
+                setValue={setName}
               />
-              <></>
-              <Input
+              {/* <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Telefone"
                 value={phoneNumber}
-                onChange={setPhoneNumber}
-              />
-              <Input
+                setValue={setPhoneNumber}
+              /> */}
+              <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Email"
                 value={email}
-                onChange={setEmail}
+                setValue={setEmail}
               />
             </S.ContainerInputsContact>
           ) : null}
@@ -176,7 +174,7 @@ export const ModalCard: React.FC<ModalProps> = ({
               if (screen) {
                 navigation.navigate(screen);
               }
-              handleAddInput(Input);
+              // handleAddInput(Input);
               handleSendData();
               setOpen(false);
               if (type === 'Contact') {

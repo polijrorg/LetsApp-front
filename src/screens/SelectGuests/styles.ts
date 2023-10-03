@@ -1,4 +1,5 @@
 import { theme } from '@styles/default.theme';
+import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
@@ -61,8 +62,6 @@ export const ContainerEmail = styled.View`
   height: 40px;
   margin-top: 8px;
   padding: 4px 8px 4px 4px;
-  /* border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.lowEmphasis}; */
   border-radius: 8px;
   border-width: 1px;
   border-color: ${theme.colors.lowEmphasis};
@@ -82,12 +81,12 @@ export const IconSend = styled.Image`
   height: 16px;
 `;
 
-export const Email = styled.View`
+export const Email = styled(View)`
   align-items: center;
   justify-content: center;
 `;
 
-export const AddContact = styled.Text`
+export const AddContact = styled(Text)`
   font-size: 16px;
   font-family: 'Roboto';
 `;

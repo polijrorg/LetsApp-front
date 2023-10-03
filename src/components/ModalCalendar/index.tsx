@@ -1,9 +1,9 @@
 import * as S from './styles';
-import { api } from '@services/api';
+import useAuth from '@hooks/useAuth';
+import CalendarServices from '@services/CalendarServices';
 import * as AuthSession from 'expo-auth-session';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import useProfile from 'src/contexts/useProfile';
 
 type ModalProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,20 +15,20 @@ export const ModalCalendar: React.FC<ModalProps> = ({
   const GoogleCalendar = require('../../assets/GoogleCalendar.png');
   const Outlook = require('../../assets/Outlook.png');
 
-  const { phoneUser } = useProfile();
+  const { user, updateUser } = useAuth();
 
-  async function handleSendData() {
+  async function handleGetGoogleUrl() {
     try {
-      const phone = phoneUser;
-      const { data } = await api.post(
-        `/getAuthUrl/${encodeURIComponent(phone)}`
-      );
-      const authUrl = data;
-      const response = await AuthSession.startAsync({ authUrl });
+      const googleUrl = await CalendarServices.getGoogleUrl(user.phone);
+      const response = await AuthSession.startAsync({ authUrl: googleUrl });
+      console.log(response);
+      await updateUser();
     } catch (error) {
       console.log(error);
     }
   }
+
+  async function handleGetOutlookUrl() {}
 
   return (
     <S.ModalView onPress={() => setOpen(false)}>
@@ -39,13 +39,13 @@ export const ModalCalendar: React.FC<ModalProps> = ({
           completa do aplicativo!
         </S.Description>
         <S.ContainerButtons>
-          <TouchableOpacity onPress={handleSendData}>
+          <TouchableOpacity onPress={handleGetGoogleUrl}>
             <S.Input>
               <S.ImageCalendars source={GoogleCalendar} />
               <S.NameCalendar>Google Calendar</S.NameCalendar>
             </S.Input>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleGetOutlookUrl}>
             <S.Input>
               <S.ImageCalendars source={Outlook} />
               <S.NameCalendar>Outlook</S.NameCalendar>

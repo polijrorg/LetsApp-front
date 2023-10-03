@@ -1,12 +1,16 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
-import { ModalCard } from '@components/Modal';
+import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
-import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import {
+  Modal,
+  Pressable,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import useProfile from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
@@ -17,10 +21,11 @@ const Check = require('../../assets/Check.png');
 const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [email, setEmail] = useState('');
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(null);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phone, setPhone] = useState('');
+
   const [addParticipants, setAddParticipants] = useState([]);
 
   const { setContactSelected } = useProfile();
@@ -28,64 +33,55 @@ const SelectGuests = ({ navigation }) => {
   const { user } = useAuth();
 
   const addParticipant = () => {
-    if (name && phoneNumber) {
-      const newParticipant = { name, phoneNumber, email };
+    if (name && phone) {
+      const newParticipant = { name, phone, email };
       setAddParticipants([...addParticipants, newParticipant]);
       setName('');
-      setPhoneNumber('');
+      setPhone('');
       setEmail('');
-      addNewParticipant();
     }
   };
 
-  async function addNewParticipant() {
-    try {
-      await CalendarServices.addContact({
-        userPhone: user.phone,
-        phone: phoneNumber,
-        name: name,
-        email: email,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   useEffect(() => {
-    (async () => {
+    const getContacts = async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
           fields: [Contacts.Fields.PhoneNumbers],
           sort: Contacts.SortTypes.FirstName,
         });
-        setContacts(data);
+        setContacts(data.slice(0, 15));
       }
-    })();
+    };
+    getContacts();
   }, []);
 
   const [selectedParticipants, setSelectedParticipants] = useState([]);
-  setContactSelected(selectedParticipants);
+  // setContactSelected(selectedParticipants);
 
-  const toggleParticipantSelection = (participant) => {
-    // Verifica se o participante já foi selecionado
-    const isSelected = selectedParticipants.some(
-      (p) => p.name === participant.name
-    );
+  // const toggleParticipantSelection = (participant) => {
+  //   // Verifica se o participante já foi selecionado
+  //   const isSelected = selectedParticipants.some(
+  //     (p) => p.name === participant.name
+  //   );
 
-    if (isSelected) {
-      // Remove o participante do array de selecionados
-      setSelectedParticipants((prevParticipants) =>
-        prevParticipants.filter((p) => p.name !== participant.name)
-      );
-    } else {
-      // Adiciona o participante ao array de selecionados
-      setSelectedParticipants((prevParticipants) => [
-        ...prevParticipants,
-        participant,
-      ]);
-    }
-  };
+  //   if (isSelected) {
+  //     // Remove o participante do array de selecionados
+  //     setSelectedParticipants((prevParticipants) =>
+  //       prevParticipants.filter((p) => p.name !== participant.name)
+  //     );
+  //   } else {
+  //     // Adiciona o participante ao array de selecionados
+  //     setSelectedParticipants((prevParticipants) => [
+  //       ...prevParticipants,
+  //       participant,
+  //     ]);
+  //   }
+  // };
 
   return (
     <S.Body>
@@ -110,11 +106,7 @@ const SelectGuests = ({ navigation }) => {
           onChangeText={(texto) => setSearch(texto)}
         />
       </S.ContainerSearch>
-      <TouchableOpacity
-        onPress={() => {
-          setOpen(true);
-        }}
-      >
+      <Pressable onPress={handleOpen}>
         <S.ContainerEmail>
           <S.ContainerIcon>
             <S.IconEmail source={IconEmail} />
@@ -123,21 +115,15 @@ const SelectGuests = ({ navigation }) => {
             <S.AddContact>Adicionar Contato</S.AddContact>
           </S.Email>
         </S.ContainerEmail>
-      </TouchableOpacity>
-      <ModalCard
-        Open={open}
-        setOpen={setOpen}
-        navigation={navigation}
-        screen="SelectGuests"
-        type="Contact"
-        name={name}
-        setName={setName}
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
-        email={email}
-        setEmail={setEmail}
-        addParticipant={addParticipant}
-      />
+      </Pressable>
+      <Modal visible={open} transparent>
+        <AddContact
+          setOpen={setOpen}
+          setEmail={setEmail}
+          setName={setName}
+          setPhone={setPhone}
+        />
+      </Modal>
       <S.Scroll>
         <S.ContainerSubtitle>
           <S.Subtitle>Contatos Adicionados</S.Subtitle>
