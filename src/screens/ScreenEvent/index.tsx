@@ -7,7 +7,6 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 export type CardsInviteProps = {
-  event: 'online' | 'presencial';
   navigation: any;
   route: any;
 };
@@ -78,7 +77,9 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
               <S.LocalandDate>{} Convidados</S.LocalandDate>
               <S.Confirmed>: Sim</S.Confirmed>
             </S.Adjust>
-            <S.InfoButton onPress={() => navigation.navigate('InvitedGuests')}>
+            <S.InfoButton
+              onPress={() => navigation.navigate('InvitedGuests', { event })}
+            >
               <S.InfoText>MAIS INFORMAÇÕES</S.InfoText>
             </S.InfoButton>
           </S.Row>

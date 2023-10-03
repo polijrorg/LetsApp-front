@@ -1,16 +1,21 @@
 import { theme } from '@styles/default.theme';
+import { SafeAreaView, View } from 'react-native';
 import styled from 'styled-components/native';
 
-export const Body = styled.View`
+export const MainWrapper = styled(SafeAreaView)`
   flex: 1;
-  padding: 16px;
-  padding-top: 32px;
+  background-color: ${theme.colors.background};
+  display: flex;
+`;
+
+export const Body = styled(View)`
+  flex: 1;
+  padding: 16px 20px 0px 20px;
   background-color: ${theme.colors.background};
   display: flex;
 `;
 
 export const Header = styled.View`
-  margin-top: 4%;
   display: flex;
   flex-direction: row;
   align-items: center;

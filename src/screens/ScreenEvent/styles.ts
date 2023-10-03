@@ -20,6 +20,7 @@ export const IconBack = styled.Image`
   width: 28px;
   height: 28px;
   margin-left: 20px;
+  margin-top: 16px;
 `;
 
 export const ContainerInfo = styled(View)`
@@ -41,7 +42,7 @@ export const Name = styled(Text)`
   font-size: 18px;
   font-family: 'RobotoBold';
   color: ${theme.colors.highEmphasis};
-  padding: 16px 0px;
+  padding: 24px 0px 16px;
 `;
 
 export const Adress = styled(Text)`
