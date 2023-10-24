@@ -17,12 +17,12 @@ const CardsEvent: React.FC<CardsEventProps> = ({
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
   console.log(
-    moment(event.begin)
+    moment(event.element.begin)
       .locale('pt-br')
       .format('MMM')
       .replace(/^\w/, (c) => c.toUpperCase())
   );
-  console.log(event.begin);
+  console.log(event.element.begin);
 
   return (
     <S.ContainerCard
@@ -36,20 +36,20 @@ const CardsEvent: React.FC<CardsEventProps> = ({
       <S.ContainerContent>
         <S.Image>
           <S.Month>
-            {moment(event.begin)
+            {moment(event.element.begin)
               .locale('pt-br')
               .format('MMM')
               .replace(/^\w/, (c) => c.toUpperCase())}
           </S.Month>
-          <S.Day>{moment(event.begin).format('DD')}</S.Day>
+          <S.Day>{moment(event.element.begin).format('DD')}</S.Day>
         </S.Image>
         <S.ContainerContentData>
-          <S.Name>{event.name}</S.Name>
+          <S.Name>{event.element.name}</S.Name>
           <S.ContainerContent>
             <S.IconAdress
               source={location === 'online' ? online : presencial}
             />
-            <S.Adress>{event.address}</S.Adress>
+            <S.Adress>{event.element.address}</S.Adress>
           </S.ContainerContent>
         </S.ContainerContentData>
       </S.ContainerContent>

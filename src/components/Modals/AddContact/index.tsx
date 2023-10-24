@@ -3,7 +3,6 @@ import FixedInput from '@components/FixedInput';
 import useAuth from '@hooks/useAuth';
 import CalendarServices from '@services/CalendarServices';
 import React from 'react';
-import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {

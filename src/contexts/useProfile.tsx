@@ -17,6 +17,10 @@ export type ProfileContextData = {
   setTimeSelectedEnd: React.Dispatch<React.SetStateAction<string>>;
   contactSelected: ContactInfo[];
   setContactSelected: React.Dispatch<React.SetStateAction<ContactInfo[]>>;
+  mandatoryContactSelected: ContactInfo[];
+  setMandatoryContactSelected: React.Dispatch<
+    React.SetStateAction<ContactInfo[]>
+  >;
 };
 
 export type ContactInfo = {
@@ -40,6 +44,9 @@ export const ProfileContextProvider: React.FC<{
   const [timeSelectedStart, setTimeSelectedStart] = useState<string>(null);
   const [timeSelectedEnd, setTimeSelectedEnd] = useState<string>(null);
   const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
+  const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
+    ContactInfo[]
+  >([]);
 
   useEffect(() => {}, [
     dateStart,
@@ -71,6 +78,8 @@ export const ProfileContextProvider: React.FC<{
         setTimeSelectedEnd,
         contactSelected,
         setContactSelected,
+        mandatoryContactSelected,
+        setMandatoryContactSelected,
       }}
     >
       {children}

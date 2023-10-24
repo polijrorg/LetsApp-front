@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DateAndSchedule = ({ navigation }) => {
+const DateAndSchedule = ({ navigation, route }) => {
   const IconClock = require('../../assets/ClockIcon.png');
   const IconDate = require('../../assets/DateIcon.png');
 
@@ -37,6 +37,9 @@ const DateAndSchedule = ({ navigation }) => {
 
   const { setDateStart, setDateEnd, setTimeStart, setTimeEnd, setDuration } =
     useProfile();
+
+  const { mandatoryContactSelected, contactSelected } = route.params;
+
 
   const sendData = () => {
     setDateStart(date);
@@ -259,7 +262,10 @@ const DateAndSchedule = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   sendData();
-                  navigation.navigate('SuggestSchedule');
+                  navigation.navigate('SuggestSchedule', {
+                    mandatoryContactSelected,
+                    contactSelected,
+                  });
                 }}
               >
                 <Button

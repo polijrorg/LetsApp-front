@@ -2,16 +2,12 @@ import * as S from './styles';
 import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
+import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import useProfile from 'src/contexts/useProfile';
+import { Modal, Pressable, TouchableOpacity } from 'react-native';
+import useProfile, { ContactInfo } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -22,25 +18,31 @@ const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [email, setEmail] = useState('');
   const [contacts, setContacts] = useState(null);
+  const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
-  const [addParticipants, setAddParticipants] = useState([]);
-
-  const { setContactSelected } = useProfile();
+  const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
+  const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
+    ContactInfo[]
+  >([]);
 
   const { user } = useAuth();
 
-  const addParticipant = () => {
-    if (name && phone) {
-      const newParticipant = { name, phone, email };
-      setAddParticipants([...addParticipants, newParticipant]);
-      setName('');
-      setPhone('');
-      setEmail('');
-    }
-  };
+  useEffect(() => {
+    const getUserContacts = async () => {
+      try {
+        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        setUserContacts(response.data.user.contatos);
+        console.log('completeUser', response.data);
+        console.log('user', user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserContacts();
+  }, [user]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -60,28 +62,38 @@ const SelectGuests = ({ navigation }) => {
     getContacts();
   }, []);
 
-  const [selectedParticipants, setSelectedParticipants] = useState([]);
-  // setContactSelected(selectedParticipants);
+  const toggleParticipantSelection = (participant) => {
+    // Verifica se o participante já foi selecionado
+    const isSelected = contactSelected.some((p) => p.name === participant.name);
+    const isMandatory = mandatoryContactSelected.some(
+      (p) => p.name === participant.name
+    );
 
-  // const toggleParticipantSelection = (participant) => {
-  //   // Verifica se o participante já foi selecionado
-  //   const isSelected = selectedParticipants.some(
-  //     (p) => p.name === participant.name
-  //   );
+    if (isSelected) {
+      // Remove o participante do array de selecionados e adiciona aos mandatorios
+      setContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.name !== participant.name)
+      );
+      setMandatoryContactSelected((prevParticipants) => [
+        ...prevParticipants,
+        participant,
+      ]);
+    } else if (isMandatory) {
+      // Remove o participante do array de mandatorios
+      setMandatoryContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.name !== participant.name)
+      );
+    } else {
+      // Adiciona o participante ao array de selecionados
+      setContactSelected((prevParticipants) => [
+        ...prevParticipants,
+        participant,
+      ]);
+    }
+  };
 
-  //   if (isSelected) {
-  //     // Remove o participante do array de selecionados
-  //     setSelectedParticipants((prevParticipants) =>
-  //       prevParticipants.filter((p) => p.name !== participant.name)
-  //     );
-  //   } else {
-  //     // Adiciona o participante ao array de selecionados
-  //     setSelectedParticipants((prevParticipants) => [
-  //       ...prevParticipants,
-  //       participant,
-  //     ]);
-  //   }
-  // };
+  console.log('contatos', contactSelected);
+  console.log('mandatórios', mandatoryContactSelected);
 
   return (
     <S.Body>
@@ -129,11 +141,35 @@ const SelectGuests = ({ navigation }) => {
           <S.Subtitle>Contatos Adicionados</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
-        {addParticipants.map((participant, index) => (
+        <Contact
+          name="Letícia"
+          phoneOrEmail="+5511995076244"
+          email="leticia@falconer.com.br"
+          onPress={() =>
+            toggleParticipantSelection({
+              name: 'Teste',
+              email: 'leticia@falconer.com',
+              phoneNumber: '5511995076244',
+            })
+          }
+        />
+        <Contact
+          name="Luiz"
+          phoneOrEmail="+5511982553531"
+          email="luiz.silva@polijunior.com.br"
+          onPress={() =>
+            toggleParticipantSelection({
+              name: 'Luiz',
+              email: 'luiz.silva@polijunior.com.br',
+              phoneNumber: '+5511982553531',
+            })
+          }
+        />
+        {userContacts?.map((participant, index) => (
           <React.Fragment key={index}>
             <Contact
               name={participant.name}
-              phoneOrEmail={participant.phoneNumber}
+              phoneOrEmail={participant.phone}
               email={participant.email}
               onPress={() => toggleParticipantSelection(participant)}
             />
@@ -159,7 +195,12 @@ const SelectGuests = ({ navigation }) => {
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity
-          onPress={() => navigation.navigate('DateAndSchedule')}
+          onPress={() =>
+            navigation.navigate('DateAndSchedule', {
+              contactSelected,
+              mandatoryContactSelected,
+            })
+          }
         >
           <S.Check source={Check} />
         </TouchableOpacity>

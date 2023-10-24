@@ -21,13 +21,18 @@ const Contact: React.FC<ContactProps> = ({
   isDisabled,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
+  const [isMandatory, setIsMandatory] = useState(false);
 
   const handleClick = () => {
-    if (isSelected === false) {
-      setIsSelected(true);
-    } else {
+    if (isSelected) {
       setIsSelected(false);
+      setIsMandatory(true);
+    } else if (isMandatory) {
+      setIsSelected(false);
+      setIsMandatory(false);
+    } else {
+      setIsSelected(true);
+      setIsMandatory(false);
     }
 
     if (onPress) {
@@ -40,7 +45,7 @@ const Contact: React.FC<ContactProps> = ({
   return (
     <S.ContainerContact
       onPress={handleClick}
-      isSelected={!isDisabled && isSelected}
+      isSelected={(!isDisabled && isSelected) || isMandatory}
       activeOpacity={isDisabled ? 1 : 0.2}
     >
       <S.ContentWrapper>
@@ -48,17 +53,16 @@ const Contact: React.FC<ContactProps> = ({
         <S.Data>
           <S.Name>{name}</S.Name>
           <S.PhoneOrEmail>{phoneOrEmail}</S.PhoneOrEmail>
-          {/* <S.PhoneOrEmail>{email}</S.PhoneOrEmail> */}
+          {email ? <S.PhoneOrEmail>{email}</S.PhoneOrEmail> : <></>}
         </S.Data>
       </S.ContentWrapper>
-      {!isDisabled && isSelected ? (
+      {!isDisabled && (isSelected || isMandatory) ? (
         <CheckBox
           checkedIcon="check"
           uncheckedIcon="square-o"
           checkedColor="#3446E4"
           uncheckedColor="#3446E4"
-          checked={isPressed}
-          onPress={() => setIsPressed(!isPressed)}
+          checked={isMandatory}
           disabled={isDisabled}
         />
       ) : null}

@@ -11,60 +11,43 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import useProfile from 'src/contexts/useProfile';
 
-const SuggestSchedule = ({ navigation }) => {
-  const {
-    dateStart,
-    dateEnd,
-    timeStart,
-    timeEnd,
-    duration,
-    timeSelectedStart,
-    timeSelectedEnd,
-    contactSelected,
-  } = useProfile();
+const SuggestSchedule = ({ navigation, route }) => {
+  const { dateStart, dateEnd, timeStart, timeEnd, duration } = useProfile();
+
+  const { mandatoryContactSelected, contactSelected } = route.params;
 
   const { user } = useAuth();
 
-  console.log(
-    'selecionados',
-    timeStart,
-    user.phone,
-    dateStart,
-    dateEnd,
-    duration,
-    timeSelectedStart,
-    timeSelectedEnd
-  );
-
   const [schedules, setSchedules] = useState([]);
-
-  const divided = duration.split(':');
-  const hours = parseInt(divided[0]);
-  const minutes = parseInt(divided[1]);
-  const durationFormatted = hours * 60 + minutes;
 
   useEffect(() => {
     getSchedules();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
 
+  const [selectedSchedule, setSelectedSchedule] = useState();
+
   async function getSchedules() {
     try {
+      console.log('entrou');
       const { data } = await api.post('/getRecommededTimes', {
-        phone: '+5511953975915',
+        phone: user.phone,
         beginDate: moment(dateStart)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
-        beginHour: format(timeStart, 'HH:mm:ss'),
-        duration: durationFormatted,
+        beginHour: format(timeStart, 'HH:mm') + ':00',
+        duration: duration,
         endDate: moment(dateEnd)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
-        endHour: format(timeEnd, 'HH:mm:ss'),
-        mandatoryGuests: [],
+        endHour: format(timeEnd, 'HH:mm') + ':00',
+        mandatoryGuests: mandatoryContactSelected.map(
+          (contact) => contact.email
+        ),
       });
       setSchedules(data);
       console.log(data);
@@ -112,6 +95,8 @@ const SuggestSchedule = ({ navigation }) => {
     }));
   };
 
+  console.log('selectedSchedule', selectedSchedule);
+
   return (
     <S.Body>
       <S.ContainerTitle>
@@ -139,7 +124,12 @@ const SuggestSchedule = ({ navigation }) => {
                         scheduleStart={schedule.start1}
                         scheduleEnd={schedule.end1}
                         isSelected={isSelected}
-                        onSelect={() => handleCardSelect(day, index)}
+                        onSelect={() => {
+                          handleCardSelect(day, index);
+                          if (!isSelected) {
+                            setSelectedSchedule(schedule);
+                          }
+                        }}
                       />
                     );
                   })}
@@ -166,7 +156,12 @@ const SuggestSchedule = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('CreateEvent');
+            // handleCreateEvent();
+            navigation.navigate('CreateEvent', {
+              selectedSchedule,
+              mandatoryContactSelected,
+              contactSelected,
+            });
           }}
         >
           <Button

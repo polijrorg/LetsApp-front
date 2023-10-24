@@ -61,6 +61,7 @@ export const IconBack = styled.Image`
 export const Image = styled.Image`
   width: 48px;
   height: 48px;
+  border-radius: 24px;
   margin-right: 12px;
   color: blue;
 `;

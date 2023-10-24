@@ -15,7 +15,7 @@ const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
 // const Edition = require('../../assets/Edition.png');
 
-const CreateEvent = ({ navigation }) => {
+const CreateEvent = ({ navigation, route }) => {
   // const [nameEvent, setNameEvent] = useState('Nome do Evento');
   // const [isEditing, setIsEditing] = useState(false);
 
@@ -29,6 +29,9 @@ const CreateEvent = ({ navigation }) => {
   //     setNameEvent('Nome do Evento');
   //   }
   // };
+
+  const { selectedSchedule, mandatoryContactSelected, contactSelected } =
+    route.params;
   const [eventP, setEventP] = useState('');
   const [eventO, setEventO] = useState('');
   const [description, setDescrition] = useState('');
@@ -36,16 +39,15 @@ const CreateEvent = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
   const [isOnline, setIsOnline] = useState(false);
 
-  const {
-    dateStart,
-    dateEnd,
-    timeStart,
-    timeEnd,
-    duration,
-    timeSelectedStart,
-    timeSelectedEnd,
-    contactSelected,
-  } = useProfile();
+  // const {
+  //   dateStart,
+  //   dateEnd,
+  //   timeStart,
+  //   timeEnd,
+  //   duration,
+  //   timeSelectedStart,
+  //   timeSelectedEnd,
+  // } = useProfile();
 
   const { user } = useAuth();
 
@@ -63,24 +65,27 @@ const CreateEvent = ({ navigation }) => {
 
   async function createEvent() {
     try {
-      console.log('Telefone do usuário', user.phone);
-      console.log('Data de Inicio:', dateStart);
-      console.log('Data de Termino:', dateEnd);
-      console.log(
-        'Inicio do intervalo formatado:',
-        format(timeStart, 'HH:mm:ss')
-      );
-      console.log('Final do intervalo formatado:', format(timeEnd, 'HH:mm:ss'));
-      console.log('Duração:', duration);
-      const { data } = await api.post('/createEvent', {
+      console.log({
         name: isOnline ? eventO : eventP,
         phone: user.phone,
-        begin: timeSelectedStart,
-        attendees: 'caiogiro10@gmail.com',
-        end: timeSelectedEnd,
+        begin: selectedSchedule.start1,
+        attendees: mandatoryContactSelected.map((contact) => contact.email),
+        end: selectedSchedule.end1,
         adress: eventO,
         description: description,
         createMeetLink: isOnline,
+        optionalAttendees: contactSelected.map((contact) => contact.email),
+      });
+      const { data } = await api.post('/createGoogleEvent', {
+        name: isOnline ? eventO : eventP,
+        phone: user.phone,
+        begin: selectedSchedule.start1,
+        attendees: mandatoryContactSelected.map((contact) => contact.email),
+        end: selectedSchedule.end1,
+        adress: eventO,
+        description: description,
+        createMeetLink: isOnline,
+        optionalAttendees: contactSelected.map((contact) => contact.email),
       });
 
       console.log(data);

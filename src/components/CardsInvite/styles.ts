@@ -35,6 +35,7 @@ export const InfoWrapper = styled.View`
 export const Image = styled.Image`
   width: 52px;
   height: 52px;
+  border-radius: 26px;
 `;
 
 export const Name = styled.Text`

@@ -26,7 +26,11 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
         });
       }}
     >
-      <S.Image source={{ uri: invite.element.organizerPhoto }} />
+      {invite.element.organizerPhoto ? (
+        <S.Image source={{ uri: invite.element.organizerPhoto }} />
+      ) : (
+        <S.Image source={require('../../assets/UserCircle.png')} />
+      )}
       <S.InfoWrapper>
         <S.Name>{invite.element.name}</S.Name>
         <S.ContainerContent>

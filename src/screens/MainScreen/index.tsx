@@ -65,6 +65,7 @@ const MainScreen = ({ navigation }) => {
             completeUser.user.email
           );
           setEvents(response);
+          console.log('events', response);
         }
       } catch (error) {
         console.log(error);
@@ -136,7 +137,7 @@ const MainScreen = ({ navigation }) => {
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
-                    key={event.id}
+                    key={event.element.id}
                     location="presencial"
                     event={event}
                     navigation={navigation}

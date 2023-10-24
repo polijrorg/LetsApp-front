@@ -26,12 +26,10 @@ const CardSchedule: React.FC<CardScheduleProps> = ({
   const { setTimeSelectedStart, setTimeSelectedEnd } = useProfile();
 
   const handleClick = () => {
-    setTimeSelectedStart(scheduleStart);
-    setTimeSelectedEnd(scheduleEnd);
+    // setTimeSelectedStart(scheduleStart);
+    // setTimeSelectedEnd(scheduleEnd);
 
-    if (onSelect) {
-      onSelect();
-    }
+    onSelect();
   };
 
   return (

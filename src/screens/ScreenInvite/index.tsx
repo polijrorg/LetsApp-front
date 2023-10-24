@@ -46,7 +46,11 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         <S.GradientBottom colors={['transparent', 'black']} />
         <S.InfoWrapper>
           <S.ContainerContent>
-            <S.Image source={{ uri: invite.element.organizerPhoto }} />
+            {invite.element.organizerPhoto ? (
+              <S.Image source={{ uri: invite.element.organizerPhoto }} />
+            ) : (
+              <S.Image source={require('../../assets/UserCircle.png')} />
+            )}
             <S.Name>Convidado por {invite.element.organizerName}</S.Name>
           </S.ContainerContent>
           <S.InfoContent>

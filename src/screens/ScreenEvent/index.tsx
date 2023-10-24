@@ -21,7 +21,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const event: Event = route.params.event;
   const location = route.params.event;
 
-  const ajustDate = moment(event.begin).format('DD/MM/YYYY');
+  const ajustDate = moment(event.element.begin).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')
     .format('ddd');
@@ -39,7 +39,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
       </TouchableOpacity>
       <S.ContainerInfo>
         <S.Image source={Office} />
-        <S.Name>{event.name}</S.Name>
+        <S.Name>{event.element.name}</S.Name>
         <S.ContainerContent>
           <S.Row>
             <S.ContainerIcon>
@@ -49,7 +49,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             </S.ContainerIcon>
             <S.Adjust>
               <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-              <S.Adress>{event.address}</S.Adress>
+              <S.Adress>{event.element.address}</S.Adress>
             </S.Adjust>
           </S.Row>
           <S.Row>
@@ -62,8 +62,8 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                 {ajustDate.substring(0, 5)}
               </S.LocalandDate>
               <S.Date>
-                {moment(event.begin).format('HH:mm')} -{' '}
-                {moment(event.end).format('HH:mm')}
+                {moment(event.element.begin).format('HH:mm')} -{' '}
+                {moment(event.element.end).format('HH:mm')}
               </S.Date>
             </S.Adjust>
           </S.Row>
@@ -82,7 +82,7 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             </S.InfoButton>
           </S.Row>
         </S.ContainerContent>
-        <S.Content>{event.description}</S.Content>
+        <S.Content>{event.element.description}</S.Content>
       </S.ContainerInfo>
     </S.Body>
   );
