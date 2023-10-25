@@ -54,6 +54,7 @@ export const AuthProvider: React.FC<{
   };
 
   const deleteUser = async (data: IDeleteUserRequest) => {
+    console.log(data);
     await UserService.deleteUser(data);
     await AsyncStorage.clear();
 
