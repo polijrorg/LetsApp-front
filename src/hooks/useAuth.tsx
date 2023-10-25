@@ -7,6 +7,7 @@ import React, { useContext, useState, createContext, useEffect } from 'react';
 
 interface IRegisterRequest {
   phone: string;
+  pseudoUserId?: string;
 }
 
 interface AuthContextData {

@@ -2,14 +2,16 @@ import * as S from './styles';
 import Button from '@components/Button';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
-import format from 'date-fns/format';
+// import format from 'date-fns/format';
+import { createURL } from 'expo-linking';
 import React, { useState } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import useProfile from 'src/contexts/useProfile';
+
+// import useProfile from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
@@ -51,7 +53,7 @@ const CreateEvent = ({ navigation, route }) => {
 
   const { user } = useAuth();
 
-  const emailsArray = contactSelected.map((guest) => guest.email);
+  // const emailsArray = contactSelected.map((guest) => guest.email);
 
   const handleOnlinePress = () => {
     setSelectedOption('online');
@@ -89,26 +91,32 @@ const CreateEvent = ({ navigation, route }) => {
       });
 
       console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      const { data } = await api.post('/invites/create', {
-        name: isOnline ? eventO : eventP,
-        date: dateStart,
-        phone: user.phone,
-        beginHour: timeSelectedStart,
-        guests: emailsArray,
-        endHour: timeSelectedEnd,
-        adress: eventO,
-        description: description,
-        link: 'www.xpto.com',
-      });
 
-      console.log(data);
+      data.pseudoGuests.map((pseudoGuest) => {
+        const prefix = createURL('lets-app');
+        const link = `${prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+        console.log(link);
+      });
     } catch (error) {
       console.log(error);
     }
+    // try {
+    //   const { data } = await api.post('/invites/create', {
+    //     name: isOnline ? eventO : eventP,
+    //     date: dateStart,
+    //     phone: user.phone,
+    //     beginHour: timeSelectedStart,
+    //     guests: emailsArray,
+    //     endHour: timeSelectedEnd,
+    //     adress: eventO,
+    //     description: description,
+    //     link: 'www.xpto.com',
+    //   });
+
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   return (

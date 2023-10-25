@@ -29,7 +29,7 @@ const ValidationSchema = yup.object({
   DDD: yup.string().required('Informe seu DDD').length(2, 'DDD inválido'),
 });
 
-const Autentication = ({ navigation }) => {
+const Autentication = ({ navigation, routes }) => {
   const { register } = useAuth();
 
   const [DDD, setDDD] = useState('');
@@ -48,7 +48,10 @@ const Autentication = ({ navigation }) => {
   async function handleSignUp() {
     try {
       const formattedPhone = `+55${DDD}${phone}`;
-      await register({ phone: formattedPhone });
+      await register({
+        phone: formattedPhone,
+        pseudoUserId: routes.params.pseudoUserId,
+      });
       // setPhoneUser(formattedPhone);
       console.log('ue');
       navigation.navigate('VerificationCode');

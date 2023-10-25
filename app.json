@@ -12,6 +12,12 @@
       "eas": {
         "projectId": "59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
       }
+    },
+    "android": {
+      "package": "com.letsapp.letsapp"
+    },
+    "ios": {
+      "bundleIdentifier": "com.letsapp.letsapp"
     }
   }
 }
