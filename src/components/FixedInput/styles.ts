@@ -23,7 +23,9 @@ export const ContainerInput = styled.View<InputProps>`
 export const Input = styled.TextInput`
   flex: 1;
   font-size: 16px;
+  padding-left: 2px;
   font-family: 'Roboto';
+  color: ${theme.colors.highEmphasis};
 `;
 
 export const ContainerArrow = styled.View<InputProps>`

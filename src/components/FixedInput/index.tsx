@@ -34,7 +34,7 @@ const FixedInput: React.FC<InputProps> = ({
         value={value}
         onChangeText={(text) => setValue(text)}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.mediumEmphasis}
+        placeholderTextColor={theme.colors.lowEmphasis}
         keyboardType={keyboardType}
         editable={editable}
       />

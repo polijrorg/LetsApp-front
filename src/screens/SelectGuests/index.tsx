@@ -5,8 +5,9 @@ import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
+import { Modal } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { Modal, Pressable, TouchableOpacity } from 'react-native';
+import { Pressable, TouchableOpacity } from 'react-native';
 import useProfile, { ContactInfo } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
@@ -16,12 +17,9 @@ const Check = require('../../assets/Check.png');
 
 const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
-  const [email, setEmail] = useState('');
   const [contacts, setContacts] = useState(null);
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
 
   const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
   const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
@@ -42,7 +40,7 @@ const SelectGuests = ({ navigation }) => {
       }
     };
     getUserContacts();
-  }, [user]);
+  }, [user, open]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -92,8 +90,8 @@ const SelectGuests = ({ navigation }) => {
     }
   };
 
-  console.log('contatos', contactSelected);
-  console.log('mandatórios', mandatoryContactSelected);
+  // console.log('contatos', contactSelected);
+  // console.log('mandatórios', mandatoryContactSelected);
 
   return (
     <S.Body>
@@ -128,13 +126,8 @@ const SelectGuests = ({ navigation }) => {
           </S.Email>
         </S.ContainerEmail>
       </Pressable>
-      <Modal visible={open} transparent>
-        <AddContact
-          setOpen={setOpen}
-          setEmail={setEmail}
-          setName={setName}
-          setPhone={setPhone}
-        />
+      <Modal isOpen={open}>
+        <AddContact setOpen={setOpen} userPhone={user.phone} />
       </Modal>
       <S.Scroll>
         <S.ContainerSubtitle>
