@@ -60,7 +60,7 @@ const Autentication = ({ navigation, route }) => {
     }
   }
 
-  // Ouvinte para o teclado ficar ativo
+  // Ouvinte para o teclado ficar ativo //
   const keyboardDidShowListener = Keyboard.addListener(
     'keyboardDidShow',
     () => {
