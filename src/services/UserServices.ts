@@ -21,6 +21,11 @@ export interface IDeleteUserRequest {
   phone: string;
 }
 
+interface ISendLinkRequest {
+  link: string;
+  pseudoUserId: string;
+}
+
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<User> {
     try {
@@ -70,6 +75,18 @@ export default class UserServices {
       const response = await api.post('/verify', {
         code: data.code,
         phone: data.phone,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async sendSignUpLink(data: ISendLinkRequest): Promise<string> {
+    try {
+      const response = await api.post('/SendSignUpLink', {
+        link: data.link,
+        pseudoUserId: data.pseudoUserId,
       });
       return response.data;
     } catch (error) {

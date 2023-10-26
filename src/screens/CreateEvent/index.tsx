@@ -1,6 +1,7 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import useAuth from '@hooks/useAuth';
+import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 // import format from 'date-fns/format';
 import { createURL } from 'expo-linking';
@@ -65,6 +66,19 @@ const CreateEvent = ({ navigation, route }) => {
     setIsOnline(false);
   };
 
+  const handleLinkNotification = async (link: string, pseudoUserId: string) => {
+    try {
+      const reponse = await UserServices.sendSignUpLink({
+        link,
+        pseudoUserId,
+      });
+
+      console.log('link notification response: ', reponse);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   async function createEvent() {
     try {
       console.log({
@@ -95,7 +109,8 @@ const CreateEvent = ({ navigation, route }) => {
       data.pseudoGuests.map((pseudoGuest) => {
         const prefix = createURL('lets-app');
         const link = `${prefix}/authentication/${pseudoGuest.pseudoUserId}`;
-        console.log(link);
+
+        handleLinkNotification(link, pseudoGuest.pseudoUserId);
       });
     } catch (error) {
       console.log(error);
