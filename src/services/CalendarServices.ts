@@ -46,4 +46,9 @@ export default class CalendarServices {
     const response = await api.post(`/getGoogleAuthUrl/${phone}`);
     return response.data;
   }
+
+  static async getOutlookUrl(phone: string): Promise<string> {
+    const response = await api.post(`/getOutlookAuthUrl/${phone}`);
+    return response.data;
+  }
 }

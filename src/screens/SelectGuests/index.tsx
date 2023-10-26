@@ -7,7 +7,7 @@ import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, TouchableOpacity } from 'react-native';
-import useProfile, { ContactInfo } from 'src/contexts/useProfile';
+import { ContactInfo } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -16,12 +16,12 @@ const Check = require('../../assets/Check.png');
 
 const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
   const [contacts, setContacts] = useState(null);
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  // const [name, setName] = useState('');
+  // const [phone, setPhone] = useState('');
 
   const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
   const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
@@ -45,7 +45,7 @@ const SelectGuests = ({ navigation }) => {
   }, [user]);
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpen(!open);
   };
 
   useEffect(() => {
@@ -131,9 +131,9 @@ const SelectGuests = ({ navigation }) => {
       <Modal visible={open} transparent>
         <AddContact
           setOpen={setOpen}
-          setEmail={setEmail}
-          setName={setName}
-          setPhone={setPhone}
+          // setEmail={setEmail}
+          // setName={setName}
+          // setPhone={setPhone}
         />
       </Modal>
       <S.Scroll>

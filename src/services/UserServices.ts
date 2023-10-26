@@ -10,11 +10,11 @@ interface IVerifyCodeRequest {
   code: number;
 }
 
-interface IAddContact {
+export interface IAddContact {
   userPhone: string;
-  phone: string;
+  phone?: string;
   name: string;
-  email: string;
+  email?: string;
 }
 
 export interface IDeleteUserRequest {
@@ -43,7 +43,9 @@ export default class UserServices {
   static async deleteUser(data: IDeleteUserRequest): Promise<User> {
     try {
       const reponse = await api.delete('/deleteUser', {
-        phone: data.phone,
+        data: {
+          phone: data.phone,
+        },
       });
       return reponse.data;
     } catch (error) {
@@ -87,6 +89,20 @@ export default class UserServices {
       const response = await api.post('/SendSignUpLink', {
         link: data.link,
         pseudoUserId: data.pseudoUserId,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async addContact(data: IAddContact): Promise<User> {
+    try {
+      const response = await api.post('/addContact', {
+        userPhone: data.userPhone,
+        phone: data.phone,
+        name: data.name,
+        email: data.email,
       });
       return response.data;
     } catch (error) {
