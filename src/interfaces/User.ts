@@ -7,12 +7,19 @@ export default interface User {
   email: string;
   photo: string;
   code: string;
-  googleRefeshCode: string;
-  microsoftRefeshCode: string;
+  googleRefreshCode: string;
   created_at: Date;
   updated_at: Date;
   tokens: string;
+  type: string;
   contatos: Contacts[];
+}
+
+export interface PseudoUser {
+  pseudoUserId: string;
+  email?: string;
+  phone?: string;
+  name: string;
 }
 
 export default interface Profile {

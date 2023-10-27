@@ -56,7 +56,7 @@ const AddContact: React.FC<Props> = ({
   };
 
   return (
-    <S.Body onPress={() => setOpen(false)}>
+    <S.Body>
       <S.ModalView>
         {/* <S.BackButton
           onPress={() => {

@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export type ProfileContextData = {
-  dateStart: Date;
-  setDateStart: React.Dispatch<React.SetStateAction<Date>>;
-  dateEnd: Date;
-  setDateEnd: React.Dispatch<React.SetStateAction<Date>>;
-  timeStart: Date;
-  setTimeStart: React.Dispatch<React.SetStateAction<Date>>;
-  timeEnd: Date;
-  setTimeEnd: React.Dispatch<React.SetStateAction<Date>>;
-  duration: String;
-  setDuration: React.Dispatch<React.SetStateAction<String>>;
+  dateStart: String;
+  setDateStart: React.Dispatch<React.SetStateAction<String>>;
+  dateEnd: String;
+  setDateEnd: React.Dispatch<React.SetStateAction<String>>;
+  timeStart: String;
+  setTimeStart: React.Dispatch<React.SetStateAction<String>>;
+  timeEnd: String;
+  setTimeEnd: React.Dispatch<React.SetStateAction<String>>;
+  duration: Number;
+  setDuration: React.Dispatch<React.SetStateAction<Number>>;
   timeSelectedStart: string;
   setTimeSelectedStart: React.Dispatch<React.SetStateAction<string>>;
   timeSelectedEnd: string;
@@ -36,11 +36,11 @@ const ProfileContext = createContext<ProfileContextData>(
 export const ProfileContextProvider: React.FC<{
   children?: React.ReactNode | undefined;
 }> = ({ children }) => {
-  const [dateStart, setDateStart] = useState<Date>(null);
-  const [dateEnd, setDateEnd] = useState<Date>(null);
-  const [timeStart, setTimeStart] = useState<Date>(null);
-  const [timeEnd, setTimeEnd] = useState<Date>(null);
-  const [duration, setDuration] = useState<String>(null);
+  const [dateStart, setDateStart] = useState<string>(null);
+  const [dateEnd, setDateEnd] = useState<string>(null);
+  const [timeStart, setTimeStart] = useState<string>(null);
+  const [timeEnd, setTimeEnd] = useState<string>(null);
+  const [duration, setDuration] = useState<Number>(null);
   const [timeSelectedStart, setTimeSelectedStart] = useState<string>(null);
   const [timeSelectedEnd, setTimeSelectedEnd] = useState<string>(null);
   const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);

@@ -2,17 +2,16 @@ import * as S from './styles';
 import Button from '@components/Button';
 import useAuth from '@hooks/useAuth';
 import UserServices from '@services/UserServices';
-import { api } from '@services/api';
 // import format from 'date-fns/format';
 import { createURL } from 'expo-linking';
+import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-
-// import useProfile from 'src/contexts/useProfile';
+import useProfile from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlue.png');
 const Office = require('../../assets/Office.png');
@@ -38,23 +37,11 @@ const CreateEvent = ({ navigation, route }) => {
   const [eventP, setEventP] = useState('');
   const [eventO, setEventO] = useState('');
   const [description, setDescrition] = useState('');
-
+  const { dateEnd, timeStart, timeEnd } = useProfile();
   const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
   const [isOnline, setIsOnline] = useState(false);
 
-  // const {
-  //   dateStart,
-  //   dateEnd,
-  //   timeStart,
-  //   timeEnd,
-  //   duration,
-  //   timeSelectedStart,
-  //   timeSelectedEnd,
-  // } = useProfile();
-
   const { user } = useAuth();
-
-  // const emailsArray = contactSelected.map((guest) => guest.email);
 
   const handleOnlinePress = () => {
     setSelectedOption('online');
@@ -66,72 +53,53 @@ const CreateEvent = ({ navigation, route }) => {
     setIsOnline(false);
   };
 
-  const handleLinkNotification = async (link: string, pseudoUserId: string) => {
-    try {
-      const reponse = await UserServices.sendSignUpLink({
-        link,
-        pseudoUserId,
-      });
-
-      console.log('link notification response: ', reponse);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  const createOutlookEvent = UserServices.createOutlookEvent;
+  const createGoogleEvent = UserServices.createGoogleEvent;
 
   async function createEvent() {
-    try {
-      console.log({
-        name: isOnline ? eventO : eventP,
+    const beginSearch = moment(timeStart.toString(), 'HH:mm:ss').format();
+
+    const date = moment(dateEnd.toString()).get('date');
+    const month = moment(dateEnd.toString()).get('month');
+    const year = moment(dateEnd.toString()).get('year');
+
+    const endSearch = moment(timeEnd.toString(), 'HH:mm:ss')
+      .set({ date, month, year })
+      .format();
+
+    const prefix = createURL('lets-app');
+
+    if (user.type === 'OUTLOOK') {
+      await createOutlookEvent({
+        prefix,
         phone: user.phone,
-        begin: selectedSchedule.start1,
+        begin: selectedSchedule.start,
+        end: selectedSchedule.end,
+        beginSearch: beginSearch,
+        endSearch: endSearch,
+        name: isOnline ? eventO : eventP,
         attendees: mandatoryContactSelected.map((contact) => contact.email),
-        end: selectedSchedule.end1,
-        adress: eventO,
-        description: description,
+        address: 'test',
+        description,
         createMeetLink: isOnline,
         optionalAttendees: contactSelected.map((contact) => contact.email),
       });
-      const { data } = await api.post('/createGoogleEvent', {
-        name: isOnline ? eventO : eventP,
+    } else {
+      await createGoogleEvent({
+        prefix,
         phone: user.phone,
-        begin: selectedSchedule.start1,
+        begin: selectedSchedule.start,
+        end: selectedSchedule.end,
+        beginSearch: beginSearch,
+        endSearch: endSearch,
+        name: isOnline ? eventO : eventP,
         attendees: mandatoryContactSelected.map((contact) => contact.email),
-        end: selectedSchedule.end1,
-        adress: eventO,
-        description: description,
+        address: 'test',
+        description,
         createMeetLink: isOnline,
         optionalAttendees: contactSelected.map((contact) => contact.email),
       });
-
-      console.log(data);
-
-      data.pseudoGuests.map((pseudoGuest) => {
-        const prefix = createURL('lets-app');
-        const link = `${prefix}/authentication/${pseudoGuest.pseudoUserId}`;
-
-        handleLinkNotification(link, pseudoGuest.pseudoUserId);
-      });
-    } catch (error) {
-      console.log(error);
     }
-    // try {
-    //   const { data } = await api.post('/invites/create', {
-    //     name: isOnline ? eventO : eventP,
-    //     date: dateStart,
-    //     phone: user.phone,
-    //     beginHour: timeSelectedStart,
-    //     guests: emailsArray,
-    //     endHour: timeSelectedEnd,
-    //     adress: eventO,
-    //     description: description,
-    //     link: 'www.xpto.com',
-    //   });
-
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }
 
   return (

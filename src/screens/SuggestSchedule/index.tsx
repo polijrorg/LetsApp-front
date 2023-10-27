@@ -1,15 +1,16 @@
-/* eslint-disable radix */
 import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
 import useAuth from '@hooks/useAuth';
 import { api } from '@services/api';
-import format from 'date-fns/format';
+// import format from 'date-fns/format';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import useProfile from 'src/contexts/useProfile';
+
+// import { date } from 'yup';
 
 const SuggestSchedule = ({ navigation, route }) => {
   const { dateStart, dateEnd, timeStart, timeEnd, duration } = useProfile();
@@ -25,32 +26,42 @@ const SuggestSchedule = ({ navigation, route }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
+  // const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
 
-  const [selectedSchedule, setSelectedSchedule] = useState();
+  const [selectedSchedule, setSelectedSchedule] = useState('');
 
   async function getSchedules() {
     try {
-      console.log('entrou');
+      console.log(
+        dateStart,
+
+        dateEnd,
+        'beginHour: ',
+        timeStart,
+        'endHour: ',
+        timeEnd,
+        'duration: ',
+        duration,
+        'mandatoryContactSelected: ',
+        mandatoryContactSelected,
+        'phone: ',
+        user.phone
+      );
+
       const { data } = await api.post('/getRecommededTimes', {
         phone: user.phone,
-        beginDate: moment(dateStart)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: duration,
-        endDate: moment(dateEnd)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        endHour: format(timeEnd, 'HH:mm') + ':00',
+        beginDate: dateStart,
+        beginHour: timeStart,
+        duration: duration.toString(),
+        endDate: dateEnd,
+        endHour: timeEnd,
         mandatoryGuests: mandatoryContactSelected.map(
           (contact) => contact.email
         ),
       });
-      setSchedules(data);
       console.log(data);
+      setSchedules(data.freeTimes);
+      console.log(schedules);
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +70,7 @@ const SuggestSchedule = ({ navigation, route }) => {
   moment.locale('pt-br');
 
   const schedulesByDay = schedules.reduce((acc, schedule) => {
-    const day = moment(schedule.start1)
+    const day = moment(schedule.start)
       .format('dddd - DD/MM')
       .replace(/^\w/, (c) => c.toUpperCase());
 
@@ -115,14 +126,14 @@ const SuggestSchedule = ({ navigation, route }) => {
                     return (
                       <CardSchedule
                         key={index}
-                        day={moment(schedule.start1).format('DD')}
-                        date={moment(schedule.start1)
+                        day={moment(schedule.start).format('DD')}
+                        date={moment(schedule.start)
                           .format('ddd')
                           .replace(/^\w/, (c) => c.toUpperCase())}
-                        start={moment(schedule.start1).format('HH:mm')}
-                        end={moment(schedule.end1).format('HH:mm')}
-                        scheduleStart={schedule.start1}
-                        scheduleEnd={schedule.end1}
+                        start={moment(schedule.start).format('HH:mm')}
+                        end={moment(schedule.end).format('HH:mm')}
+                        scheduleStart={schedule.start}
+                        scheduleEnd={schedule.end}
                         isSelected={isSelected}
                         onSelect={() => {
                           handleCardSelect(day, index);
