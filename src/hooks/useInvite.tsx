@@ -1,4 +1,5 @@
 import Contacts from '@interfaces/Contacts';
+import Schedule from '@interfaces/Schedule';
 import React, { useContext, useState, createContext } from 'react';
 
 interface InviteContextData {
@@ -10,12 +11,14 @@ interface InviteContextData {
   setTimeStart: React.Dispatch<React.SetStateAction<Date>>;
   timeEnd: Date;
   setTimeEnd: React.Dispatch<React.SetStateAction<Date>>;
-  duration: String;
-  setDuration: React.Dispatch<React.SetStateAction<String>>;
+  duration: string;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
   contactSelected: Contacts[];
   setContactSelected: React.Dispatch<React.SetStateAction<Contacts[]>>;
   mandatoryContactSelected: Contacts[];
   setMandatoryContactSelected: React.Dispatch<React.SetStateAction<Contacts[]>>;
+  selectedSchedule: Schedule;
+  setSelectedSchedule: React.Dispatch<React.SetStateAction<Schedule>>;
 }
 
 const InviteContext = createContext<InviteContextData>({} as InviteContextData);
@@ -28,6 +31,7 @@ export const InviteProvider: React.FC<{
   const [timeStart, setTimeStart] = useState();
   const [timeEnd, setTimeEnd] = useState();
   const [duration, setDuration] = useState();
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule>();
   const [contactSelected, setContactSelected] = useState<Contacts[]>([]);
   const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
     Contacts[]
@@ -50,6 +54,8 @@ export const InviteProvider: React.FC<{
         setContactSelected,
         mandatoryContactSelected,
         setMandatoryContactSelected,
+        selectedSchedule,
+        setSelectedSchedule,
       }}
     >
       {children}

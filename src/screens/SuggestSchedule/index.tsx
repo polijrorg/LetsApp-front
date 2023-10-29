@@ -3,74 +3,85 @@ import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
 import useAuth from '@hooks/useAuth';
-import { api } from '@services/api';
+import useInvite from '@hooks/useInvite';
+import CalendarServices from '@services/CalendarServices';
 import format from 'date-fns/format';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
-import useProfile from 'src/contexts/useProfile';
 
-const SuggestSchedule = ({ navigation, route }) => {
-  const { dateStart, dateEnd, timeStart, timeEnd, duration } = useProfile();
+// interface SchedulesByDate {
+//   date: Object;
+// }
 
-  const { mandatoryContactSelected, contactSelected } = route.params;
+const SuggestSchedule = ({ navigation }) => {
+  const {
+    dateStart,
+    dateEnd,
+    timeStart,
+    timeEnd,
+    duration,
+    mandatoryContactSelected,
+    selectedSchedule,
+    setSelectedSchedule,
+  } = useInvite();
 
   const { user } = useAuth();
 
-  const [schedules, setSchedules] = useState([]);
+  const [schedulesByDate, setSchedulesByDate] = useState({});
 
   useEffect(() => {
     getSchedules();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
-
-  const [selectedSchedule, setSelectedSchedule] = useState();
-
   async function getSchedules() {
     try {
       console.log('entrou');
-      const { data } = await api.post('/getRecommededTimes', {
+      const response = await CalendarServices.getRecommendedTime({
         phone: user.phone,
         beginDate: moment(dateStart)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
         beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: duration,
+        duration: parseInt(duration),
         endDate: moment(dateEnd)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
         endHour: format(timeEnd, 'HH:mm') + ':00',
         mandatoryGuests: mandatoryContactSelected.map(
-          (contact) => contact.email
+          (contact) => contact.email || contact.phone
         ),
       });
-      setSchedules(data);
-      console.log(data);
+      // console.log(moment(response.freeTimes[0].start).format('dddd - DD/MM'));
+      filterSchedulesByDay(response.freeTimes);
+      // console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
 
+  const filterSchedulesByDay = (freeTimes) => {
+    const initialValue = {};
+    const filteredSchedules = freeTimes.reduce((acc, schedule) => {
+      const day = moment(schedule.start).format('dddd - DD/MM');
+
+      if (!acc[day]) {
+        acc[day] = [];
+      }
+
+      acc[day].push(schedule);
+
+      return acc;
+    }, initialValue);
+
+    setSchedulesByDate(filteredSchedules);
+  };
+
   moment.locale('pt-br');
-
-  const schedulesByDay = schedules.reduce((acc, schedule) => {
-    const day = moment(schedule.start1)
-      .format('dddd - DD/MM')
-      .replace(/^\w/, (c) => c.toUpperCase());
-
-    if (!acc[day]) {
-      acc[day] = [];
-    }
-
-    acc[day].push(schedule);
-
-    return acc;
-  }, {});
 
   // const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
   //   null
@@ -95,7 +106,8 @@ const SuggestSchedule = ({ navigation, route }) => {
     }));
   };
 
-  console.log('selectedSchedule', selectedSchedule);
+  // console.log('selectedCardsByDay', selectedCardsByDay);
+  // console.log('selectedSchedule', selectedSchedule);
 
   return (
     <S.Body>
@@ -104,25 +116,25 @@ const SuggestSchedule = ({ navigation, route }) => {
       </S.ContainerTitle>
       <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
         <S.Scroll showsVerticalScrollIndicator={false}>
-          {Object.entries(schedulesByDay).map(([day, daySchedules]) => {
+          {Object.entries(schedulesByDate).map(([day]) => {
             const selectedDayIndex = selectedCardsByDay[day];
             return (
               <S.ScheduleContainer key={day}>
                 <S.Subtitle>{day}</S.Subtitle>
                 <S.ContainerSuggest>
-                  {(daySchedules as Array<any>).map((schedule, index) => {
+                  {schedulesByDate[day].map((schedule, index) => {
                     const isSelected = index === selectedDayIndex;
                     return (
                       <CardSchedule
                         key={index}
-                        day={moment(schedule.start1).format('DD')}
-                        date={moment(schedule.start1)
+                        day={moment(schedule.start).format('DD')}
+                        date={moment(schedule.start)
                           .format('ddd')
                           .replace(/^\w/, (c) => c.toUpperCase())}
-                        start={moment(schedule.start1).format('HH:mm')}
-                        end={moment(schedule.end1).format('HH:mm')}
-                        scheduleStart={schedule.start1}
-                        scheduleEnd={schedule.end1}
+                        start={moment(schedule.start).format('HH:mm')}
+                        end={moment(schedule.end).format('HH:mm')}
+                        scheduleStart={schedule.start}
+                        scheduleEnd={schedule.end}
                         isSelected={isSelected}
                         onSelect={() => {
                           handleCardSelect(day, index);
@@ -156,11 +168,8 @@ const SuggestSchedule = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            // handleCreateEvent();
             navigation.navigate('CreateEvent', {
               selectedSchedule,
-              mandatoryContactSelected,
-              contactSelected,
             });
           }}
         >

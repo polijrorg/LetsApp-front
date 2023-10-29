@@ -1,6 +1,7 @@
 import { api } from './api';
 import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
+import SuggestedTimes from '@interfaces/SuggestedTimes';
 import User from '@interfaces/User';
 
 interface IAddContact {
@@ -8,6 +9,16 @@ interface IAddContact {
   phone: string;
   name: string;
   email: string;
+}
+
+interface IGetRecommendedTime {
+  phone: string;
+  beginDate: string;
+  beginHour: string;
+  duration: number;
+  endDate: string;
+  endHour: string;
+  mandatoryGuests: string[];
 }
 
 export interface IDeleteUserRequest {
@@ -44,6 +55,30 @@ export default class CalendarServices {
 
   static async getGoogleUrl(phone: string): Promise<string> {
     const response = await api.post(`/getGoogleAuthUrl/${phone}`);
+    return response.data;
+  }
+
+  static async getRecommendedTime(
+    data: IGetRecommendedTime
+  ): Promise<SuggestedTimes> {
+    console.log({
+      phone: data.phone,
+      beginDate: data.beginDate,
+      beginHour: data.beginHour,
+      duration: data.duration,
+      endDate: data.endDate,
+      endHour: data.endHour,
+      mandatoryGuests: data.mandatoryGuests,
+    });
+    const response = await api.post('/getRecommededTimes', {
+      phone: data.phone,
+      beginDate: data.beginDate,
+      beginHour: data.beginHour,
+      duration: data.duration,
+      endDate: data.endDate,
+      endHour: data.endHour,
+      mandatoryGuests: data.mandatoryGuests,
+    });
     return response.data;
   }
 }
