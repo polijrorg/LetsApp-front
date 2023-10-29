@@ -1,4 +1,5 @@
 import { theme } from '@styles/default.theme';
+import { TextInput } from 'react-native';
 import styled from 'styled-components/native';
 
 type InputProps = {
@@ -20,7 +21,7 @@ export const ContainerInput = styled.View<InputProps>`
   align-items: center;
 `;
 
-export const Input = styled.TextInput`
+export const Input = styled(TextInput)`
   flex: 1;
   font-size: 16px;
   padding-left: 2px;

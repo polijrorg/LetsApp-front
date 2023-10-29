@@ -2,13 +2,13 @@ import * as S from './styles';
 import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
+import useInvite from '@hooks/useInvite';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import { Modal } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import { Pressable, TouchableOpacity } from 'react-native';
-import useProfile, { ContactInfo } from 'src/contexts/useProfile';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -21,20 +21,28 @@ const SelectGuests = ({ navigation }) => {
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
 
-  const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
-  const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
-    ContactInfo[]
-  >([]);
+  // const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
+  // const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
+  //   ContactInfo[]
+  // >([]);
 
   const { user } = useAuth();
+
+  const {
+    contactSelected,
+    setContactSelected,
+    mandatoryContactSelected,
+    setMandatoryContactSelected,
+  } = useInvite();
 
   useEffect(() => {
     const getUserContacts = async () => {
       try {
         const response = await api.get(`GetUserByPhone/${user.phone}`);
         setUserContacts(response.data.user.contatos);
-        console.log('completeUser', response.data);
-        console.log('user', user);
+        // console.log('contacts', response.data.user.contatos);
+        // console.log('completeUser', response.data);
+        // console.log('user', user);
       } catch (error) {
         console.log(error);
       }
@@ -55,6 +63,7 @@ const SelectGuests = ({ navigation }) => {
           sort: Contacts.SortTypes.FirstName,
         });
         setContacts(data.slice(0, 15));
+        // console.log(data.slice(0, 15));
       }
     };
     getContacts();
@@ -62,15 +71,20 @@ const SelectGuests = ({ navigation }) => {
 
   const toggleParticipantSelection = (participant) => {
     // Verifica se o participante já foi selecionado
-    const isSelected = contactSelected.some((p) => p.name === participant.name);
+    const isSelected = contactSelected.some((p) => p.id === participant.id);
     const isMandatory = mandatoryContactSelected.some(
-      (p) => p.name === participant.name
+      (p) => p.id === participant.id
     );
+    console.log('contactSelected', contactSelected);
+    console.log('mandatoryContactSelected', mandatoryContactSelected);
+    console.log('participant', participant);
+    console.log('isSelected', isSelected);
+    console.log('isMandatory', isMandatory);
 
     if (isSelected) {
       // Remove o participante do array de selecionados e adiciona aos mandatorios
       setContactSelected((prevParticipants) =>
-        prevParticipants.filter((p) => p.name !== participant.name)
+        prevParticipants.filter((p) => p.id !== participant.id)
       );
       setMandatoryContactSelected((prevParticipants) => [
         ...prevParticipants,
@@ -79,7 +93,7 @@ const SelectGuests = ({ navigation }) => {
     } else if (isMandatory) {
       // Remove o participante do array de mandatorios
       setMandatoryContactSelected((prevParticipants) =>
-        prevParticipants.filter((p) => p.name !== participant.name)
+        prevParticipants.filter((p) => p.id !== participant.id)
       );
     } else {
       // Adiciona o participante ao array de selecionados
@@ -130,40 +144,17 @@ const SelectGuests = ({ navigation }) => {
         <AddContact setOpen={setOpen} userPhone={user.phone} />
       </Modal>
       <S.Scroll>
-        <S.ContainerSubtitle>
-          <S.Subtitle>Contatos Adicionados</S.Subtitle>
-          <S.Mandatory>Obrigatório?</S.Mandatory>
-        </S.ContainerSubtitle>
-        <Contact
-          name="Letícia"
-          phoneOrEmail="+5511995076244"
-          email="leticia@falconer.com.br"
-          onPress={() =>
-            toggleParticipantSelection({
-              name: 'Teste',
-              email: 'leticia@falconer.com',
-              phoneNumber: '5511995076244',
-            })
-          }
-        />
-        <Contact
-          name="Luiz"
-          phoneOrEmail="+5511982553531"
-          email="luiz.silva@polijunior.com.br"
-          onPress={() =>
-            toggleParticipantSelection({
-              name: 'Luiz',
-              email: 'luiz.silva@polijunior.com.br',
-              phoneNumber: '+5511982553531',
-            })
-          }
-        />
+        {userContacts?.lenght > 0 && (
+          <S.ContainerSubtitle>
+            <S.Subtitle>Contatos LetsApp</S.Subtitle>
+            <S.Mandatory>Obrigatório?</S.Mandatory>
+          </S.ContainerSubtitle>
+        )}
         {userContacts?.map((participant, index) => (
           <React.Fragment key={index}>
             <Contact
               name={participant.name}
-              phoneOrEmail={participant.phone}
-              email={participant.email}
+              phoneOrEmail={participant.email || participant.phone}
               onPress={() => toggleParticipantSelection(participant)}
             />
           </React.Fragment>

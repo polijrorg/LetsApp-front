@@ -1,5 +1,6 @@
 // import { AuthProvider } from './useAuth';
 import { AuthProvider } from './useAuth';
+import { InviteProvider } from './useInvite';
 import { theme } from '@styles/default.theme';
 import { NativeBaseProvider } from 'native-base';
 import React from 'react';
@@ -14,7 +15,9 @@ const AppProvider: React.FC<Props> = ({ children }) => (
   <NativeBaseProvider>
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <ProfileContextProvider>{children}</ProfileContextProvider>
+        <InviteProvider>
+          <ProfileContextProvider>{children}</ProfileContextProvider>
+        </InviteProvider>
       </AuthProvider>
     </ThemeProvider>
   </NativeBaseProvider>

@@ -32,6 +32,7 @@ export const Icon = styled.Image`
 export const Data = styled(View)`
   display: flex;
   justify-content: space-between;
+  padding: 2px 0px;
 `;
 
 export const Name = styled.Text`
