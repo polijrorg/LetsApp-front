@@ -21,6 +21,7 @@ const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const invite: Invite = route.params.invite;
+  // console.log(invite);
   const location = route.params.location;
 
   const ajustDate = moment(invite.element.begin).format('DD/MM/YYYY');

@@ -4,9 +4,9 @@ import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
 import { ModalCalendar } from '@components/ModalCalendar';
 import useAuth from '@hooks/useAuth';
-import CompleteUser from '@interfaces/CompleteUser';
 import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
+import Profile from '@interfaces/User';
 import { useIsFocused } from '@react-navigation/native';
 import CalendarServices from '@services/CalendarServices';
 import { api } from '@services/api';
@@ -21,7 +21,7 @@ const MainScreen = ({ navigation }) => {
   const { user } = useAuth();
 
   const [open, setOpen] = useState(true);
-  const [completeUser, setCompleteUser] = useState<CompleteUser>(null);
+  const [completeUser, setCompleteUser] = useState<Profile>(null);
 
   const isFocused = useIsFocused();
 
@@ -31,6 +31,8 @@ const MainScreen = ({ navigation }) => {
         const response = await api.get(`GetUserByPhone/${user.phone}`);
         setCompleteUser(response.data);
         setOpen(!response.data.calendar_found);
+        console.log('completeUser', response.data);
+        console.log('user', user);
       } catch (error) {
         console.log(error);
       }
@@ -63,6 +65,7 @@ const MainScreen = ({ navigation }) => {
             completeUser.user?.email
           );
           setEvents(response);
+          console.log('events', response);
         }
       } catch (error) {
         console.log(error);

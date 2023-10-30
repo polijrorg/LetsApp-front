@@ -2,86 +2,98 @@ import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
 import useAuth from '@hooks/useAuth';
-import useInvite from '@hooks/useInvite';
-import CalendarServices from '@services/CalendarServices';
-import format from 'date-fns/format';
+import { api } from '@services/api';
+// import format from 'date-fns/format';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
+import useProfile from 'src/contexts/useProfile';
 
-// interface SchedulesByDate {
-//   date: Object;
-// }
+// import { date } from 'yup';
 
-const SuggestSchedule = ({ navigation }) => {
-  const {
-    dateStart,
-    dateEnd,
-    timeStart,
-    timeEnd,
-    duration,
-    mandatoryContactSelected,
-    selectedSchedule,
-    setSelectedSchedule,
-  } = useInvite();
+const SuggestSchedule = ({ navigation, route }) => {
+  const { dateStart, dateEnd, timeStart, timeEnd, duration } = useProfile();
+
+  const { mandatoryContactSelected, contactSelected } = route.params;
 
   const { user } = useAuth();
 
-  const [schedulesByDate, setSchedulesByDate] = useState({});
+  const [schedules, setSchedules] = useState([]);
 
   useEffect(() => {
     getSchedules();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
+
+  const [selectedSchedule, setSelectedSchedule] = useState('');
+
   async function getSchedules() {
     try {
-      const response = await CalendarServices.getRecommendedTime({
+      console.log(
+        dateStart,
+
+        dateEnd,
+        'beginHour: ',
+        timeStart,
+        'endHour: ',
+        timeEnd,
+        'duration: ',
+        duration,
+        'mandatoryContactSelected: ',
+        mandatoryContactSelected,
+        'phone: ',
+        user.phone
+      );
+
+      const { data } = await api.post('/getRecommededTimes', {
         phone: user.phone,
-        beginDate: moment(dateStart)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: parseInt(duration, 10),
-        endDate: moment(dateEnd)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        endHour: format(timeEnd, 'HH:mm') + ':00',
+        beginDate: dateStart,
+        beginHour: timeStart,
+        duration: duration.toString(),
+        endDate: dateEnd,
+        endHour: timeEnd,
         mandatoryGuests: mandatoryContactSelected.map(
-          (contact) => contact.email || contact.phone
+          (contact) => contact.email
         ),
       });
-      filterSchedulesByDay(response.freeTimes);
+      console.log(data);
+      setSchedules(data.freeTimes);
+      console.log(schedules);
     } catch (error) {
       console.log(error);
     }
   }
 
-  const filterSchedulesByDay = (freeTimes) => {
-    const initialValue = {};
-    const filteredSchedules = freeTimes.reduce((acc, schedule) => {
-      const weekDay = moment(schedule.start)
-        .format('dddd')
-        .replace(/-[^-]*/g, '');
-      const day = weekDay + moment(schedule.start).format(' - DD/MM');
-      const formatedDay = day.replace(/^./, day[0].toUpperCase());
-
-      if (!acc[formatedDay]) {
-        acc[formatedDay] = [];
-      }
-
-      acc[formatedDay].push(schedule);
-
-      return acc;
-    }, initialValue);
-
-    setSchedulesByDate(filteredSchedules);
-  };
-
   moment.locale('pt-br');
+
+  const schedulesByDay = schedules.reduce((acc, schedule) => {
+    const day = moment(schedule.start)
+      .format('dddd - DD/MM')
+      .replace(/^\w/, (c) => c.toUpperCase());
+
+    if (!acc[day]) {
+      acc[day] = [];
+    }
+
+    acc[day].push(schedule);
+
+    return acc;
+  }, {});
+
+  // const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
+  //   null
+  // );
+
+  // const handleCardSelect = (index: number) => {
+  //   if (selectedCardIndex === index) {
+  //     setSelectedCardIndex(null); // Deselect the currently selected card
+  //   } else {
+  //     setSelectedCardIndex(index);
+  //   }
+  // };
 
   const [selectedCardsByDay, setSelectedCardsByDay] = useState<{
     [day: string]: number | null;
@@ -94,6 +106,8 @@ const SuggestSchedule = ({ navigation }) => {
     }));
   };
 
+  console.log('selectedSchedule', selectedSchedule);
+
   return (
     <S.Body>
       <S.ContainerTitle>
@@ -101,19 +115,25 @@ const SuggestSchedule = ({ navigation }) => {
       </S.ContainerTitle>
       <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
         <S.Scroll showsVerticalScrollIndicator={false}>
-          {Object.entries(schedulesByDate).map(([day]) => {
+          {Object.entries(schedulesByDay).map(([day, daySchedules]) => {
             const selectedDayIndex = selectedCardsByDay[day];
             return (
               <S.ScheduleContainer key={day}>
                 <S.Subtitle>{day}</S.Subtitle>
                 <S.ContainerSuggest>
-                  {schedulesByDate[day].map((schedule, index) => {
+                  {(daySchedules as Array<any>).map((schedule, index) => {
                     const isSelected = index === selectedDayIndex;
                     return (
                       <CardSchedule
                         key={index}
+                        day={moment(schedule.start).format('DD')}
+                        date={moment(schedule.start)
+                          .format('ddd')
+                          .replace(/^\w/, (c) => c.toUpperCase())}
                         start={moment(schedule.start).format('HH:mm')}
                         end={moment(schedule.end).format('HH:mm')}
+                        scheduleStart={schedule.start}
+                        scheduleEnd={schedule.end}
                         isSelected={isSelected}
                         onSelect={() => {
                           handleCardSelect(day, index);
@@ -147,8 +167,11 @@ const SuggestSchedule = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
+            // handleCreateEvent();
             navigation.navigate('CreateEvent', {
               selectedSchedule,
+              mandatoryContactSelected,
+              contactSelected,
             });
           }}
         >

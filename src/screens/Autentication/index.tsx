@@ -52,6 +52,8 @@ const Autentication = ({ navigation, route }) => {
         phone: formattedPhone,
         pseudoUserId: route.params?.pseudoUserId,
       });
+      // setPhoneUser(formattedPhone);
+      console.log('ue');
       navigation.navigate('VerificationCode');
     } catch (error) {
       console.log(error);

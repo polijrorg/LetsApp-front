@@ -1,5 +1,4 @@
 import { theme } from '@styles/default.theme';
-import { ScrollView } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
@@ -13,7 +12,7 @@ export const ContainerTitle = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  margin-top: 48px;
+  margin-top: 36px;
   margin-bottom: 36px;
 `;
 
@@ -41,10 +40,10 @@ export const Buttons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin: 16px 0px;
+  margin-top: 16px;
 `;
 
-export const Scroll = styled(ScrollView)`
+export const Scroll = styled.ScrollView`
   margin-top: 8px;
   height: 80%;
   width: 100%;

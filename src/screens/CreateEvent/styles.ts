@@ -1,6 +1,5 @@
 import { theme } from '@styles/default.theme';
-import { LinearGradient } from 'expo-linear-gradient';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import styled from 'styled-components/native';
 
 type InviteProps = {
@@ -13,27 +12,9 @@ export const Wrapper = styled(KeyboardAvoidingView)`
   background-color: ${theme.colors.white};
 `;
 
-export const InputsWrapper = styled(View)`
-  align-items: center;
-`;
-
 export const Body = styled.View`
+  background-color: ${theme.colors.white};
   display: flex;
-  flex: 1;
-`;
-
-export const GradientBottom = styled(LinearGradient)`
-  position: absolute;
-  bottom: 65%;
-  height: 48px;
-  width: 100%;
-`;
-
-export const GradientTop = styled(LinearGradient)`
-  position: absolute;
-  top: 0;
-  height: 80px;
-  width: 100%;
 `;
 
 export const Back = styled.ImageBackground<InviteProps>`
@@ -41,24 +22,61 @@ export const Back = styled.ImageBackground<InviteProps>`
   background-image: ${(props) => `(${props.source})`};
   height: 100%;
   width: 100%;
-  position: absolute;
 `;
 
 export const Header = styled.View`
-  background-color: ${theme.colors.background};
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  padding: 48px 20px;
+  background-color: ${theme.colors.white};
+  margin-top: 75%;
+  flex: 1;
+  border-top-left-radius: 72px;
+  border-top-right-radius: 72px;
+  padding: 40px;
   align-items: center;
-  justify-content: space-between;
-  height: 70%;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
 `;
 
 export const ContainerType = styled.View`
   width: 100px;
+`;
+
+export const ContainerEvent = styled.View`
+  flex-direction: row;
+  margin-bottom: 32px;
+`;
+
+export const ContainerNameTypeP = styled.View<InviteProps>`
+  background-color: ${(props) =>
+    props.selectedOption === 'presencial' ? '#3446E4' : '#fff'};
+  border-radius: 8px;
+  /* border-width: 1px;
+  border-color: ${(props) =>
+    props.selectedOption === 'presencial' ? 'none' : '#949494'}; */
+`;
+
+export const ContainerNameTypeO = styled.View<InviteProps>`
+  background-color: ${(props) =>
+    props.selectedOption === 'online' ? '#3446E4' : '#fff'};
+  border-radius: 8px;
+  /* border-width: 1px;
+  border-color: ${(props) =>
+    props.selectedOption === 'presencial' ? 'none' : '#949494'}; */
+  align-items: center;
+  justify-content: center;
+`;
+
+export const NameTypeP = styled.Text<InviteProps>`
+  font-size: 16px;
+  font-family: 'RobotoMedium';
+  color: ${(props) =>
+    props.selectedOption === 'presencial' ? '#fafafa' : '#949494'};
+  margin: 4px;
+`;
+
+export const NameTypeO = styled.Text<InviteProps>`
+  font-size: 16px;
+  font-family: 'RobotoMedium';
+  color: ${(props) =>
+    props.selectedOption === 'online' ? '#fafafa' : '#949494'};
+  margin: 4px;
 `;
 
 export const NameEvent = styled.Text`
@@ -81,10 +99,10 @@ export const Icon = styled.Image`
 `;
 
 export const IconBack = styled.Image`
-  width: 28px;
-  height: 28px;
-  margin-left: 20px;
-  margin-top: 48px;
+  width: 53px;
+  height: 53px;
+  margin-left: 4%;
+  margin-top: 1%;
 `;
 
 export const Buttons = styled.View`
@@ -100,11 +118,10 @@ export const Scroll = styled.ScrollView``;
 export const ContainerContent = styled.View`
   width: 288px;
   height: 128px;
-  padding: 4px 8px;
+  padding: 8px;
   border-width: 1px;
   border: ${theme.colors.primary.main};
   border-radius: 8px;
-  margin-top: 12px;
 `;
 
 export const ContainerLink = styled.View`
@@ -113,15 +130,12 @@ export const ContainerLink = styled.View`
   border-width: 1px;
   border: ${theme.colors.primary.main};
   border-radius: 8px;
-  padding: 8px;
+  padding: 4px;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 24px;
 `;
 
 export const Content = styled.TextInput`
   font-size: 14px;
   font-family: 'Roboto';
-  color: ${theme.colors.highEmphasis};
-  width: 100%;
-  height: 100%;
 `;

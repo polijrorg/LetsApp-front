@@ -1,10 +1,9 @@
 import * as S from './styles';
 import FixedInput from '@components/FixedInput';
+import useAuth from '@hooks/useAuth';
 import CalendarServices from '@services/CalendarServices';
-import { theme } from '@styles/default.theme';
-import { Select, CheckIcon } from 'native-base';
-import React, { useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {
@@ -15,7 +14,6 @@ interface Props {
   // phone?: string;
   // setPhone: (name: string) => void;
   // setEmail: (name: string) => void;
-  userPhone?: string;
 }
 
 const AddContact: React.FC<Props> = ({
@@ -26,20 +24,30 @@ const AddContact: React.FC<Props> = ({
   // setEmail,
   // phone,
   // setPhone,
-  userPhone,
 }) => {
-  const [selected, setSelected] = useState('Telefone');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
+  const { user } = useAuth();
   const handleAddContact = async () => {
+    console.log('entrou');
     try {
-      await CalendarServices.addContact({
-        email: selected === 'Email' ? email : null,
+      console.log({
+        email,
         name,
-        phone: selected === 'Telefone' ? phone : null,
-        userPhone: userPhone,
+        phone,
+        userPhone: user.phone,
+      });
+      if (!name && !phone && !email) {
+        alert('Campos Nome e Telefone ou Email são obrigatórios');
+        return;
+      }
+      await CalendarServices.addContact({
+        email,
+        name,
+        phone,
+        userPhone: user.phone,
       });
       setOpen(false);
     } catch (error) {
@@ -48,67 +56,42 @@ const AddContact: React.FC<Props> = ({
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => setOpen(false)}>
-      <S.Body>
-        <S.ModalView>
-          {/* <S.BackButton
+    <S.Body>
+      <S.ModalView>
+        {/* <S.BackButton
           onPress={() => {
             setOpen(false);
           }}
         >
           <S.IconBack source={require('../../../assets/ArrowBackBlue.png')} />
         </S.BackButton> */}
-          <S.Title>Adicionar novo contato</S.Title>
-          <FixedInput
-            height="40px"
-            width="100%"
-            placeholder="Nome"
-            value={name}
-            setValue={setName}
-          />
-          <Select
-            selectedValue={selected}
-            defaultValue="Telefone"
-            width="100%"
-            _selectedItem={{
-              endIcon: <CheckIcon size="5" />,
-            }}
-            onValueChange={(itemValue) => setSelected(itemValue)}
-            borderColor={theme.colors.primary.dark}
-            borderRadius={8}
-            height="40px"
-            fontSize="16px"
-            color={theme.colors.highEmphasis}
-            mt="4px"
-            mb="4px"
-          >
-            <Select.Item label="Telefone" value="Telefone" />
-            <Select.Item label="Email" value="Email" />
-          </Select>
-          {selected === 'Telefone' ? (
-            <FixedInput
-              height="40px"
-              width="100%"
-              placeholder="Insira o telefone"
-              value={phone}
-              setValue={setPhone}
-            />
-          ) : (
-            <FixedInput
-              height="40px"
-              width="100%"
-              placeholder="Insira o email"
-              value={email}
-              setValue={setEmail}
-            />
-          )}
-
-          <S.ConfirmButton onPress={handleAddContact}>
-            <Icon name="check" size={30} color="#3446E4" />
-          </S.ConfirmButton>
-        </S.ModalView>
-      </S.Body>
-    </TouchableWithoutFeedback>
+        <S.Title>Adicionar novo contato</S.Title>
+        <FixedInput
+          height="32px"
+          width="278px"
+          placeholder="Nome"
+          value={name}
+          setValue={setName}
+        />
+        <FixedInput
+          height="32px"
+          width="278px"
+          placeholder="Telefone"
+          value={phone}
+          setValue={setPhone}
+        />
+        <FixedInput
+          height="32px"
+          width="278px"
+          placeholder="Email"
+          value={email}
+          setValue={setEmail}
+        />
+        <S.ConfirmButton onPress={handleAddContact}>
+          <Icon name="check" size={30} color="#3446E4" />
+        </S.ConfirmButton>
+      </S.ModalView>
+    </S.Body>
   );
 };
 
