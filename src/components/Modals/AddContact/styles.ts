@@ -2,9 +2,8 @@ import { theme } from '@styles/default.theme';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
-export const Body = styled(View)`
-  width: 100%;
-  height: 100%;
+export const Body = styled(TouchableOpacity)`
+  flex: 1;
   align-items: center;
   justify-content: center;
   background-color: rgba(39, 39, 39, 0.8);
@@ -14,12 +13,11 @@ export const ModalView = styled(View)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   width: 336px;
   border-radius: 24px;
-  padding: 20px 24px;
+  padding: 20px;
   padding-top: 32px;
-  z-index: 15;
 `;
 
 export const ConfirmButton = styled(TouchableOpacity)`

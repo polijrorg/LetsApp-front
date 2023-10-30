@@ -42,6 +42,7 @@ export const AuthProvider: React.FC<{
 
   const register = async (data: IRegisterRequest) => {
     try {
+      console.log('entrou aqui');
       const response = await UserService.register(data);
 
       setInitialUser(response);
@@ -61,6 +62,8 @@ export const AuthProvider: React.FC<{
     setUser(null);
     setPhone(null);
     setLoading(false);
+
+    console.log('deletouu');
   };
 
   const updateUser = async () => {
@@ -80,6 +83,7 @@ export const AuthProvider: React.FC<{
     const response = await UserServices.addNameAndImage(data);
 
     setUser(response);
+    console.log('user', response);
     await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
   };
 

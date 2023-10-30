@@ -25,6 +25,8 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')
     .format('ddd');
+  console.log;
+  console.log(ajustDate);
 
   return (
     <S.Body>

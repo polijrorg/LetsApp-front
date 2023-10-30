@@ -5,12 +5,13 @@ import styled from 'styled-components/native';
 export const Body = styled.View`
   flex: 1;
   padding: 16px;
+  padding-top: 32px;
   background-color: ${theme.colors.background};
   display: flex;
 `;
 
 export const Header = styled.View`
-  margin-top: 48px;
+  margin-top: 4%;
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -10,6 +10,7 @@ export type InputProps = {
   pencil?: boolean;
   value?: string;
   setValue?: (value: string) => void;
+  keyboardType?: string;
   editable?: boolean;
 };
 
@@ -24,6 +25,7 @@ const FixedInput: React.FC<InputProps> = ({
   placeholder,
   value,
   setValue,
+  keyboardType,
   editable = true,
 }) => {
   return (
@@ -32,9 +34,9 @@ const FixedInput: React.FC<InputProps> = ({
         value={value}
         onChangeText={(text) => setValue(text)}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.lowEmphasis}
+        placeholderTextColor={theme.colors.mediumEmphasis}
+        keyboardType={keyboardType}
         editable={editable}
-        autoCapitalize="none"
       />
       <S.ContainerArrow arrow={arrow}>
         <S.Arrow source={ImageArrow} />
