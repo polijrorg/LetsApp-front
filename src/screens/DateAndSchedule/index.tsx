@@ -1,6 +1,8 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useInvite from '@hooks/useInvite';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { theme } from '@styles/default.theme';
 import { format } from 'date-fns';
 import moment from 'moment-timezone';
 import React, { useState } from 'react';
@@ -13,7 +15,6 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import useProfile from 'src/contexts/useProfile';
 
 const styles = StyleSheet.create({
   datePicker: {
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DateAndSchedule = ({ navigation, route }) => {
+const DateAndSchedule = ({ navigation }) => {
   const IconClock = require('../../assets/ClockIcon.png');
   const IconDate = require('../../assets/DateIcon.png');
 
@@ -36,9 +37,7 @@ const DateAndSchedule = ({ navigation, route }) => {
   const [durations, setDurations] = useState('');
 
   const { setDateStart, setDateEnd, setTimeStart, setTimeEnd, setDuration } =
-    useProfile();
-
-  const { mandatoryContactSelected, contactSelected } = route.params;
+    useInvite();
 
   const sendData = () => {
     setDateStart(
@@ -140,7 +139,7 @@ const DateAndSchedule = ({ navigation, route }) => {
                     <Pressable onPress={toggleStartPicker}>
                       <S.inputDate
                         placeholder="Selecione uma data de início"
-                        value={moment(date.toDateString()).format('DD/MM/YYYY')}
+                        value={moment(date).format('DD/MM/YYYY')}
                         onChangeText={setDate}
                         editable={false}
                         onPressIn={toggleStartPicker}
@@ -169,9 +168,7 @@ const DateAndSchedule = ({ navigation, route }) => {
                     <Pressable onPress={toggleEndPicker}>
                       <S.inputDate
                         placeholder="Selecione uma data de término"
-                        value={moment(date1.toDateString()).format(
-                          'DD/MM/YYYY'
-                        )}
+                        value={moment(date1).format('DD/MM/YYYY')}
                         onChangeText={setDate1}
                         editable={false}
                         onPressIn={toggleEndPicker}
@@ -243,11 +240,9 @@ const DateAndSchedule = ({ navigation, route }) => {
                 <S.Text>Tempo:</S.Text>
                 <S.ContainerInputDate>
                   <S.InputDate
-                    type="datetime"
-                    options={{
-                      format: 'HH:mm',
-                    }}
-                    placeholder="00h:00min"
+                    type="only-numbers"
+                    placeholder="00min"
+                    placeholderTextColor={theme.colors.lowEmphasis}
                     value={durations}
                     onChangeText={(word) => {
                       setDurations(word);
@@ -274,10 +269,7 @@ const DateAndSchedule = ({ navigation, route }) => {
               <TouchableOpacity
                 onPress={() => {
                   sendData();
-                  navigation.navigate('SuggestSchedule', {
-                    mandatoryContactSelected,
-                    contactSelected,
-                  });
+                  navigation.navigate('SuggestSchedule');
                 }}
               >
                 <Button

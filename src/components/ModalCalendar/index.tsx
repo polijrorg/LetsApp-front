@@ -14,8 +14,7 @@ export const ModalCalendar: React.FC = () => {
   async function handleGetGoogleUrl() {
     try {
       const googleUrl = await CalendarServices.getGoogleUrl(user.phone);
-      const response = await AuthSession.startAsync({ authUrl: googleUrl });
-      console.log(response);
+      await AuthSession.startAsync({ authUrl: googleUrl });
       await updateUser();
     } catch (error) {
       console.log(error);
