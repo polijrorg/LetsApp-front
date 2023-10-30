@@ -12,9 +12,9 @@ interface IVerifyCodeRequest {
 
 interface IAddContact {
   userPhone: string;
-  phone: string;
+  phone?: string;
   name: string;
-  email: string;
+  email?: string;
 }
 
 export interface IDeleteUserRequest {

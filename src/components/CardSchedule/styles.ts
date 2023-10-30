@@ -1,3 +1,5 @@
+import { theme } from 'native-base';
+import { Text } from 'react-native';
 import styled from 'styled-components/native';
 
 type ScheduleProps = {
@@ -5,7 +7,7 @@ type ScheduleProps = {
 };
 
 export const ContainerCard = styled.TouchableOpacity<ScheduleProps>`
-  width: 90px;
+  width: 72px;
   height: 80px;
   border-radius: 12px;
   background-color: ${(props) => (props.isSelected ? '#949494' : '#727FF6')};
@@ -25,7 +27,9 @@ export const Date = styled.Text`
   margin: 3px 0px 3px;
 `;
 
-export const Schedule = styled.Text`
-  font-family: 'Roboto';
+export const Schedule = styled(Text)`
+  font-family: 'RobotoBold';
   font-size: 12px;
+  color: ${theme.colors.white};
+  line-height: 24px;
 `;

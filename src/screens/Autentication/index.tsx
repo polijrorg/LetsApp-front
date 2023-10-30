@@ -49,8 +49,6 @@ const Autentication = ({ navigation }) => {
     try {
       const formattedPhone = `+55${DDD}${phone}`;
       await register({ phone: formattedPhone });
-      // setPhoneUser(formattedPhone);
-      console.log('ue');
       navigation.navigate('VerificationCode');
     } catch (error) {
       console.log(error);
