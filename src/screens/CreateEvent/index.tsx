@@ -69,8 +69,28 @@ const CreateEvent = ({ navigation }) => {
             .startOf('day')
             .format(),
         });
-        navigation.navigate('MainScreen');
+      } else {
+        await CalendarServices.createOutlookEvent({
+          name: title,
+          phone: user.phone,
+          begin: selectedSchedule.start,
+          attendees: mandatoryContactSelected.map((contact) => contact.email),
+          end: selectedSchedule.end,
+          address: online ? '' : address,
+          description: description,
+          createMeetLink: online,
+          optionalAttendees: contactSelected.map((contact) => contact.email),
+          beginSearch: moment(dateStart)
+            .tz('America/Sao_Paulo')
+            .startOf('day')
+            .format(),
+          endSearch: moment(dateEnd)
+            .tz('America/Sao_Paulo')
+            .startOf('day')
+            .format(),
+        });
       }
+      navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,7 @@
 import { api } from './api';
 import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
+import PseudoGuest from '@interfaces/PseudoGuest';
 import SuggestedTimes from '@interfaces/SuggestedTimes';
 import User from '@interfaces/User';
 
@@ -21,7 +22,7 @@ interface IGetRecommendedTime {
   mandatoryGuests: string[];
 }
 
-interface ICreateGoogleEvent {
+interface ICreateEvent {
   phone: string;
   begin: string;
   end: string;
@@ -33,6 +34,24 @@ interface ICreateGoogleEvent {
   createMeetLink: boolean;
   name: string;
   optionalAttendees: string[];
+}
+
+interface ICreateEventResponse {
+  id: string;
+  name: string;
+  begin: string;
+  end: string;
+  beginSearch: string;
+  endSearch: string;
+  description: string;
+  phone: string;
+  address: string;
+  link: string;
+  state: 'accepted' | 'declined' | 'needsAction';
+  googleId: string;
+  organizerPhoto: string;
+  organizerName: string;
+  pseudoGuests: PseudoGuest[];
 }
 
 export interface IDeleteUserRequest {
@@ -87,8 +106,10 @@ export default class CalendarServices {
     return response.data;
   }
 
-  static async createGoogleEvent(data: ICreateGoogleEvent): Promise<void> {
-    await api.post('/createGoogleEvent', {
+  static async createGoogleEvent(
+    data: ICreateEvent
+  ): Promise<ICreateEventResponse> {
+    const response = await api.post('/createGoogleEvent', {
       name: data.name,
       phone: data.phone,
       begin: data.begin,
@@ -101,6 +122,25 @@ export default class CalendarServices {
       beginSearch: data.beginSearch,
       endSearch: data.endSearch,
     });
-    // return response.data;
+    return response.data;
+  }
+
+  static async createOutlookEvent(
+    data: ICreateEvent
+  ): Promise<ICreateEventResponse> {
+    const response = await api.post('/createOutlookEvent', {
+      name: data.name,
+      phone: data.phone,
+      begin: data.begin,
+      attendees: data.attendees,
+      end: data.end,
+      address: data.address,
+      description: data.description,
+      createMeetLink: data.createMeetLink,
+      optionalAttendees: data.optionalAttendees,
+      beginSearch: data.beginSearch,
+      endSearch: data.endSearch,
+    });
+    return response.data;
   }
 }
