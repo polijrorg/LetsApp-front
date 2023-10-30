@@ -10,3 +10,9 @@ export default interface User {
   tokens: string;
   type: 'GOOGLE' | 'OUTLOOK';
 }
+
+export interface PseudoUser {
+  pseudoUserId: string;
+  email?: string;
+  phone?: string;
+}

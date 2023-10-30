@@ -1,9 +1,10 @@
+import UserServices from './UserServices';
 import { api } from './api';
 import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import PseudoGuest from '@interfaces/PseudoGuest';
 import SuggestedTimes from '@interfaces/SuggestedTimes';
-import User from '@interfaces/User';
+import User, { PseudoUser } from '@interfaces/User';
 
 interface IAddContact {
   userPhone: string;
@@ -23,6 +24,7 @@ interface IGetRecommendedTime {
 }
 
 interface ICreateEvent {
+  prefix: string;
   phone: string;
   begin: string;
   end: string;
@@ -52,6 +54,7 @@ interface ICreateEventResponse {
   organizerPhoto: string;
   organizerName: string;
   pseudoGuests: PseudoGuest[];
+  linkNotificationResponses: string[];
 }
 
 export interface IDeleteUserRequest {
@@ -122,7 +125,21 @@ export default class CalendarServices {
       beginSearch: data.beginSearch,
       endSearch: data.endSearch,
     });
-    return response.data;
+
+    const linkNotificationResponses: string[] = [];
+
+    response.data.pseudoGuests.map(async (pseudoGuest: PseudoUser) => {
+      const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+
+      const linkNotificationResponse = await UserServices.sendSignUpLink({
+        link,
+        pseudoUserId: pseudoGuest.pseudoUserId,
+      });
+
+      linkNotificationResponses.push(linkNotificationResponse);
+    });
+
+    return { ...response.data, linkNotificationResponses };
   }
 
   static async createOutlookEvent(
@@ -141,6 +158,26 @@ export default class CalendarServices {
       beginSearch: data.beginSearch,
       endSearch: data.endSearch,
     });
-    return response.data;
+
+    console.log(response);
+
+    const linkNotificationResponses: string[] = [];
+
+    const responses = response.config.data.pseudoGuests.map(
+      async (pseudoGuest: PseudoUser) => {
+        const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+
+        const linkNotificationResponse = await UserServices.sendSignUpLink({
+          link,
+          pseudoUserId: pseudoGuest.pseudoUserId,
+        });
+
+        linkNotificationResponses.push(linkNotificationResponse);
+      }
+    );
+
+    await Promise.all(responses);
+
+    return { ...response.data, linkNotificationResponses };
   }
 }

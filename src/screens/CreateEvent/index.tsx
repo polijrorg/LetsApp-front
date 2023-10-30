@@ -5,6 +5,7 @@ import ToggleOnlineButton from '@components/ToggleOnlineButton';
 import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
+import { createURL } from 'expo-linking';
 import moment from 'moment';
 import React, { useState } from 'react';
 import {
@@ -38,6 +39,8 @@ const CreateEvent = ({ navigation }) => {
     contactSelected,
     dateStart,
     dateEnd,
+    // timeStart,
+    // timeEnd,
   } = useInvite();
 
   const [description, setDescrition] = useState('');
@@ -48,9 +51,23 @@ const CreateEvent = ({ navigation }) => {
   const { user } = useAuth();
 
   async function createEvent() {
+    // const beginSearch = moment(timeStart, 'HH:mm:ss').format();
+
+    // const date = moment(dateEnd.toString()).get('date');
+    // const month = moment(dateEnd.toString()).get('month');
+    // const year = moment(dateEnd.toString()).get('year');
+
+    // const endSearch = moment(timeEnd.toString(), 'HH:mm:ss')
+    //   .set({ date, month, year })
+    //   .format();
+
+    //RESOLVER DEPOIS
+
+    const prefix = createURL('/lest-app');
     try {
       if (user.type === 'GOOGLE') {
         await CalendarServices.createGoogleEvent({
+          prefix,
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,
@@ -71,6 +88,7 @@ const CreateEvent = ({ navigation }) => {
         });
       } else {
         await CalendarServices.createOutlookEvent({
+          prefix,
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,

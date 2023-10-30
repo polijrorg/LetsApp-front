@@ -10,11 +10,16 @@ interface IVerifyCodeRequest {
   code: number;
 }
 
-interface IAddContact {
-  userPhone: string;
-  phone?: string;
-  name: string;
-  email?: string;
+// interface IAddContact {
+//   userPhone: string;
+//   phone?: string;
+//   name: string;
+//   email?: string;
+// }
+
+interface ISendLinkRequest {
+  link: string;
+  pseudoUserId: string;
 }
 
 export interface IDeleteUserRequest {
@@ -38,7 +43,9 @@ export default class UserServices {
   static async deleteUser(data: IDeleteUserRequest): Promise<User> {
     try {
       const reponse = await api.delete('/deleteUser', {
-        phone: data.phone,
+        data: {
+          phone: data.phone,
+        },
       });
       return reponse.data;
     } catch (error) {
@@ -70,6 +77,18 @@ export default class UserServices {
       const response = await api.post('/verify', {
         code: data.code,
         phone: data.phone,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async sendSignUpLink(data: ISendLinkRequest): Promise<string> {
+    try {
+      const response = await api.post('/SendSignUpLink', {
+        link: data.link,
+        pseudoUserId: data.pseudoUserId,
       });
       return response.data;
     } catch (error) {
