@@ -1,21 +1,23 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import EventTitle from '@components/EventTitle';
+import ToggleOnlineButton from '@components/ToggleOnlineButton';
 import useAuth from '@hooks/useAuth';
-import { api } from '@services/api';
-import format from 'date-fns/format';
+import useInvite from '@hooks/useInvite';
+import CalendarServices from '@services/CalendarServices';
+import moment from 'moment';
 import React, { useState } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import useProfile from 'src/contexts/useProfile';
 
-const IconArrow = require('../../assets/ArrowBackBlue.png');
+const IconArrow = require('../../assets/ArrowBackWhite.png');
 const Office = require('../../assets/Office.png');
 // const Edition = require('../../assets/Edition.png');
 
-const CreateEvent = ({ navigation, route }) => {
+const CreateEvent = ({ navigation }) => {
   // const [nameEvent, setNameEvent] = useState('Nome do Evento');
   // const [isEditing, setIsEditing] = useState(false);
 
@@ -30,82 +32,45 @@ const CreateEvent = ({ navigation, route }) => {
   //   }
   // };
 
-  const { selectedSchedule, mandatoryContactSelected, contactSelected } =
-    route.params;
-  const [eventP, setEventP] = useState('');
-  const [eventO, setEventO] = useState('');
+  const {
+    selectedSchedule,
+    mandatoryContactSelected,
+    contactSelected,
+    dateStart,
+    dateEnd,
+  } = useInvite();
+
   const [description, setDescrition] = useState('');
-
-  const [selectedOption, setSelectedOption] = useState('presencial'); // Inicialmente seleciona o botão de eventos
-  const [isOnline, setIsOnline] = useState(false);
-
-  // const {
-  //   dateStart,
-  //   dateEnd,
-  //   timeStart,
-  //   timeEnd,
-  //   duration,
-  //   timeSelectedStart,
-  //   timeSelectedEnd,
-  // } = useProfile();
+  const [online, setOnline] = useState(false);
+  const [title, setTitle] = useState('');
+  const [address, setAddress] = useState('');
 
   const { user } = useAuth();
 
-  const emailsArray = contactSelected.map((guest) => guest.email);
-
-  const handleOnlinePress = () => {
-    setSelectedOption('online');
-    setIsOnline(true);
-  };
-
-  const handlePresencialPress = () => {
-    setSelectedOption('presencial');
-    setIsOnline(false);
-  };
-
   async function createEvent() {
     try {
-      console.log({
-        name: isOnline ? eventO : eventP,
-        phone: user.phone,
-        begin: selectedSchedule.start1,
-        attendees: mandatoryContactSelected.map((contact) => contact.email),
-        end: selectedSchedule.end1,
-        adress: eventO,
-        description: description,
-        createMeetLink: isOnline,
-        optionalAttendees: contactSelected.map((contact) => contact.email),
-      });
-      const { data } = await api.post('/createGoogleEvent', {
-        name: isOnline ? eventO : eventP,
-        phone: user.phone,
-        begin: selectedSchedule.start1,
-        attendees: mandatoryContactSelected.map((contact) => contact.email),
-        end: selectedSchedule.end1,
-        adress: eventO,
-        description: description,
-        createMeetLink: isOnline,
-        optionalAttendees: contactSelected.map((contact) => contact.email),
-      });
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      const { data } = await api.post('/invites/create', {
-        name: isOnline ? eventO : eventP,
-        date: dateStart,
-        phone: user.phone,
-        beginHour: timeSelectedStart,
-        guests: emailsArray,
-        endHour: timeSelectedEnd,
-        adress: eventO,
-        description: description,
-        link: 'www.xpto.com',
-      });
-
-      console.log(data);
+      if (user.type === 'GOOGLE') {
+        await CalendarServices.createGoogleEvent({
+          name: title,
+          phone: user.phone,
+          begin: selectedSchedule.start,
+          attendees: mandatoryContactSelected.map((contact) => contact.email),
+          end: selectedSchedule.end,
+          address: online ? '' : address,
+          description: description,
+          createMeetLink: online,
+          optionalAttendees: contactSelected.map((contact) => contact.email),
+          beginSearch: moment(dateStart)
+            .tz('America/Sao_Paulo')
+            .startOf('day')
+            .format(),
+          endSearch: moment(dateEnd)
+            .tz('America/Sao_Paulo')
+            .startOf('day')
+            .format(),
+        });
+        navigation.navigate('MainScreen');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -113,112 +78,76 @@ const CreateEvent = ({ navigation, route }) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <S.Wrapper behavior="position">
-        <S.Body>
-          <S.Back source={Office}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SuggestSchedule');
-              }}
-            >
-              <S.IconBack source={IconArrow} />
-            </TouchableOpacity>
-            <S.Header>
-              <S.ContainerEvent>
-                <TouchableOpacity onPress={handlePresencialPress}>
-                  <S.ContainerNameTypeP selectedOption={selectedOption}>
-                    <S.NameTypeP selectedOption={selectedOption}>
-                      Presencial{' '}
-                    </S.NameTypeP>
-                  </S.ContainerNameTypeP>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleOnlinePress}>
-                  <S.ContainerNameTypeO selectedOption={selectedOption}>
-                    <S.NameTypeO selectedOption={selectedOption}>
-                      {' '}
-                      Online
-                    </S.NameTypeO>
-                  </S.ContainerNameTypeO>
-                </TouchableOpacity>
-                {/* {isEditing ? (
-                  <S.ChangeName
-                    value={nameEvent}
-                    onChangeText={(text) => setNameEvent(text)}
-                    onBlur={handleNameEventBlur}
-                  />
-                ) : (
-                  <>
-                    <S.NameEvent>{nameEvent}</S.NameEvent>
-                    <TouchableOpacity onPress={handleIconClick}>
-                      <S.Icon source={Edition} />
-                    </TouchableOpacity>
-                  </>
-                )} */}
-              </S.ContainerEvent>
+      <S.Body>
+        <S.Back source={Office}>
+          <S.GradientTop colors={['black', 'transparent']} />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('SuggestSchedule');
+            }}
+          >
+            <S.IconBack source={IconArrow} />
+          </TouchableOpacity>
+          <S.GradientBottom colors={['transparent', 'black']} />
+          {/* <KeyboardAvoidingView behavior="position"> */}
+          <S.Header>
+            <S.InputsWrapper>
+              <EventTitle title={title} setTitle={setTitle} />
+              <ToggleOnlineButton online={online} setOnline={setOnline} />
               <S.ContainerContent>
-                <S.Scroll vertical={true}>
-                  <S.Content
-                    placeholder="Descrição"
-                    multiline={true}
-                    value={description}
-                    onChangeText={(text) => setDescrition(text)}
-                  />
-                </S.Scroll>
+                <S.Content
+                  placeholder="Descrição"
+                  multiline={true}
+                  value={description}
+                  onChangeText={(text) => setDescrition(text)}
+                />
               </S.ContainerContent>
-              {selectedOption === 'presencial' ? (
+              {!online && (
                 <S.ContainerLink>
                   <S.Content
-                    placeholder="Nome do Evento"
-                    value={eventP}
-                    onChangeText={(text) => setEventP(text)}
-                  />
-                </S.ContainerLink>
-              ) : (
-                <S.ContainerLink>
-                  <S.Content
-                    placeholder="Nome da Reunião"
-                    value={eventO}
-                    onChangeText={(text) => setEventO(text)}
+                    placeholder="Digite o endereço da reunião"
+                    value={address}
+                    onChangeText={(text) => setAddress(text)}
                   />
                 </S.ContainerLink>
               )}
-              <S.Buttons>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('SuggestSchedule');
-                  }}
-                >
-                  <Button
-                    width="136px"
-                    backgroundColor="#FAFAFA"
-                    borderColor="#949494"
-                    hasIcon={false}
-                    icon={Office}
-                    title="Voltar"
-                    titleColor="#949494"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    createEvent();
-                    navigation.navigate('MainScreen');
-                  }}
-                >
-                  <Button
-                    width="136px"
-                    backgroundColor="#3446E4"
-                    borderColor="transparent"
-                    hasIcon={false}
-                    icon={Office}
-                    title="Criar"
-                    titleColor="#FAFAFA"
-                  />
-                </TouchableOpacity>
-              </S.Buttons>
-            </S.Header>
-          </S.Back>
-        </S.Body>
-      </S.Wrapper>
+            </S.InputsWrapper>
+            <S.Buttons>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('SuggestSchedule');
+                }}
+              >
+                <Button
+                  width="136px"
+                  backgroundColor="#FAFAFA"
+                  borderColor="#949494"
+                  hasIcon={false}
+                  icon={Office}
+                  title="Voltar"
+                  titleColor="#949494"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  createEvent();
+                }}
+              >
+                <Button
+                  width="136px"
+                  backgroundColor="#3446E4"
+                  borderColor="transparent"
+                  hasIcon={false}
+                  icon={Office}
+                  title="Criar"
+                  titleColor="#FAFAFA"
+                />
+              </TouchableOpacity>
+            </S.Buttons>
+          </S.Header>
+          {/* </KeyboardAvoidingView> */}
+        </S.Back>
+      </S.Body>
     </TouchableWithoutFeedback>
   );
 };

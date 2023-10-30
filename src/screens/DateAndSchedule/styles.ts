@@ -15,7 +15,7 @@ export const ContainerTitle = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  margin-top: 36px;
+  margin-top: 48px;
   margin-bottom: 36px;
 `;
 
@@ -83,6 +83,7 @@ export const Buttons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 40px;
 `;
 
 export const Wrapper = styled(KeyboardAvoidingView)`

@@ -38,7 +38,6 @@ const SuggestSchedule = ({ navigation }) => {
 
   async function getSchedules() {
     try {
-      console.log('entrou');
       const response = await CalendarServices.getRecommendedTime({
         phone: user.phone,
         beginDate: moment(dateStart)
@@ -56,9 +55,7 @@ const SuggestSchedule = ({ navigation }) => {
           (contact) => contact.email || contact.phone
         ),
       });
-      // console.log(moment(response.freeTimes[0].start).format('dddd - DD/MM'));
       filterSchedulesByDay(response.freeTimes);
-      // console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -67,13 +64,17 @@ const SuggestSchedule = ({ navigation }) => {
   const filterSchedulesByDay = (freeTimes) => {
     const initialValue = {};
     const filteredSchedules = freeTimes.reduce((acc, schedule) => {
-      const day = moment(schedule.start).format('dddd - DD/MM');
+      const weekDay = moment(schedule.start)
+        .format('dddd')
+        .replace(/-[^-]*/g, '');
+      const day = weekDay + moment(schedule.start).format(' - DD/MM');
+      const formatedDay = day.replace(/^./, day[0].toUpperCase());
 
-      if (!acc[day]) {
-        acc[day] = [];
+      if (!acc[formatedDay]) {
+        acc[formatedDay] = [];
       }
 
-      acc[day].push(schedule);
+      acc[formatedDay].push(schedule);
 
       return acc;
     }, initialValue);
@@ -82,18 +83,6 @@ const SuggestSchedule = ({ navigation }) => {
   };
 
   moment.locale('pt-br');
-
-  // const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
-  //   null
-  // );
-
-  // const handleCardSelect = (index: number) => {
-  //   if (selectedCardIndex === index) {
-  //     setSelectedCardIndex(null); // Deselect the currently selected card
-  //   } else {
-  //     setSelectedCardIndex(index);
-  //   }
-  // };
 
   const [selectedCardsByDay, setSelectedCardsByDay] = useState<{
     [day: string]: number | null;
@@ -105,9 +94,6 @@ const SuggestSchedule = ({ navigation }) => {
       [day]: prevSelected[day] === index ? null : index,
     }));
   };
-
-  // console.log('selectedCardsByDay', selectedCardsByDay);
-  // console.log('selectedSchedule', selectedSchedule);
 
   return (
     <S.Body>
@@ -127,14 +113,8 @@ const SuggestSchedule = ({ navigation }) => {
                     return (
                       <CardSchedule
                         key={index}
-                        day={moment(schedule.start).format('DD')}
-                        date={moment(schedule.start)
-                          .format('ddd')
-                          .replace(/^\w/, (c) => c.toUpperCase())}
                         start={moment(schedule.start).format('HH:mm')}
                         end={moment(schedule.end).format('HH:mm')}
-                        scheduleStart={schedule.start}
-                        scheduleEnd={schedule.end}
                         isSelected={isSelected}
                         onSelect={() => {
                           handleCardSelect(day, index);

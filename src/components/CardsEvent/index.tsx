@@ -16,13 +16,6 @@ const CardsEvent: React.FC<CardsEventProps> = ({
 }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
-  console.log(
-    moment(event.element.begin)
-      .locale('pt-br')
-      .format('MMM')
-      .replace(/^\w/, (c) => c.toUpperCase())
-  );
-  console.log(event.element.begin);
 
   return (
     <S.ContainerCard

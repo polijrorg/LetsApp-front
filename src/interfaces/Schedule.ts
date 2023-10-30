@@ -1,4 +1,4 @@
 export default interface Schedule {
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
 }

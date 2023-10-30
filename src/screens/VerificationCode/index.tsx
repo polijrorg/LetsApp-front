@@ -38,15 +38,13 @@ const VerificationCode = ({ navigation }) => {
   );
 
   useEffect(() => {
-    console.log(initialUser);
     const handleSmsReceived = async (message) => {
       const code = message.body.match(/\d{6}/)[0];
       setVerificationCode(code);
       try {
-        const { data } = await api.post('/verify', {
+        await api.post('/verify', {
           verificationCode,
         });
-        console.log(data);
         navigation.navigate('Profile');
       } catch (error) {
         console.log(error);
@@ -79,11 +77,10 @@ const VerificationCode = ({ navigation }) => {
               onChange={async (value) => {
                 setVerificationCode(value);
                 try {
-                  const { data } = await api.post('/verify', {
+                  await api.post('/verify', {
                     phone: initialUser.phone,
                     code: parseInt(value, 10),
                   });
-                  console.log(data);
                   navigation.navigate('InitialData');
                 } catch (error) {
                   console.log(error);

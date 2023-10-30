@@ -20,8 +20,6 @@ const Profile = ({ navigation, route }) => {
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
 
-  console.log('image', image);
-
   const { user, addNameAndImage } = useAuth();
 
   const { imageUser } = route.params;
@@ -60,8 +58,6 @@ const Profile = ({ navigation, route }) => {
       await addNameAndImage(form);
 
       navigation.navigate('MainScreen');
-
-      // console.log(data);
     } catch (error) {
       console.log(error);
     }

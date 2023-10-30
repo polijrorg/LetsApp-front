@@ -31,8 +31,6 @@ const MainScreen = ({ navigation }) => {
         const response = await api.get(`GetUserByPhone/${user.phone}`);
         setCompleteUser(response.data);
         setOpen(!response.data.calendar_found);
-        console.log('completeUser', response.data);
-        console.log('user', user);
       } catch (error) {
         console.log(error);
       }
@@ -65,7 +63,6 @@ const MainScreen = ({ navigation }) => {
             completeUser.user.email
           );
           setEvents(response);
-          console.log('events', response);
         }
       } catch (error) {
         console.log(error);

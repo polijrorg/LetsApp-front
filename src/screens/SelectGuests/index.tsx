@@ -40,9 +40,6 @@ const SelectGuests = ({ navigation }) => {
       try {
         const response = await api.get(`GetUserByPhone/${user.phone}`);
         setUserContacts(response.data.user.contatos);
-        // console.log('contacts', response.data.user.contatos);
-        // console.log('completeUser', response.data);
-        // console.log('user', user);
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +60,6 @@ const SelectGuests = ({ navigation }) => {
           sort: Contacts.SortTypes.FirstName,
         });
         setContacts(data.slice(0, 15));
-        // console.log(data.slice(0, 15));
       }
     };
     getContacts();
@@ -75,11 +71,6 @@ const SelectGuests = ({ navigation }) => {
     const isMandatory = mandatoryContactSelected.some(
       (p) => p.id === participant.id
     );
-    console.log('contactSelected', contactSelected);
-    console.log('mandatoryContactSelected', mandatoryContactSelected);
-    console.log('participant', participant);
-    console.log('isSelected', isSelected);
-    console.log('isMandatory', isMandatory);
 
     if (isSelected) {
       // Remove o participante do array de selecionados e adiciona aos mandatorios
@@ -103,9 +94,6 @@ const SelectGuests = ({ navigation }) => {
       ]);
     }
   };
-
-  // console.log('contatos', contactSelected);
-  // console.log('mandatórios', mandatoryContactSelected);
 
   return (
     <S.Body>

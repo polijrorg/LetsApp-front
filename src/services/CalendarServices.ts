@@ -21,6 +21,20 @@ interface IGetRecommendedTime {
   mandatoryGuests: string[];
 }
 
+interface ICreateGoogleEvent {
+  phone: string;
+  begin: string;
+  end: string;
+  beginSearch: string;
+  endSearch: string;
+  attendees: string[];
+  description: string;
+  address: string;
+  createMeetLink: boolean;
+  name: string;
+  optionalAttendees: string[];
+}
+
 export interface IDeleteUserRequest {
   phone: string;
 }
@@ -61,15 +75,6 @@ export default class CalendarServices {
   static async getRecommendedTime(
     data: IGetRecommendedTime
   ): Promise<SuggestedTimes> {
-    console.log({
-      phone: data.phone,
-      beginDate: data.beginDate,
-      beginHour: data.beginHour,
-      duration: data.duration,
-      endDate: data.endDate,
-      endHour: data.endHour,
-      mandatoryGuests: data.mandatoryGuests,
-    });
     const response = await api.post('/getRecommededTimes', {
       phone: data.phone,
       beginDate: data.beginDate,
@@ -80,5 +85,22 @@ export default class CalendarServices {
       mandatoryGuests: data.mandatoryGuests,
     });
     return response.data;
+  }
+
+  static async createGoogleEvent(data: ICreateGoogleEvent): Promise<void> {
+    await api.post('/createGoogleEvent', {
+      name: data.name,
+      phone: data.phone,
+      begin: data.begin,
+      attendees: data.attendees,
+      end: data.end,
+      address: data.address,
+      description: data.description,
+      createMeetLink: data.createMeetLink,
+      optionalAttendees: data.optionalAttendees,
+      beginSearch: data.beginSearch,
+      endSearch: data.endSearch,
+    });
+    // return response.data;
   }
 }
