@@ -7,6 +7,7 @@ import React, { useContext, useState, createContext, useEffect } from 'react';
 
 interface IRegisterRequest {
   phone: string;
+  pseudoUserId?: string;
 }
 
 interface AuthContextData {
@@ -53,6 +54,7 @@ export const AuthProvider: React.FC<{
   };
 
   const deleteUser = async (data: IDeleteUserRequest) => {
+    console.log(data);
     await UserService.deleteUser(data);
     await AsyncStorage.clear();
 

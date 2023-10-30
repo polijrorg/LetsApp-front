@@ -43,7 +43,7 @@ const MainScreen = ({ navigation }) => {
       try {
         if (completeUser !== null) {
           const response = await CalendarServices.getUserInvites(
-            completeUser.user.email
+            completeUser.user?.email
           );
           setInvites(response);
           setNumberInvites(response.length);
@@ -52,15 +52,15 @@ const MainScreen = ({ navigation }) => {
         console.log(error);
       }
     };
-    user.email && getInvites();
-  }, [completeUser, user.email]);
+    user?.email && getInvites();
+  }, [completeUser, user?.email]);
 
   useEffect(() => {
     const getEvents = async () => {
       try {
         if (completeUser !== null) {
           const response = await CalendarServices.getUserEvents(
-            completeUser.user.email
+            completeUser.user?.email
           );
           setEvents(response);
         }
@@ -68,8 +68,8 @@ const MainScreen = ({ navigation }) => {
         console.log(error);
       }
     };
-    user.email && getEvents();
-  }, [completeUser, user.email]);
+    user?.email && getEvents();
+  }, [completeUser, user?.email]);
 
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
@@ -99,7 +99,7 @@ const MainScreen = ({ navigation }) => {
             navigation.navigate('Profile', {
               name: user?.name,
               imageUser: user?.photo,
-              email: completeUser?.user.email,
+              email: completeUser?.user?.email,
               phone: user.phone,
             });
           }}

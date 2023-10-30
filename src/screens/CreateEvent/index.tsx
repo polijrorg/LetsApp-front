@@ -3,9 +3,9 @@ import Button from '@components/Button';
 import EventTitle from '@components/EventTitle';
 import ToggleOnlineButton from '@components/ToggleOnlineButton';
 import useAuth from '@hooks/useAuth';
-import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
 import moment from 'moment';
+import { createURL } from 'expo-linking';
 import React, { useState } from 'react';
 import {
   Keyboard,
@@ -49,8 +49,10 @@ const CreateEvent = ({ navigation }) => {
 
   async function createEvent() {
     try {
+      const prefix = createURL('lets-app');
       if (user.type === 'GOOGLE') {
         await CalendarServices.createGoogleEvent({
+          prefix,
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,
@@ -71,6 +73,7 @@ const CreateEvent = ({ navigation }) => {
         });
       } else {
         await CalendarServices.createOutlookEvent({
+          prefix,
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,

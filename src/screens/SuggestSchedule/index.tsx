@@ -1,4 +1,3 @@
-/* eslint-disable radix */
 import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
@@ -45,7 +44,7 @@ const SuggestSchedule = ({ navigation }) => {
           .startOf('day')
           .format(),
         beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: parseInt(duration),
+        duration: parseInt(duration, 10),
         endDate: moment(dateEnd)
           .tz('America/Sao_Paulo')
           .startOf('day')

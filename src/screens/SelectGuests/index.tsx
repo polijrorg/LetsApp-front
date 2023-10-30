@@ -21,11 +21,6 @@ const SelectGuests = ({ navigation }) => {
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
 
-  // const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
-  // const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
-  //   ContactInfo[]
-  // >([]);
-
   const { user } = useAuth();
 
   const {
@@ -48,7 +43,7 @@ const SelectGuests = ({ navigation }) => {
   }, [user, open]);
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpen(!open);
   };
 
   useEffect(() => {

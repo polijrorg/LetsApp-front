@@ -40,12 +40,25 @@ const DateAndSchedule = ({ navigation }) => {
     useInvite();
 
   const sendData = () => {
-    setDateStart(date);
-    setDateEnd(date1);
-    setTimeStart(time);
-    setTimeEnd(time1);
-    setDuration(durations);
+    setDateStart(
+      moment(date)
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+        .tz('America/Sao_Paulo')
+        .format()
+    );
+    setDateEnd(
+      moment(date)
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+        .tz('America/Sao_Paulo')
+        .format()
+    );
+    setTimeStart(moment(time).tz('America/Sao_Paulo').format('HH:mm:ss'));
+    setTimeEnd(moment(time1).tz('America/Sao_Paulo').format('HH:mm:ss'));
+    setDuration(moment.duration(durations.concat(':00')).asMinutes());
   };
+
+  const { duration } = useProfile();
+  console.log(duration);
 
   const toggleStartPicker = () => {
     setShowStartPicker(!showStartPicker);
@@ -146,6 +159,8 @@ const DateAndSchedule = ({ navigation }) => {
                     onChange={onChangeEnd}
                     style={styles.datePicker}
                     themeVariant="light"
+                    // negativeButton={{ label: 'Cancel', textColor: 'red' }}
+                    // positiveButton={{ label: 'OK', textColor: 'black' }}
                   />
                 )}
                 <S.ContainerInputDate>

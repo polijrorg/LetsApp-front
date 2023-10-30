@@ -29,7 +29,7 @@ const ValidationSchema = yup.object({
   DDD: yup.string().required('Informe seu DDD').length(2, 'DDD inválido'),
 });
 
-const Autentication = ({ navigation }) => {
+const Autentication = ({ navigation, route }) => {
   const { register } = useAuth();
 
   const [DDD, setDDD] = useState('');
@@ -48,14 +48,17 @@ const Autentication = ({ navigation }) => {
   async function handleSignUp() {
     try {
       const formattedPhone = `+55${DDD}${phone}`;
-      await register({ phone: formattedPhone });
+      await register({
+        phone: formattedPhone,
+        pseudoUserId: route.params?.pseudoUserId,
+      });
       navigation.navigate('VerificationCode');
     } catch (error) {
       console.log(error);
     }
   }
 
-  // Ouvinte para o teclado ficar ativo
+  // Ouvinte para o teclado ficar ativo //
   const keyboardDidShowListener = Keyboard.addListener(
     'keyboardDidShow',
     () => {

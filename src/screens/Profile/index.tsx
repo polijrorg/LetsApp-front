@@ -98,7 +98,7 @@ const Profile = ({ navigation, route }) => {
         <FixedInput
           width="100%"
           height="40px"
-          value={name || user.name}
+          value={name || user?.name}
           setValue={setName}
           pencil
           placeholder="Insira seu nome"
@@ -110,7 +110,7 @@ const Profile = ({ navigation, route }) => {
             <Input
               width="100%"
               height="40px"
-              placeholder={user.email}
+              placeholder={user?.email}
               editable={false}
             />
           </S.FlexibleInputContainer>
@@ -139,7 +139,7 @@ const Profile = ({ navigation, route }) => {
             <Input
               width="100%"
               height="40px"
-              placeholder={user.phone}
+              placeholder={user?.phone}
               editable={false}
             />
           </S.FlexibleInputContainer>
