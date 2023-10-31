@@ -26,6 +26,11 @@ export interface IDeleteUserRequest {
   phone: string;
 }
 
+interface IGetUserRequest {
+  phone?: string;
+  email?: string;
+}
+
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<User> {
     try {
@@ -91,6 +96,23 @@ export default class UserServices {
         pseudoUserId: data.pseudoUserId,
       });
       return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async isPossibleMandatoryUser({
+    phone,
+    email,
+  }: IGetUserRequest): Promise<boolean> {
+    try {
+      if (phone && phone !== '') {
+        const response = await api.get(`/GetUserByPhone/${phone}`);
+        return response.data.calendar_found;
+      } else if (email !== '') {
+        const response = await api.get(`/GetUserByEmail/${email}`);
+        return response.data.calendar_found;
+      }
     } catch (error) {
       console.log(error);
     }
