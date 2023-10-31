@@ -3,6 +3,7 @@ import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
+import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
@@ -20,6 +21,7 @@ const SelectGuests = ({ navigation }) => {
   const [contacts, setContacts] = useState(null);
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
+  const [possibleMandatory, setPossibleMandatory] = useState(true);
 
   // const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
   // const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
@@ -27,6 +29,8 @@ const SelectGuests = ({ navigation }) => {
   // >([]);
 
   const { user } = useAuth();
+
+  const possibleMandatories = [];
 
   const {
     contactSelected,
@@ -73,6 +77,23 @@ const SelectGuests = ({ navigation }) => {
     );
 
     if (isSelected) {
+      // Verifica se contato pode ser obrigatório
+      const isPossibleMandatory = async () => {
+        const response = await UserServices.isPossibleMandatoryUser({
+          phone: participant.phone,
+          email: participant.email,
+        });
+
+        setPossibleMandatory(response);
+      };
+
+      isPossibleMandatory();
+
+      if (!possibleMandatory) {
+        alert(
+          'Contato não registrado no Lets App, enviaremos um convite por email/sms'
+        );
+      }
       // Remove o participante do array de selecionados e adiciona aos mandatorios
       setContactSelected((prevParticipants) =>
         prevParticipants.filter((p) => p.id !== participant.id)
@@ -96,8 +117,8 @@ const SelectGuests = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log(contactSelected);
-    console.log(mandatoryContactSelected);
+    console.log('Contatos selecionados', contactSelected);
+    console.log('Contatos obrigatórios', mandatoryContactSelected);
   });
 
   return (
