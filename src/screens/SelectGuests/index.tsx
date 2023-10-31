@@ -30,8 +30,6 @@ const SelectGuests = ({ navigation }) => {
 
   const { user } = useAuth();
 
-  const possibleMandatories = [];
-
   const {
     contactSelected,
     setContactSelected,
