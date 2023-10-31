@@ -3,10 +3,12 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
-import React, { useState, useEffect } from 'react';
+import { theme } from '@styles/default.theme';
+import React, { useState, useEffect, createRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -20,6 +22,9 @@ type FormDataProps = {
   phone: string;
 };
 
+const ImageArrow = require('../../assets/ArrowInput.png');
+const ImagePen = require('../../assets/Pen.png');
+
 const ValidationSchema = yup.object({
   phone: yup
     .string()
@@ -31,6 +36,8 @@ const ValidationSchema = yup.object({
 
 const Autentication = ({ navigation }) => {
   const { register } = useAuth();
+  const DDDref = createRef<TextInput>();
+  const phoneRef = createRef<TextInput>();
 
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
@@ -79,6 +86,10 @@ const Autentication = ({ navigation }) => {
     };
   });
 
+  const handleAutoTab = () => {
+    phoneRef.current.focus();
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-160}>
@@ -114,8 +125,12 @@ const Autentication = ({ navigation }) => {
                           onChange(inputValue);
                           setDDD(inputValue);
                         }
+                        if (e.length === 2) {
+                          handleAutoTab();
+                        }
                       }}
                       keyboardType="numeric"
+                      ref={DDDref}
                     />
                   )}
                 />
@@ -127,21 +142,28 @@ const Autentication = ({ navigation }) => {
                   control={control}
                   name="phone"
                   render={({ field: { onChange, value } }) => (
-                    <Input
-                      arrow={false}
-                      height="32px"
-                      width="238px"
-                      placeholder="Número"
-                      value={value}
-                      onChange={(e) => {
-                        const inputValue = e;
-                        if (inputValue.length <= 9) {
-                          onChange(inputValue);
-                          setPhone(inputValue);
-                        }
-                      }}
-                      keyboardType="numeric"
-                    />
+                    <S.ContainerInput width={'238px'} height={'32px'}>
+                      <S.Input
+                        value={value}
+                        onChangeText={(e) => {
+                          const inputValue = e;
+                          if (inputValue.length <= 9) {
+                            onChange(inputValue);
+                            setPhone(inputValue);
+                          }
+                        }}
+                        placeholder="Número"
+                        placeholderTextColor={theme.colors.mediumEmphasis}
+                        keyboardType="numeric"
+                        ref={phoneRef}
+                      />
+                      <S.ContainerArrow arrow={false}>
+                        <S.Arrow source={ImageArrow} />
+                      </S.ContainerArrow>
+                      <S.ContainerArrow arrow={false}>
+                        <S.Pen source={ImagePen} />
+                      </S.ContainerArrow>
+                    </S.ContainerInput>
                   )}
                 />
                 {errors.phone && (

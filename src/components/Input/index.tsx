@@ -12,6 +12,7 @@ export type InputProps = {
   onChange?: (text: string) => void;
   keyboardType?: string;
   editable?: boolean;
+  ref?: React.MutableRefObject<any>;
 };
 
 const ImageArrow = require('../../assets/ArrowInput.png');
@@ -27,6 +28,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   keyboardType,
   editable = true,
+  ref,
 }) => {
   return (
     <S.ContainerInput width={width} height={height}>
@@ -37,6 +39,7 @@ const Input: React.FC<InputProps> = ({
         placeholderTextColor={theme.colors.mediumEmphasis}
         keyboardType={keyboardType}
         editable={editable}
+        ref={ref}
       />
       <S.ContainerArrow arrow={arrow}>
         <S.Arrow source={ImageArrow} />
