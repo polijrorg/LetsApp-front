@@ -31,6 +31,11 @@ interface IGetUserRequest {
   email?: string;
 }
 
+interface IAvailabilityRequest {
+  id: string;
+  inviteId: string;
+}
+
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<User> {
     try {
@@ -113,6 +118,22 @@ export default class UserServices {
         const response = await api.get(`/GetUserByEmail/${email}`);
         return response.data.calendar_found;
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async checkUserAvailability({
+    id,
+    inviteId,
+  }: IAvailabilityRequest): Promise<boolean> {
+    try {
+      const response = await api.post('/checkUserAvailability', {
+        id,
+        inviteId,
+      });
+
+      return response.data;
     } catch (error) {
       console.log(error);
     }

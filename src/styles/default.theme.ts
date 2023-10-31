@@ -5,6 +5,8 @@ export const theme = {
       main: '#727FF6',
       light: '#BCD1FB',
       dark: '#3446E4',
+
+      negative: '#FF0000',
     },
 
     highEmphasis: '#322E1E',

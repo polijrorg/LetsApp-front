@@ -170,6 +170,14 @@ export const Adjust = styled(View)`
   justify-content: space-between;
 `;
 
+export const AvailabilityText = styled(Text)<{ available: boolean }>`
+  font-size: 8px;
+  color: ${(props) =>
+    props.available
+      ? `${theme.colors.primary.main}`
+      : `${theme.colors.primary.negative}`};
+`;
+
 export const Line = styled(View)`
   width: 100%;
   border-bottom-width: 2px;

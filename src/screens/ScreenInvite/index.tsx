@@ -1,10 +1,13 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useAuth from '@hooks/useAuth';
 import Invite from '@interfaces/Invites';
+import UserServices from '@services/UserServices';
 import moment from 'moment';
 // import moment from 'moment';
 import 'moment/locale/pt-br';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 export type CardsInviteProps = {
@@ -22,6 +25,24 @@ const calendar = require('../../assets/CalendarIcon.png');
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const invite: Invite = route.params.invite;
   const location = route.params.location;
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const getAvailability = async () => {
+      const response = await UserServices.checkUserAvailability({
+        id: user.id,
+        inviteId: invite.element.id,
+      });
+
+      setIsAvailable(response);
+      setIsLoading(false);
+    };
+
+    getAvailability();
+  });
+
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const ajustDate = moment(invite.element.begin).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
@@ -77,6 +98,15 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   {moment(invite.element.begin).format('HH:mm')} -{' '}
                   {moment(invite.element.end).format('HH:mm')}
                 </S.Date>
+                {!isLoading && (
+                  <S.AvailabilityText available={isAvailable}>
+                    {`${
+                      isAvailable
+                        ? 'Você está disponível nesse horário'
+                        : 'Você não está disponível nesse horário'
+                    }`}
+                  </S.AvailabilityText>
+                )}
               </S.Adjust>
               <S.ScheduleButton
                 onPress={() => {
