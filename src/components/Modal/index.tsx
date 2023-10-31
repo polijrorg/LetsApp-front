@@ -185,7 +185,6 @@ export const ModalCard: React.FC<ModalProps> = ({
               <S.ContainerButtons>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('Profile');
                     setOpen(false);
                   }}
                 >

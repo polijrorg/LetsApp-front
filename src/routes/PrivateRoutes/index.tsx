@@ -8,6 +8,7 @@ import Profile from '@screens/Profile';
 import ScreenEvent from '@screens/ScreenEvent';
 import ScreenInvite from '@screens/ScreenInvite';
 import SelectGuests from '@screens/SelectGuests';
+import SuggestNewTime from '@screens/SuggestNewTime';
 import SuggestSchedule from '@screens/SuggestSchedule';
 import React from 'react';
 
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   SuggestSchedule: undefined;
   ModalCard: undefined;
   InvitedGuests: undefined;
+  SuggestNewTime: undefined;
 };
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
@@ -44,6 +46,7 @@ function PrivateRoutes() {
       <Screen name="SuggestSchedule" component={SuggestSchedule} />
       <Screen name="ModalCard" component={ModalCard} />
       <Screen name="InvitedGuests" component={InvitedGuests} />
+      <Screen name="SuggestNewTime" component={SuggestNewTime} />
     </Navigator>
   );
 }

@@ -78,7 +78,11 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   {moment(invite.element.end).format('HH:mm')}
                 </S.Date>
               </S.Adjust>
-              <S.ScheduleButton>
+              <S.ScheduleButton
+                onPress={() => {
+                  navigation.navigate('SuggestNewTime', { invite: invite });
+                }}
+              >
                 <S.ScheduleText>Modificar o horário</S.ScheduleText>
               </S.ScheduleButton>
             </S.Row>

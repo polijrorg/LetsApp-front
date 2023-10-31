@@ -95,6 +95,11 @@ const SelectGuests = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    console.log(contactSelected);
+    console.log(mandatoryContactSelected);
+  });
+
   return (
     <S.Body>
       <S.Header>

@@ -61,16 +61,31 @@ export interface IDeleteUserRequest {
   phone: string;
 }
 
+export interface ISuggestedNewTimesRequest {
+  phone: string;
+  inviteId: string;
+}
+
+interface IUpdateEventRequest {
+  phone: string;
+  idInvite: string;
+  begin: string;
+  end: string;
+}
+
 export default class CalendarServices {
   static async addContact(data: IAddContact): Promise<User> {
-    const response = await api.post('addContact', {
-      userPhone: data.userPhone,
-      phone: data.phone,
-      name: data.name,
-      email: data.email,
-    });
-
-    return response.data;
+    try {
+      const response = await api.post('/addContact', {
+        userPhone: data.userPhone,
+        phone: data.phone,
+        name: data.name,
+        email: data.email,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   static async getUserEvents(email: string): Promise<Event[]> {
@@ -163,7 +178,7 @@ export default class CalendarServices {
 
     const linkNotificationResponses: string[] = [];
 
-    const responses = response.config.data.pseudoGuests.map(
+    const responses = response.data.pseudoGuests.map(
       async (pseudoGuest: PseudoUser) => {
         const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
 
@@ -179,5 +194,26 @@ export default class CalendarServices {
     await Promise.all(responses);
 
     return { ...response.data, linkNotificationResponses };
+  }
+
+  static async getSuggestedNewTimes(data: ISuggestedNewTimesRequest) {
+    const response = await api.post('/suggestNewTime', {
+      phone: data.phone,
+      inviteId: data.inviteId,
+    });
+
+    return response.data;
+  }
+
+  static async updateEvent(data: IUpdateEventRequest) {
+    console.log('entrou');
+    const response = await api.post('/updateAllEvents', {
+      phone: data.phone,
+      idInvite: data.idInvite,
+      begin: data.begin,
+      end: data.end,
+    });
+
+    return response.data;
   }
 }
