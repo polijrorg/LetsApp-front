@@ -24,27 +24,6 @@ const Contact: React.FC<ContactProps> = ({
   isSelected,
   isMandatory,
 }) => {
-  // const [isSelected, setIsSelected] = useState(false);
-  // const [isMandatory, setIsMandatory] = useState(false);
-
-  // const handleClick = () => {
-  //   if (isSelected) {
-  //     setIsSelected(false);
-  //     setIsMandatory(true);
-  //   } else if (isMandatory) {
-  //     setIsSelected(false);
-  //     setIsMandatory(false);
-  //   } else {
-  //     setIsSelected(true);
-  //     setIsMandatory(false);
-  //   }
-
-  //   if (onPress) {
-  //     onPress();
-  //   }
-  // setHasBorder(!hasBorder);
-  // onClick(title);
-
   return (
     <S.ContainerContact
       onPress={onPress}
