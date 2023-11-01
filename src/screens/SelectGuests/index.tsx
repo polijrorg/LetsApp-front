@@ -56,7 +56,7 @@ const SelectGuests = ({ navigation }) => {
           fields: [Contacts.Fields.PhoneNumbers],
           sort: Contacts.SortTypes.FirstName,
         });
-        setContacts(data.slice(0, 15));
+        setContacts(data);
       }
     };
     getContacts();
