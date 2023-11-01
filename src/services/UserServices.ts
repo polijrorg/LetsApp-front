@@ -36,6 +36,12 @@ interface IAvailabilityRequest {
   inviteId: string;
 }
 
+interface IUpdateStateRequest {
+  state: string;
+  email: string;
+  inviteId: string;
+}
+
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<User> {
     try {
@@ -143,6 +149,25 @@ export default class UserServices {
     try {
       const response = await api.post('/resendCode', {
         phone,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async updateInviteState({
+    state,
+    email,
+    inviteId,
+  }: IUpdateStateRequest): Promise<void> {
+    console.log('entrou');
+    try {
+      const response = await api.post('/invites/updateInviteState', {
+        state,
+        email,
+        inviteId,
       });
 
       console.log(response.data);

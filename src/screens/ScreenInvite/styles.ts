@@ -7,6 +7,10 @@ type InviteProps = {
   source: string;
 };
 
+type StatusProps = {
+  color: string;
+};
+
 export const Body = styled(View)`
   flex: 1;
   background-color: ${theme.colors.background};
@@ -218,4 +222,12 @@ export const Content = styled(Text)`
   line-height: 24px;
   letter-spacing: 0.5px;
   color: ${theme.colors.mediumEmphasis};
+`;
+
+export const StateText = styled(Text)<StatusProps>`
+  color: ${(props) => props.color};
+  font-size: 16px;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+  font-family: 'Roboto';
 `;
