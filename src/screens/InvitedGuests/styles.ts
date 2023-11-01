@@ -119,6 +119,14 @@ export const Subtitle = styled.Text`
   font-family: 'Roboto';
 `;
 
+export const EmptyText = styled.Text`
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: ${theme.colors.lowEmphasis};
+  font-family: 'RobotoLight';
+  padding: 12px 4px;
+`;
+
 export const Mandatory = styled.Text`
   font-size: 10px;
   color: ${theme.colors.highEmphasis};

@@ -4,16 +4,11 @@ import moment from 'moment';
 import React from 'react';
 
 export type CardsEventProps = {
-  location: 'online' | 'presencial';
   event: Event;
   navigation: any;
 };
 
-const CardsEvent: React.FC<CardsEventProps> = ({
-  location,
-  event,
-  navigation,
-}) => {
+const CardsEvent: React.FC<CardsEventProps> = ({ event, navigation }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
 
@@ -22,7 +17,6 @@ const CardsEvent: React.FC<CardsEventProps> = ({
       onPress={() => {
         navigation.navigate('ScreenEvent', {
           event: event,
-          location: location,
         });
       }}
     >
@@ -39,10 +33,10 @@ const CardsEvent: React.FC<CardsEventProps> = ({
         <S.ContainerContentData>
           <S.Name>{event.element.name}</S.Name>
           <S.ContainerContent>
-            <S.IconAdress
-              source={location === 'online' ? online : presencial}
-            />
-            <S.Adress>{event.element.address}</S.Adress>
+            <S.IconAdress source={event.element.link ? online : presencial} />
+            <S.Adress>
+              {event.element.link ? 'Evento online' : event.element.address}
+            </S.Adress>
           </S.ContainerContent>
         </S.ContainerContentData>
       </S.ContainerContent>

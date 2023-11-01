@@ -1,9 +1,13 @@
+import User, { PseudoUser } from './User';
+
 export default interface Event {
   element: {
     id: string;
     name: string;
     begin: Date;
     end: string;
+    beginSearch: Date;
+    endSearch: Date;
     description: string;
     phone: string;
     address: string;
@@ -13,8 +17,13 @@ export default interface Event {
     organizerPhoto: string;
     organizerName: string;
   };
-  maybe: number;
-  no: number;
-  status: number;
-  yes: number;
+  maybe: EventStatus;
+  no: EventStatus;
+  yes: EventStatus;
+}
+
+interface EventStatus {
+  amount: number;
+  ateendees: User[];
+  pseudoAttendes: PseudoUser[];
 }
