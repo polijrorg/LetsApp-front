@@ -9,6 +9,12 @@ export const Body = styled.View`
   display: flex;
 `;
 
+export const LoadButtonView = styled(View)`
+  width: 100%;
+  padding: 12px 0px;
+  align-items: center;
+`;
+
 export const Header = styled.View`
   margin-top: 48px;
   display: flex;

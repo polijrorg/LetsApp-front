@@ -1,4 +1,5 @@
 import * as S from './styles';
+import Button from '@components/Button';
 import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
@@ -18,7 +19,13 @@ const Check = require('../../assets/Check.png');
 
 const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
-  const [contacts, setContacts] = useState(null);
+  const [contacts1, setContacts1] = useState(null);
+  const [contacts2, setContacts2] = useState(null);
+  const [contacts3, setContacts3] = useState(null);
+  const [contacts4, setContacts4] = useState(null);
+  const [contacts5, setContacts5] = useState(null);
+  const [contacts6, setContacts6] = useState(null);
+  const [loadContacts, setLoadContacts] = useState(1);
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
   const [possibleMandatory, setPossibleMandatory] = useState(true);
@@ -56,7 +63,13 @@ const SelectGuests = ({ navigation }) => {
           fields: [Contacts.Fields.PhoneNumbers],
           sort: Contacts.SortTypes.FirstName,
         });
-        setContacts(data.slice(0, 15));
+        console.log(data.length);
+        setContacts1(data.slice(0, 200));
+        data.length > 200 && setContacts2(data.slice(200, 400));
+        data.length > 400 && setContacts3(data.slice(400, 600));
+        data.length > 400 && setContacts4(data.slice(600, 800));
+        data.length > 600 && setContacts5(data.slice(800, 1000));
+        data.length > 800 && setContacts6(data.slice(1000, 1200));
       }
     };
     getContacts();
@@ -84,7 +97,8 @@ const SelectGuests = ({ navigation }) => {
 
       if (!possibleMandatory) {
         Alert.alert(
-          'Contato não registrado no Lets App, enviaremos um convite por email/sms'
+          'Contato não registrado no Lets App',
+          'Não temos acesso ao seu calendário, enviaremos um convite por email/sms'
         );
       }
       // Remove o participante do array de selecionados e adiciona aos mandatorios
@@ -113,6 +127,10 @@ const SelectGuests = ({ navigation }) => {
     console.log('Contatos selecionados', contactSelected);
     console.log('Contatos obrigatórios', mandatoryContactSelected);
   }, [contactSelected, mandatoryContactSelected]);
+
+  const loadMore = () => {
+    setLoadContacts(loadContacts + 1);
+  };
 
   return (
     <S.Body>
@@ -170,8 +188,9 @@ const SelectGuests = ({ navigation }) => {
           <S.Subtitle>Minha Agenda</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
-        {contacts &&
-          contacts.map((event, index) => (
+        {loadContacts === 1 &&
+          contacts1 &&
+          contacts1.map((event, index) => (
             <React.Fragment key={index}>
               <Contact
                 name={event.name}
@@ -183,6 +202,74 @@ const SelectGuests = ({ navigation }) => {
               />
             </React.Fragment>
           ))}
+        {loadContacts === 2 &&
+          contacts2 &&
+          contacts2.map((event, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={event.name}
+                phoneOrEmail={
+                  event.phoneNumbers && event.phoneNumbers[0]
+                    ? event.phoneNumbers[0].number
+                    : 'Nenhum contato disponível'
+                }
+              />
+            </React.Fragment>
+          ))}
+        {loadContacts === 3 &&
+          contacts3 &&
+          contacts3.map((event, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={event.name}
+                phoneOrEmail={
+                  event.phoneNumbers && event.phoneNumbers[0]
+                    ? event.phoneNumbers[0].number
+                    : 'Nenhum contato disponível'
+                }
+              />
+            </React.Fragment>
+          ))}
+        {loadContacts === 4 &&
+          contacts4 &&
+          contacts4.map((event, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={event.name}
+                phoneOrEmail={
+                  event.phoneNumbers && event.phoneNumbers[0]
+                    ? event.phoneNumbers[0].number
+                    : 'Nenhum contato disponível'
+                }
+              />
+            </React.Fragment>
+          ))}
+        {loadContacts === 5 &&
+          contacts5 &&
+          contacts5.map((event, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={event.name}
+                phoneOrEmail={
+                  event.phoneNumbers && event.phoneNumbers[0]
+                    ? event.phoneNumbers[0].number
+                    : 'Nenhum contato disponível'
+                }
+              />
+            </React.Fragment>
+          ))}
+        <S.LoadButtonView>
+          <TouchableOpacity onPress={loadMore}>
+            <Button
+              width="300px"
+              backgroundColor={theme.colors.primary.main}
+              borderColor="transparent"
+              hasIcon={false}
+              title="Carregar mais"
+              titleColor="#FAFAFA"
+            />
+          </TouchableOpacity>
+        </S.LoadButtonView>
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity
