@@ -94,10 +94,12 @@ export const ScrollView = styled.ScrollView`
 
 export const ContainerInvite = styled.View`
   display: flex;
+  flex-direction: column-reverse;
 `;
 
 export const ContainerEvent = styled.View`
   display: flex;
+  flex-direction: column-reverse;
 `;
 
 export const IconMore = styled.View`
