@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
-import { theme } from '@styles/default.theme';
 import React, { useState, useEffect, createRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -21,9 +20,6 @@ type FormDataProps = {
   DDD: string;
   phone: string;
 };
-
-const ImageArrow = require('../../assets/ArrowInput.png');
-const ImagePen = require('../../assets/Pen.png');
 
 const ValidationSchema = yup.object({
   phone: yup
@@ -142,28 +138,22 @@ const Autentication = ({ navigation }) => {
                   control={control}
                   name="phone"
                   render={({ field: { onChange, value } }) => (
-                    <S.ContainerInput width={'238px'} height={'32px'}>
-                      <S.Input
-                        value={value}
-                        onChangeText={(e) => {
-                          const inputValue = e;
-                          if (inputValue.length <= 9) {
-                            onChange(inputValue);
-                            setPhone(inputValue);
-                          }
-                        }}
-                        placeholder="Número"
-                        placeholderTextColor={theme.colors.mediumEmphasis}
-                        keyboardType="numeric"
-                        ref={phoneRef}
-                      />
-                      <S.ContainerArrow arrow={false}>
-                        <S.Arrow source={ImageArrow} />
-                      </S.ContainerArrow>
-                      <S.ContainerArrow arrow={false}>
-                        <S.Pen source={ImagePen} />
-                      </S.ContainerArrow>
-                    </S.ContainerInput>
+                    <Input
+                      arrow={false}
+                      height="32px"
+                      width="238px"
+                      placeholder="Número"
+                      value={value}
+                      onChange={(e) => {
+                        const inputValue = e;
+                        if (inputValue.length <= 9) {
+                          onChange(inputValue);
+                          setPhone(inputValue);
+                        }
+                      }}
+                      keyboardType="numeric"
+                      ref={phoneRef}
+                    />
                   )}
                 />
                 {errors.phone && (
