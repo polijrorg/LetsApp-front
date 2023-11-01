@@ -19,7 +19,8 @@ const Participants = require('../../assets/Participants.png');
 
 const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const event: Event = route.params.event;
-  const location = route.params.event;
+
+  const totalGuests = event.yes.amount + event.no.amount + event.maybe.amount;
 
   const ajustDate = moment(event.element.begin).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
@@ -41,13 +42,11 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         <S.ContainerContent>
           <S.Row>
             <S.ContainerIcon>
-              <S.IconAdress
-                source={location === 'online' ? online : presencial}
-              />
+              <S.IconAdress source={event.element.link ? online : presencial} />
             </S.ContainerIcon>
             <S.Adjust>
               <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-              <S.Adress>{event.element.address}</S.Adress>
+              <S.Adress>{event.element.address || 'Evento online'}</S.Adress>
             </S.Adjust>
           </S.Row>
           <S.Row>
@@ -70,8 +69,10 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
               <S.IconDate source={Participants} />
             </S.ContainerIcon>
             <S.Adjust>
-              <S.LocalandDate>{} Convidados</S.LocalandDate>
-              <S.Confirmed>: Sim</S.Confirmed>
+              <S.LocalandDate>
+                {totalGuests} {totalGuests === 1 ? ' Convidado' : 'Convidados'}
+              </S.LocalandDate>
+              <S.Confirmed>{event.yes.amount}: Sim</S.Confirmed>
             </S.Adjust>
             <S.InfoButton
               onPress={() => navigation.navigate('InvitedGuests', { event })}

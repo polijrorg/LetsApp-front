@@ -135,7 +135,6 @@ const MainScreen = ({ navigation }) => {
                 <React.Fragment key={index}>
                   <CardsEvent
                     key={event.element.id}
-                    location="presencial"
                     event={event}
                     navigation={navigation}
                   />
