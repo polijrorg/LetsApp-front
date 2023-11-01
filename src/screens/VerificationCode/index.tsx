@@ -1,7 +1,9 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useCountDown from '@components/CountDown';
 import InputCode from '@components/InputCode';
 import useAuth from '@hooks/useAuth';
+import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import React, { useState, useEffect } from 'react';
 import {
@@ -17,6 +19,9 @@ const Phone = require('../../assets/PhoneIcon.png');
 
 const VerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
+  const [countdown, setCountdown] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const { secondsLeft, startCountDown } = useCountDown();
   const { initialUser } = useAuth();
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
@@ -36,6 +41,23 @@ const VerificationCode = ({ navigation }) => {
       setIsKeyboardActive(false);
     }
   );
+
+  const handleCountdown = async () => {
+    await UserServices.resendCode(initialUser.phone);
+    setCountdown(true);
+    startCountDown(60);
+    setElapsedTime(0);
+  };
+
+  useEffect(() => {
+    setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+    if (elapsedTime === 60) {
+      setCountdown(false);
+      setElapsedTime(0);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secondsLeft]);
 
   useEffect(() => {
     const handleSmsReceived = async (message) => {
@@ -76,14 +98,16 @@ const VerificationCode = ({ navigation }) => {
               value={verificationCode}
               onChange={async (value) => {
                 setVerificationCode(value);
-                try {
-                  await api.post('/verify', {
-                    phone: initialUser.phone,
-                    code: parseInt(value, 10),
-                  });
-                  navigation.navigate('InitialData');
-                } catch (error) {
-                  console.log(error);
+                if (value.length === 6) {
+                  try {
+                    await api.post('/verify', {
+                      phone: initialUser.phone,
+                      code: parseInt(value, 10),
+                    });
+                    navigation.navigate('InitialData');
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }
               }}
               keyboardType="numeric"
@@ -92,19 +116,24 @@ const VerificationCode = ({ navigation }) => {
               Preencha aqui com o código recebido por SMS
             </S.Description>
             <TouchableOpacity
-              activeOpacity={1.0}
+              activeOpacity={0.5}
+              disabled={countdown}
+              style={{ opacity: countdown ? 0.8 : 1 }}
               onPress={() => {
-                navigation.navigate('InitialData');
+                // navigation.navigate('InitialData');
+                handleCountdown();
               }}
             >
               <Button
                 width="328px"
-                backgroundColor="#3446E4"
+                backgroundColor={countdown ? '#949494' : '#3446E4'}
                 borderColor="transparent"
                 hasIcon={true}
                 icon={Message}
                 title="Reenviar código"
                 titleColor="#FAFAFA"
+                secondsLeft={secondsLeft}
+                countDown={countdown}
               />
             </TouchableOpacity>
             <TouchableOpacity

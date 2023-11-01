@@ -6,6 +6,7 @@ type ButtonProps = {
   borderColor: string;
   titleColor: string;
   hasIcon: boolean;
+  countdown: boolean;
 };
 
 export const ContainerButton = styled.View<ButtonProps>`
@@ -36,8 +37,9 @@ export const Title = styled.Text<ButtonProps>`
 
 export const ContainerIcon = styled.View<ButtonProps>`
   display: ${(props) => (props.hasIcon ? 'flex' : 'none')};
-  margin-right: 16px;
-  width: 16px;
+  justify-content: center;
+  margin-right: ${(props) => (props.countdown ? '12px' : '16px')};
+  width: ${(props) => (props.countdown ? '32px' : '16px')};
   height: 16px;
 `;
 
