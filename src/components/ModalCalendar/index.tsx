@@ -53,9 +53,9 @@ export const ModalCalendar: React.FC = () => {
             </S.Input>
           </TouchableOpacity>
         </S.ContainerButtons>
-        <S.DescritionBottom>
+        {/* <S.DescritionBottom>
           * Você pode alterar ou adicionar calendários em seu perfil
-        </S.DescritionBottom>
+        </S.DescritionBottom> */}
       </S.ContentContainer>
     </S.ModalView>
   );

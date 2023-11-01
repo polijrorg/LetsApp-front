@@ -15,6 +15,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 
 const styles = StyleSheet.create({
   datePicker: {
@@ -40,19 +41,39 @@ const DateAndSchedule = ({ navigation }) => {
     useInvite();
 
   const sendData = () => {
+    if (moment(date).diff(new Date(), 'days') < 0) {
+      displayDateErrorToast('❌ Data de início inválida');
+      return;
+    } else if (moment(date1).diff(date) < 0) {
+      displayDateErrorToast('❌ Intervalo de datas inválido');
+      return;
+    } else if (!durations || parseInt(durations, 10) === 0) {
+      displayDateErrorToast('❌ Selecione a duração do evento');
+      return;
+    } else if (moment(time1).diff(time, 'minutes') < parseInt(durations, 10)) {
+      displayDateErrorToast('❌ Intervalo de tempo inválido');
+      return;
+    }
     setDateStart(date);
     setDateEnd(date1);
     setTimeStart(time);
     setTimeEnd(time1);
     setDuration(durations);
+    navigation.navigate('SuggestSchedule');
   };
 
   const toggleStartPicker = () => {
     setShowStartPicker(!showStartPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
   };
 
   const toggleEndPicker = () => {
     setShowEndPicker(!showEndPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowStartPicker(false);
   };
 
   const onChangeStart = (event, selectedDate) => {
@@ -75,10 +96,23 @@ const DateAndSchedule = ({ navigation }) => {
 
   const toggleTimeStartPicker = () => {
     setShowTimeStart(!showTimeStart);
+    setShowTimeEnd(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const toggleTimeEndPicker = () => {
     setShowTimeEnd(!showTimeEnd);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
+  };
+
+  const disableSpinners = () => {
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const onChangeTimeStart = (event, selectedDate) => {
@@ -99,10 +133,27 @@ const DateAndSchedule = ({ navigation }) => {
     }
   };
 
+  function displayDateErrorToast(message: string) {
+    Toast.show(message, {
+      duration: Toast.durations.SHORT,
+      position: 120,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      backgroundColor: theme.colors.white,
+      textColor: theme.colors.highEmphasis,
+    });
+  }
+
   return (
     <S.Wrapper behavior="position" keyboardVerticalOffset={-120}>
       <ScrollView>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+            disableSpinners();
+          }}
+        >
           <S.Body>
             <S.ContainerTitle>
               <S.Title>Criar Novo Evento</S.Title>
@@ -232,6 +283,7 @@ const DateAndSchedule = ({ navigation }) => {
                     onChangeText={(word) => {
                       setDurations(word);
                     }}
+                    onPressIn={disableSpinners}
                   />
                 </S.ContainerInputDate>
               </S.Description>
@@ -254,7 +306,6 @@ const DateAndSchedule = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   sendData();
-                  navigation.navigate('SuggestSchedule');
                 }}
               >
                 <Button
