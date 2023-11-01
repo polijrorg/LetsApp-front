@@ -15,6 +15,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 
 const styles = StyleSheet.create({
   datePicker: {
@@ -40,11 +41,25 @@ const DateAndSchedule = ({ navigation }) => {
     useInvite();
 
   const sendData = () => {
+    if (moment(date).diff(new Date(), 'days') < 0) {
+      displayDateErrorToast('❌ Data de início inválida');
+      return;
+    } else if (moment(date1).diff(date) < 0) {
+      displayDateErrorToast('❌ Intervalo de datas inválido');
+      return;
+    } else if (!durations || parseInt(durations, 10) === 0) {
+      displayDateErrorToast('❌ Selecione a duração do evento');
+      return;
+    } else if (moment(time1).diff(time, 'minutes') < parseInt(durations, 10)) {
+      displayDateErrorToast('❌ Intervalo de tempo inválido');
+      return;
+    }
     setDateStart(date);
     setDateEnd(date1);
     setTimeStart(time);
     setTimeEnd(time1);
     setDuration(durations);
+    navigation.navigate('SuggestSchedule');
   };
 
   const toggleStartPicker = () => {
@@ -117,6 +132,18 @@ const DateAndSchedule = ({ navigation }) => {
       toggleTimeEndPicker();
     }
   };
+
+  function displayDateErrorToast(message: string) {
+    Toast.show(message, {
+      duration: Toast.durations.SHORT,
+      position: 120,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      backgroundColor: theme.colors.white,
+      textColor: theme.colors.highEmphasis,
+    });
+  }
 
   return (
     <S.Wrapper behavior="position" keyboardVerticalOffset={-120}>
@@ -279,7 +306,6 @@ const DateAndSchedule = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   sendData();
-                  navigation.navigate('SuggestSchedule');
                 }}
               >
                 <Button
