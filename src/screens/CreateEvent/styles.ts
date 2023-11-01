@@ -1,6 +1,6 @@
 import { theme } from '@styles/default.theme';
 import { LinearGradient } from 'expo-linear-gradient';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { Text, KeyboardAvoidingView, TextInput, View } from 'react-native';
 import styled from 'styled-components/native';
 
 type InviteProps = {
@@ -42,6 +42,7 @@ export const Back = styled.ImageBackground<InviteProps>`
   height: 100%;
   width: 100%;
   position: absolute;
+  z-index: -100;
 `;
 
 export const Header = styled.View`
@@ -65,6 +66,23 @@ export const NameEvent = styled.Text`
   font-size: 18px;
   font-family: 'RobotoBold';
   color: ${theme.colors.primary.main};
+`;
+
+export const ErrorText = styled(Text)`
+  font-size: 12px;
+  font-family: 'RobotoLight';
+  letter-spacing: 0c.5px;
+  color: red;
+  align-self: flex-start;
+  padding: 8px 2px;
+`;
+export const ErrorTitle = styled(Text)`
+  font-size: 12px;
+  font-family: 'RobotoLight';
+  letter-spacing: 0c.5px;
+  color: red;
+  padding: 8px 2px;
+  margin-bottom: -28px;
 `;
 
 export const ChangeName = styled.TextInput`
@@ -118,7 +136,7 @@ export const ContainerLink = styled.View`
   margin-top: 12px;
 `;
 
-export const Content = styled.TextInput`
+export const Content = styled(TextInput)`
   font-size: 14px;
   font-family: 'Roboto';
   color: ${theme.colors.highEmphasis};

@@ -5,6 +5,7 @@ import ToggleOnlineButton from '@components/ToggleOnlineButton';
 import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
+import { theme } from '@styles/default.theme';
 import { createURL } from 'expo-linking';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -47,6 +48,8 @@ const CreateEvent = ({ navigation }) => {
   const [online, setOnline] = useState(false);
   const [title, setTitle] = useState('');
   const [address, setAddress] = useState('');
+  const [addressError, setAddressError] = useState(false);
+  const [titleError, setTitleError] = useState(false);
 
   const { user } = useAuth();
 
@@ -63,6 +66,18 @@ const CreateEvent = ({ navigation }) => {
 
     //RESOLVER DEPOIS
 
+    if (title === '') {
+      setTitleError(true);
+      return;
+    }
+
+    setTitleError(false);
+
+    if (!online && address === '') {
+      setAddressError(true);
+      return;
+    }
+    setAddressError(false);
     const prefix = createURL('/lest-app');
     try {
       if (user.type === 'GOOGLE') {
@@ -139,6 +154,9 @@ const CreateEvent = ({ navigation }) => {
           <S.Header>
             <S.InputsWrapper>
               <EventTitle title={title} setTitle={setTitle} />
+              {titleError && (
+                <S.ErrorTitle>Escolha um nome para o evento</S.ErrorTitle>
+              )}
               <ToggleOnlineButton online={online} setOnline={setOnline} />
               <S.ContainerContent>
                 <S.Content
@@ -146,6 +164,7 @@ const CreateEvent = ({ navigation }) => {
                   multiline={true}
                   value={description}
                   onChangeText={(text) => setDescrition(text)}
+                  placeholderTextColor={theme.colors.lowEmphasis}
                 />
               </S.ContainerContent>
               {!online && (
@@ -154,8 +173,12 @@ const CreateEvent = ({ navigation }) => {
                     placeholder="Digite o endereço da reunião"
                     value={address}
                     onChangeText={(text) => setAddress(text)}
+                    placeholderTextColor={theme.colors.lowEmphasis}
                   />
                 </S.ContainerLink>
+              )}
+              {addressError && (
+                <S.ErrorText>Por favor, selecione um endereço</S.ErrorText>
               )}
             </S.InputsWrapper>
             <S.Buttons>
