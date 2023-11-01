@@ -1,8 +1,10 @@
 {
   "expo": {
     "name": "LetsApp",
-    "slug": "lets-app",
     "scheme": "lets-app",
+    "currentFullName": "@owner/slug",
+    "originalFullName": "@account/project_name",
+    "slug": "lets-app",
     "owner": "letsapp",
     "version": "1.0.0",
     "assetBundlePatterns": [
@@ -12,6 +14,13 @@
       "eas": {
         "projectId": "59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
       }
-    }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
+    },
+    "android": {},
+    "ios": {}
   }
 }
