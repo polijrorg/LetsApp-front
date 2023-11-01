@@ -15,6 +15,7 @@ interface AuthContextData {
   register: (data: IRegisterRequest) => Promise<void>;
   updateUser: () => Promise<void>;
   deleteUser: (data: IDeleteUserRequest) => Promise<void>;
+  deleteAsyncStorage: () => Promise<void>;
   loading: boolean;
   addNameAndImage: (data: FormData) => Promise<void>;
   initialUser: User;
@@ -82,6 +83,14 @@ export const AuthProvider: React.FC<{
     await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
   };
 
+  const deleteAsyncStorage = async () => {
+    await AsyncStorage.clear();
+
+    setUser(null);
+    setPhone(null);
+    setLoading(false);
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const getUser = async () => {
@@ -111,6 +120,7 @@ export const AuthProvider: React.FC<{
         loading,
         initialUser,
         addNameAndImage,
+        deleteAsyncStorage,
       }}
     >
       {children}

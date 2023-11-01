@@ -18,7 +18,7 @@ const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
 
 const MainScreen = ({ navigation }) => {
-  const { user } = useAuth();
+  const { user, deleteAsyncStorage } = useAuth();
 
   const [open, setOpen] = useState(true);
   const [completeUser, setCompleteUser] = useState<CompleteUser>(null);
@@ -33,9 +33,13 @@ const MainScreen = ({ navigation }) => {
         setOpen(!response.data.calendar_found);
       } catch (error) {
         console.log(error);
+        if (error.response.data.message === 'User Not Found') {
+          deleteAsyncStorage();
+        }
       }
     };
     getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isFocused]);
 
   useEffect(() => {
