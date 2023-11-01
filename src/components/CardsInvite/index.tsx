@@ -4,16 +4,11 @@ import moment from 'moment';
 import React from 'react';
 
 export type CardsInviteProps = {
-  location: 'online' | 'presencial';
   invite: Invite;
   navigation: any;
 };
 
-const CardsInvite: React.FC<CardsInviteProps> = ({
-  location,
-  invite,
-  navigation,
-}) => {
+const CardsInvite: React.FC<CardsInviteProps> = ({ invite, navigation }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
   const calendar = require('../../assets/CalendarIcon.png');
@@ -34,8 +29,10 @@ const CardsInvite: React.FC<CardsInviteProps> = ({
       <S.InfoWrapper>
         <S.Name>{invite.element.name}</S.Name>
         <S.ContainerContent>
-          <S.Icon source={location === 'online' ? online : presencial} />
-          <S.Adress>{invite.element.address}</S.Adress>
+          <S.Icon
+            source={invite.element.address !== '' ? presencial : online}
+          />
+          <S.Adress>{invite.element.address || 'Evento online'}</S.Adress>
         </S.ContainerContent>
         <S.ContainerContent>
           <S.Icon source={calendar} />

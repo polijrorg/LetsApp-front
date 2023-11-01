@@ -25,7 +25,6 @@ const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const invite: Invite = route.params.invite;
-  const location = route.params.location;
   const [acceptanceState, setAcceptanceState] = useState<string | null>(null);
   const { user } = useAuth();
 
@@ -103,12 +102,12 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             <S.Row>
               <S.ContainerIcon>
                 <S.IconAdress
-                  source={location === 'online' ? online : presencial}
+                  source={invite.element.address !== '' ? presencial : online}
                 />
               </S.ContainerIcon>
               <S.Adjust>
                 <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-                <S.Adress>{invite.element.address}</S.Adress>
+                <S.Adress>{invite.element.address || 'Evento online'}</S.Adress>
               </S.Adjust>
             </S.Row>
             <S.Row>

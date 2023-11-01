@@ -42,7 +42,9 @@ const ScreenEvent: React.FC<CardsInviteProps> = ({ route, navigation }) => {
         <S.ContainerContent>
           <S.Row>
             <S.ContainerIcon>
-              <S.IconAdress source={event.element.link ? online : presencial} />
+              <S.IconAdress
+                source={event.element.address ? presencial : online}
+              />
             </S.ContainerIcon>
             <S.Adjust>
               <S.LocalandDate>São Paulo - SP</S.LocalandDate>

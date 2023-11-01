@@ -12,6 +12,8 @@ const CardsEvent: React.FC<CardsEventProps> = ({ event, navigation }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
 
+  console.log(event.element.link);
+
   return (
     <S.ContainerCard
       onPress={() => {
@@ -33,10 +35,10 @@ const CardsEvent: React.FC<CardsEventProps> = ({ event, navigation }) => {
         <S.ContainerContentData>
           <S.Name>{event.element.name}</S.Name>
           <S.ContainerContent>
-            <S.IconAdress source={event.element.link ? online : presencial} />
-            <S.Adress>
-              {event.element.link ? 'Evento online' : event.element.address}
-            </S.Adress>
+            <S.IconAdress
+              source={event.element.address ? presencial : online}
+            />
+            <S.Adress>{event.element.address || 'Evento online'}</S.Adress>
           </S.ContainerContent>
         </S.ContainerContentData>
       </S.ContainerContent>
