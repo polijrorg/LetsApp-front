@@ -9,7 +9,7 @@ import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
 import { Modal } from 'native-base';
 import React, { useEffect, useState } from 'react';
-import { Pressable, TouchableOpacity } from 'react-native';
+import { Alert, Pressable, TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
@@ -22,11 +22,6 @@ const SelectGuests = ({ navigation }) => {
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
   const [possibleMandatory, setPossibleMandatory] = useState(true);
-
-  // const [contactSelected, setContactSelected] = useState<ContactInfo[]>([]);
-  // const [mandatoryContactSelected, setMandatoryContactSelected] = useState<
-  //   ContactInfo[]
-  // >([]);
 
   const { user } = useAuth();
 
@@ -88,7 +83,7 @@ const SelectGuests = ({ navigation }) => {
       isPossibleMandatory();
 
       if (!possibleMandatory) {
-        alert(
+        Alert.alert(
           'Contato não registrado no Lets App, enviaremos um convite por email/sms'
         );
       }
@@ -117,7 +112,7 @@ const SelectGuests = ({ navigation }) => {
   useEffect(() => {
     console.log('Contatos selecionados', contactSelected);
     console.log('Contatos obrigatórios', mandatoryContactSelected);
-  });
+  }, [contactSelected, mandatoryContactSelected]);
 
   return (
     <S.Body>

@@ -71,12 +71,16 @@ const CreateEvent = ({ navigation }) => {
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,
-          attendees: mandatoryContactSelected.map((contact) => contact.email),
+          attendees: mandatoryContactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           end: selectedSchedule.end,
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map((contact) => contact.email),
+          optionalAttendees: contactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')
@@ -92,12 +96,16 @@ const CreateEvent = ({ navigation }) => {
           name: title,
           phone: user.phone,
           begin: selectedSchedule.start,
-          attendees: mandatoryContactSelected.map((contact) => contact.email),
+          attendees: mandatoryContactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           end: selectedSchedule.end,
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map((contact) => contact.email),
+          optionalAttendees: contactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')
