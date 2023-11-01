@@ -152,7 +152,6 @@ const MainScreen = ({ navigation }) => {
                   <CardsInvite
                     key={invite.element.id}
                     invite={invite}
-                    location="presencial"
                     navigation={navigation}
                   />
                 </React.Fragment>
