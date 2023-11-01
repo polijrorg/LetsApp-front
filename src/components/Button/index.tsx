@@ -9,6 +9,8 @@ export type ButtonProps = {
   title: string;
   titleColor: string;
   borderColor: string;
+  countDown?: boolean;
+  secondsLeft?: number;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +21,8 @@ const Button: React.FC<ButtonProps> = ({
   title,
   titleColor,
   borderColor,
+  countDown,
+  secondsLeft,
 }) => {
   return (
     <S.ContainerButton
@@ -27,8 +31,12 @@ const Button: React.FC<ButtonProps> = ({
       borderColor={borderColor}
     >
       <S.ContainerAll>
-        <S.ContainerIcon hasIcon={hasIcon}>
-          <S.Icon source={icon} />
+        <S.ContainerIcon hasIcon={hasIcon} countdown={countDown}>
+          {countDown ? (
+            <S.Title titleColor={titleColor}>{`(${secondsLeft})`}</S.Title>
+          ) : (
+            <S.Icon source={icon} />
+          )}
         </S.ContainerIcon>
         <S.Title titleColor={titleColor}>{title}</S.Title>
       </S.ContainerAll>

@@ -138,4 +138,16 @@ export default class UserServices {
       console.log(error);
     }
   }
+
+  static async resendCode(phone: string): Promise<void> {
+    try {
+      const response = await api.post('/resendCode', {
+        phone,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

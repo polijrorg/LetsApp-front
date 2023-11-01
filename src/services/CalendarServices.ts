@@ -109,6 +109,11 @@ export default class CalendarServices {
     return response.data;
   }
 
+  static async getOutlookUrl(phone: string): Promise<string> {
+    const response = await api.post(`/getOutlookAuthUrl/${phone}`);
+    return response.data;
+  }
+
   static async getRecommendedTime(
     data: IGetRecommendedTime
   ): Promise<SuggestedTimes> {

@@ -21,7 +21,15 @@ export const ModalCalendar: React.FC = () => {
     }
   }
 
-  async function handleGetOutlookUrl() {}
+  async function handleGetOutlookUrl() {
+    try {
+      const googleUrl = await CalendarServices.getOutlookUrl(user.phone);
+      await AuthSession.startAsync({ authUrl: googleUrl });
+      await updateUser();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <S.ModalView>
