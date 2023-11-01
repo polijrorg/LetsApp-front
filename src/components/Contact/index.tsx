@@ -8,6 +8,8 @@ export type ContactProps = {
   email?: string;
   onPress?: () => void;
   isDisabled?: boolean;
+  isSelected?: boolean;
+  isMandatory?: boolean;
 };
 
 const ContactIcon = require('../../assets/Contact.png');
@@ -19,32 +21,33 @@ const Contact: React.FC<ContactProps> = ({
   email,
   onPress,
   isDisabled,
+  isSelected,
+  isMandatory,
 }) => {
-  const [isSelected, setIsSelected] = useState(false);
-  const [isMandatory, setIsMandatory] = useState(false);
+  // const [isSelected, setIsSelected] = useState(false);
+  // const [isMandatory, setIsMandatory] = useState(false);
 
-  const handleClick = () => {
-    if (isSelected) {
-      setIsSelected(false);
-      setIsMandatory(true);
-    } else if (isMandatory) {
-      setIsSelected(false);
-      setIsMandatory(false);
-    } else {
-      setIsSelected(true);
-      setIsMandatory(false);
-    }
+  // const handleClick = () => {
+  //   if (isSelected) {
+  //     setIsSelected(false);
+  //     setIsMandatory(true);
+  //   } else if (isMandatory) {
+  //     setIsSelected(false);
+  //     setIsMandatory(false);
+  //   } else {
+  //     setIsSelected(true);
+  //     setIsMandatory(false);
+  //   }
 
-    if (onPress) {
-      onPress();
-    }
-    // setHasBorder(!hasBorder);
-    // onClick(title);
-  };
+  //   if (onPress) {
+  //     onPress();
+  //   }
+  // setHasBorder(!hasBorder);
+  // onClick(title);
 
   return (
     <S.ContainerContact
-      onPress={handleClick}
+      onPress={onPress}
       isSelected={(!isDisabled && isSelected) || isMandatory}
       activeOpacity={isDisabled ? 1 : 0.2}
     >

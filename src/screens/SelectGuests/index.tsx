@@ -77,7 +77,7 @@ const SelectGuests = ({ navigation }) => {
           email: participant.email,
         });
 
-        setPossibleMandatory(response);
+        setPossibleMandatory(response || false);
       };
 
       isPossibleMandatory();
@@ -86,6 +86,11 @@ const SelectGuests = ({ navigation }) => {
         Alert.alert(
           'Contato não registrado no Lets App, enviaremos um convite por email/sms'
         );
+        // Remove o participante do array de selecionados e adiciona aos mandatorios
+        setContactSelected((prevParticipants) =>
+          prevParticipants.filter((p) => p.id !== participant.id)
+        );
+        return;
       }
       // Remove o participante do array de selecionados e adiciona aos mandatorios
       setContactSelected((prevParticipants) =>
@@ -163,6 +168,10 @@ const SelectGuests = ({ navigation }) => {
               name={participant.name}
               phoneOrEmail={participant.email || participant.phone}
               onPress={() => toggleParticipantSelection(participant)}
+              isSelected={contactSelected.some((p) => p.id === participant.id)}
+              isMandatory={mandatoryContactSelected.some(
+                (p) => p.id === participant.id
+              )}
             />
           </React.Fragment>
         ))}
@@ -180,6 +189,11 @@ const SelectGuests = ({ navigation }) => {
                     ? event.phoneNumbers[0].number
                     : 'Nenhum contato disponível'
                 }
+                onPress={() => toggleParticipantSelection(event)}
+                isSelected={contactSelected.some((p) => p.id === event.id)}
+                isMandatory={mandatoryContactSelected.some(
+                  (p) => p.id === event.id
+                )}
               />
             </React.Fragment>
           ))}
