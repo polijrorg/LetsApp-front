@@ -15,7 +15,7 @@ export const ContainerInput = styled.View<InputProps>`
   border-radius: 8px;
   border-width: 1px;
   border-color: ${theme.colors.primary.dark};
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
   flex-direction: row;
   align-items: center;
 `;
@@ -38,4 +38,9 @@ export const ContainerArrow = styled.View<InputProps>`
 export const Arrow = styled.Image`
   width: 14px;
   height: 7px;
+`;
+
+export const Pen = styled.Image`
+  width: 20px;
+  height: 20px;
 `;

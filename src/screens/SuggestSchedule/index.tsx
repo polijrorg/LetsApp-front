@@ -2,103 +2,87 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import CardSchedule from '@components/CardSchedule';
-import { api } from '@services/api';
+import useAuth from '@hooks/useAuth';
+import useInvite from '@hooks/useInvite';
+import CalendarServices from '@services/CalendarServices';
 import format from 'date-fns/format';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
 import 'moment/locale/pt-br';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 
-const SuggestSchedule: React.FC = ({ navigation }) => {
+// interface SchedulesByDate {
+//   date: Object;
+// }
+
+const SuggestSchedule = ({ navigation }) => {
   const {
-    phoneUser,
     dateStart,
     dateEnd,
     timeStart,
     timeEnd,
     duration,
-    timeSelectedStart,
-    timeSelectedEnd,
-    contactSelected,
-  } = useContext(ProfileContext);
+    mandatoryContactSelected,
+    selectedSchedule,
+    setSelectedSchedule,
+  } = useInvite();
 
-  console.log(
-    'selecionados',
-    timeStart,
-    phoneUser,
-    dateStart,
-    dateEnd,
-    duration,
-    timeSelectedStart,
-    timeSelectedEnd
-  );
+  const { user } = useAuth();
 
-  const [schedules, setSchedules] = useState([]);
-
-  const divided = duration.split(':');
-  const hours = parseInt(divided[0]);
-  const minutes = parseInt(divided[1]);
-  const durationFormatted = hours * 60 + minutes;
+  const [schedulesByDate, setSchedulesByDate] = useState({});
 
   useEffect(() => {
     getSchedules();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const phoneNumbersArray = contactSelected.map((guest) => guest.phoneNumber);
 
   async function getSchedules() {
     try {
-      const { data } = await api.post('/getRecommededTimes', {
-        phone: phoneUser,
+      const response = await CalendarServices.getRecommendedTime({
+        phone: user.phone,
         beginDate: moment(dateStart)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
-        beginHour: format(timeStart, 'HH:mm:ss'),
-        duration: durationFormatted,
+        beginHour: format(timeStart, 'HH:mm') + ':00',
+        duration: parseInt(duration),
         endDate: moment(dateEnd)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
-        endHour: format(timeEnd, 'HH:mm:ss'),
-        mandatoryGuests: [`+55${phoneNumbersArray}`],
+        endHour: format(timeEnd, 'HH:mm') + ':00',
+        mandatoryGuests: mandatoryContactSelected.map(
+          (contact) => contact.email || contact.phone
+        ),
       });
-      setSchedules(data);
-      console.log(data);
+      filterSchedulesByDay(response.freeTimes);
     } catch (error) {
       console.log(error);
     }
   }
 
+  const filterSchedulesByDay = (freeTimes) => {
+    const initialValue = {};
+    const filteredSchedules = freeTimes.reduce((acc, schedule) => {
+      const weekDay = moment(schedule.start)
+        .format('dddd')
+        .replace(/-[^-]*/g, '');
+      const day = weekDay + moment(schedule.start).format(' - DD/MM');
+      const formatedDay = day.replace(/^./, day[0].toUpperCase());
+
+      if (!acc[formatedDay]) {
+        acc[formatedDay] = [];
+      }
+
+      acc[formatedDay].push(schedule);
+
+      return acc;
+    }, initialValue);
+
+    setSchedulesByDate(filteredSchedules);
+  };
+
   moment.locale('pt-br');
-
-  const schedulesByDay = schedules.reduce((acc, schedule) => {
-    const day = moment(schedule.start1)
-      .format('dddd - DD/MM')
-      .replace(/^\w/, (c) => c.toUpperCase());
-
-    if (!acc[day]) {
-      acc[day] = [];
-    }
-
-    acc[day].push(schedule);
-
-    return acc;
-  }, {});
-
-  // const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(
-  //   null
-  // );
-
-  // const handleCardSelect = (index: number) => {
-  //   if (selectedCardIndex === index) {
-  //     setSelectedCardIndex(null); // Deselect the currently selected card
-  //   } else {
-  //     setSelectedCardIndex(index);
-  //   }
-  // };
 
   const [selectedCardsByDay, setSelectedCardsByDay] = useState<{
     [day: string]: number | null;
@@ -113,33 +97,31 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
 
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.ContainerTitle>
         <S.Title>Sugerir Horário</S.Title>
       </S.ContainerTitle>
       <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
         <S.Scroll showsVerticalScrollIndicator={false}>
-          {Object.entries(schedulesByDay).map(([day, daySchedules]) => {
+          {Object.entries(schedulesByDate).map(([day]) => {
             const selectedDayIndex = selectedCardsByDay[day];
             return (
               <S.ScheduleContainer key={day}>
                 <S.Subtitle>{day}</S.Subtitle>
                 <S.ContainerSuggest>
-                  {(daySchedules as Array<any>).map((schedule, index) => {
+                  {schedulesByDate[day].map((schedule, index) => {
                     const isSelected = index === selectedDayIndex;
                     return (
                       <CardSchedule
                         key={index}
-                        day={moment(schedule.start1).format('DD')}
-                        date={moment(schedule.start1)
-                          .format('ddd')
-                          .replace(/^\w/, (c) => c.toUpperCase())}
-                        start={moment(schedule.start1).format('HH:mm')}
-                        end={moment(schedule.end1).format('HH:mm')}
-                        scheduleStart={schedule.start1}
-                        scheduleEnd={schedule.end1}
+                        start={moment(schedule.start).format('HH:mm')}
+                        end={moment(schedule.end).format('HH:mm')}
                         isSelected={isSelected}
-                        onSelect={() => handleCardSelect(day, index)}
+                        onSelect={() => {
+                          handleCardSelect(day, index);
+                          if (!isSelected) {
+                            setSelectedSchedule(schedule);
+                          }
+                        }}
                       />
                     );
                   })}
@@ -166,7 +148,9 @@ const SuggestSchedule: React.FC = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('CreateEvent');
+            navigation.navigate('CreateEvent', {
+              selectedSchedule,
+            });
           }}
         >
           <Button

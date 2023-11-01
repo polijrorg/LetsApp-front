@@ -1,14 +1,38 @@
 import { theme } from '@styles/default.theme';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 
 type InviteProps = {
   source: string;
 };
 
-export const Body = styled.View`
+type StatusProps = {
+  color: string;
+};
+
+export const Body = styled(View)`
   flex: 1;
   background-color: ${theme.colors.background};
   display: flex;
+`;
+
+export const GradientTop = styled(LinearGradient)`
+  position: absolute;
+  top: 0;
+  height: 150px;
+  width: 100%;
+`;
+
+export const GradientBottom = styled(LinearGradient)`
+  position: absolute;
+  bottom: 65%;
+  height: 136px;
+  width: 100%;
+`;
+
+export const Header = styled(SafeAreaView)`
+  width: 100%;
 `;
 
 export const Back = styled.ImageBackground<InviteProps>`
@@ -16,48 +40,58 @@ export const Back = styled.ImageBackground<InviteProps>`
   background-image: ${(props) => `(${props.source})`};
   height: 100%;
   width: 100%;
+  position: absolute;
 `;
 
-export const Header = styled.View`
+export const InfoWrapper = styled(View)`
   background-color: ${theme.colors.background};
-  margin-top: 75%;
-  flex: 1;
-  border-top-left-radius: 48px;
-  border-top-right-radius: 48px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
   padding: 20px;
   align-items: center;
+  height: 70%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 `;
 
 export const IconBack = styled.Image`
-  width: 53px;
-  height: 53px;
-  margin-left: 4%;
-  margin-top: 1%;
+  width: 28px;
+  height: 28px;
+  margin-left: 20px;
+  margin-top: 16px;
 `;
 
 export const Image = styled.Image`
   width: 48px;
   height: 48px;
+  border-radius: 24px;
   margin-right: 12px;
   color: blue;
 `;
 
-export const ContainerContent = styled.View`
+export const ContainerContent = styled(View)`
   flex-direction: row;
   align-items: center;
   width: 100%;
 `;
 
-export const Name = styled.Text`
+export const InfoContent = styled(View)`
+  width: 100%;
+  margin: 16px 0px;
+`;
+
+export const Name = styled(Text)`
   font-size: 16px;
   font-family: 'Roboto';
 `;
 
-export const Adress = styled.Text`
+export const Adress = styled(Text)`
   font-size: 12px;
-  color: ${theme.colors.mediumEmphasis};
-  margin-bottom: 6px;
+  color: ${theme.colors.highEmphasis};
   font-family: 'Roboto';
+  letter-spacing: 0.55px;
+  line-height: 24px;
 `;
 
 export const IconAdress = styled.Image`
@@ -67,88 +101,133 @@ export const IconAdress = styled.Image`
   align-items: center;
 `;
 
-export const Date = styled.Text`
+export const Date = styled(Text)`
   font-size: 12px;
   color: ${theme.colors.mediumEmphasis};
   margin-bottom: 6px;
   font-family: 'Roboto';
 `;
 
-export const ContainerIcon = styled.View`
+export const Title = styled(Text)`
+  font-size: 18px;
+  color: ${theme.colors.white};
+  font-family: 'RobotoBold';
+  position: absolute;
+  bottom: 70%;
+  padding-bottom: 12px;
+  left: 24px;
+  z-index: 10;
+`;
+
+export const ContainerIcon = styled(View)`
   width: 40px;
   height: 40px;
   align-items: center;
   justify-content: center;
   background-color: #f0f0f0;
   border-radius: 16px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin: 2px 12px 2px 0px;
 `;
 export const IconDate = styled.Image`
   width: 24px;
   height: 24px;
 `;
 
-export const Column = styled.View`
-  margin-right: 20%;
+export const Column = styled(View)`
   margin-top: 24px;
 `;
 
-export const Row = styled.View`
+export const Row = styled(View)`
   flex-direction: row;
-  align-items: center;
+  width: 100%;
+  margin: 4px 0px;
 `;
 
-export const Schedule = styled.Text`
-  font-size: 12px;
+export const ScheduleText = styled(Text)`
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 1.25px;
   text-transform: uppercase;
   color: ${theme.colors.lowEmphasis};
-  font-family: 'Roboto';
+  font-family: 'RobotoBold';
+  width: 100px;
+  text-align: center;
 `;
 
-export const LocalandDate = styled.Text`
+export const ScheduleButton = styled(TouchableOpacity)`
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  text-align: center;
+`;
+
+export const LocalandDate = styled(Text)`
   font-size: 12px;
   color: ${theme.colors.lowEmphasis};
-  font-family: 'Roboto';
+  font-family: 'RobotoLight';
+  letter-spacing: 0.25px;
+  line-height: 20px;
 `;
 
-export const Adjust = styled.View`
+export const Adjust = styled(View)`
   flex-direction: column;
+  justify-content: space-between;
 `;
 
-export const Line = styled.View`
+export const AvailabilityText = styled(Text)<{ available: boolean }>`
+  font-size: 8px;
+  color: ${(props) =>
+    props.available
+      ? `${theme.colors.primary.main}`
+      : `${theme.colors.primary.negative}`};
+`;
+
+export const Line = styled(View)`
   width: 100%;
-  height: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${theme.colors.lowEmphasis};
-  margin-bottom: 8px;
+  border-bottom-width: 2px;
+  border-bottom-color: ${theme.colors.divider};
 `;
 
-export const Buttons = styled.View`
+export const Buttons = styled(SafeAreaView)`
   width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 32px;
+  position: absolute;
+  bottom: 0;
 `;
 
-export const ContainerDescrition = styled.View`
+export const ContainerDescrition = styled(View)`
   width: 100%;
+  margin: 16px 0px;
 `;
 
-export const Descrition = styled.Text`
-  font-size: 16px;
-  /* font-weight: 700; */
+export const Description = styled(Text)`
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 1.25px;
   font-family: 'RobotoBold';
   text-transform: uppercase;
-  color: ${theme.colors.primary.main};
+  color: ${theme.colors.primary.dark};
+  margin: 8px 0px;
 `;
 
 export const Scroll = styled.ScrollView`
   height: 200px;
 `;
 
-export const Content = styled.Text`
-  font-size: 14px;
+export const Content = styled(Text)`
+  font-size: 12px;
+  font-family: 'Roboto';
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  color: ${theme.colors.mediumEmphasis};
+`;
+
+export const StateText = styled(Text)<StatusProps>`
+  color: ${(props) => props.color};
+  font-size: 16px;
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
   font-family: 'Roboto';
 `;

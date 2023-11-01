@@ -1,24 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
-import { api } from '@services/api';
-import * as AuthSession from 'expo-auth-session';
-import * as FileSystem from 'expo-file-system';
+import useAuth from '@hooks/useAuth';
+// import UserServices from '@services/UserServices';
+// import { useNavigation } from '@react-navigation/native';
+// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
+// import { api } from '@services/api';
+// import * as AuthSession from 'expo-auth-session';
 import * as ImagePicker from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -33,15 +31,13 @@ const ValidationSchema = yup.object({
   name: yup.string().required('Informe o nome de usuário'),
 });
 
-const InitialData: React.FC = ({ navigation }) => {
+const InitialData = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [imageUser, setImageUser] = useState('');
-  const [firstRequisition, setFirstRequisition] = useState(false);
+  const [imageUser, setImageUser] = useState(null);
 
-  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
-  const { phoneUser, setNameUser, setImageOfUser } = useContext(ProfileContext);
+  const { addNameAndImage, phone } = useAuth();
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -53,35 +49,23 @@ const InitialData: React.FC = ({ navigation }) => {
     resolver: yupResolver(ValidationSchema),
   });
 
-  type photoProps = {
-    size: number;
-  };
-
-  type FormDataProps = {
-    name: string;
-    imageUser: string;
-  };
-
   async function pickImageFromGallery() {
     try {
-      const photoSelected = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 1,
-        aspect: [4, 4],
-        allowsEditing: true,
-      });
+      const result: ImagePicker.ImagePickerResult =
+        await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 1,
+          aspect: [4, 4],
+          allowsEditing: true,
+        });
 
-      if (!photoSelected.canceled && photoSelected.assets[0].uri) {
-        const photoInfo = (await FileSystem.getInfoAsync(
-          photoSelected.assets[0].uri
-        )) as photoProps;
-
-        const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+      if (!result.canceled && result.assets[0].uri) {
+        const fileExtension = result.assets[0].uri.split('.').pop();
 
         setImageUser({
-          name: `${(Math.random() * 165531534654).toFixed()}.${fileExtension}`,
-          uri: photoSelected.assets[0].uri,
-          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+          name: `random-file-name`,
+          uri: result.assets[0].uri,
+          type: `${result.assets[0].type}/${fileExtension}`,
         } as any);
       }
     } catch (error) {
@@ -90,54 +74,14 @@ const InitialData: React.FC = ({ navigation }) => {
     }
   }
 
-  async function handleSendData({ name, imageUser }: FormDataProps) {
+  async function handleSendData() {
     try {
       const form = new FormData();
-      form.append('phone', phoneUser);
+      form.append('phone', phone);
       form.append('name', name);
       form.append('photo', imageUser);
 
-      const { data } = await api.post('/upload', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setNameUser(name);
-      setImageOfUser(imageUser);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handlePress() {
-    try {
-      const result = await handleSendData({ name, imageUser });
-      appNavigation.navigate('MainScreen');
-      setFirstRequisition(true);
-
-      if (firstRequisition === true) {
-        try {
-          const phone = phoneUser;
-          const { data } = await api.post(
-            `/getAuthUrl/${encodeURIComponent(phone)}`
-          );
-          const authUrl = data;
-          // const redirectUrl = AuthSession.makeRedirectUri({
-          //   scheme: 'lets-app',
-          // });
-          const response = await AuthSession.startAsync({ authUrl });
-          console.log(data);
-          console.log('Response', response);
-          // const { type, url } = await AuthSession.startAsync({ authUrl });
-
-          // if (type === 'success') {
-          //   Linking.openURL(url);
-          // }
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      await addNameAndImage(form);
     } catch (error) {
       console.log(error);
     }
@@ -162,26 +106,29 @@ const InitialData: React.FC = ({ navigation }) => {
   // Remover os ouvintes de eventos de teclado quando o componente for desmontado
   useEffect(() => {
     return () => {
-      console.log('Test', isKeyboardActive);
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  });
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-220}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>Dados Iniciais</S.Title>
-            <S.Descrition>Preencha aqui com a sua foto e seu nome</S.Descrition>
+            <S.Description>
+              Preencha aqui com a sua foto e seu nome
+            </S.Description>
             <TouchableOpacity onPress={() => pickImageFromGallery()}>
-              {imageUser === '' ? (
-                <S.Gallery source={Gallery} resizeMode={'cover'} />
+              {imageUser ? (
+                <S.Gallery
+                  source={{ uri: imageUser.uri }}
+                  resizeMode={'cover'}
+                />
               ) : (
-                <S.Gallery source={imageUser} resizeMode={'cover'} />
+                <S.Gallery source={Gallery} resizeMode={'cover'} />
               )}
             </TouchableOpacity>
             <S.Errors>
@@ -205,7 +152,7 @@ const InitialData: React.FC = ({ navigation }) => {
               {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
             </S.Errors>
             <S.Empty />
-            <TouchableOpacity onPress={handleSubmit(handlePress)}>
+            <TouchableOpacity onPress={handleSubmit(handleSendData)}>
               <Button
                 width="328px"
                 backgroundColor="#3446E4"

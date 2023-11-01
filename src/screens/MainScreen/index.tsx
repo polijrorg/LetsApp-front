@@ -1,254 +1,85 @@
 import * as S from './styles';
+import Calendar from '@components/Calendar';
 import CardsEvent from '@components/CardsEvent';
 import CardsInvite from '@components/CardsInvite';
+import { ModalCalendar } from '@components/ModalCalendar';
+import useAuth from '@hooks/useAuth';
+import CompleteUser from '@interfaces/CompleteUser';
+import Event from '@interfaces/Events';
+import Invite from '@interfaces/Invites';
+import { useIsFocused } from '@react-navigation/native';
+import CalendarServices from '@services/CalendarServices';
 import { api } from '@services/api';
-import { StatusBar } from 'expo-status-bar';
-import moment from 'moment';
 import 'moment/locale/pt-br';
-import React, { useState, useContext, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import React, { useState, useEffect } from 'react';
+import { Modal, TouchableOpacity } from 'react-native';
 
 const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
 
-const Picture2 = require('../../assets/picture2.png');
+const MainScreen = ({ navigation }) => {
+  const { user, deleteAsyncStorage } = useAuth();
 
-const MainScreen: React.FC = ({ navigation }) => {
-  const { nameUser, imageOfUser, phoneUser } = useContext(ProfileContext);
+  const [open, setOpen] = useState(true);
+  const [completeUser, setCompleteUser] = useState<CompleteUser>(null);
 
-  const [showCompleteCalendar] = useState(false);
-
-  const dates = [15, 16];
-
-  function getDaysArray(year: number) {
-    const names = Object.freeze([
-      'domingo',
-      'segunda',
-      'terça',
-      'quarta',
-      'quinta',
-      'sexta',
-      'sábado',
-    ]);
-
-    let monthIndex = 0;
-
-    const result: string[] = [];
-
-    while (monthIndex < 12) {
-      const date = new Date(year, monthIndex, 1);
-
-      while (date.getMonth() == monthIndex) {
-        result.push(`${date.getDate()}-${names[date.getDay()]}`);
-
-        date.setDate(date.getDate() + 1);
-      }
-      monthIndex++;
-    }
-    return result;
-  }
-
-  function getWeeks() {
-    const days = getDaysArray(2023);
-
-    let separeteWeeks: string[][] = [];
-
-    let week: string[] = [];
-
-    for (let i = 0; i < days.length; i++) {
-      let day = days[i].split('-');
-
-      if (i === 0 && day[1] !== 'domingo') {
-        if (day[1] === 'segunda') {
-          week.push('31 - domingo');
-        } else {
-          if (day[1] === 'terça') {
-            week.push('30-domingo', '31-segunda');
-          } else {
-            if (day[1] === 'quarta') {
-              week.push('29-domingo', '30-segunda', '31-terça');
-            } else {
-              if (day[1] === 'quinta') {
-                week.push('28-domingo', '29-segunda', '30-terça', '31-quarta');
-              } else {
-                if (day[1] === 'sexta') {
-                  week.push(
-                    '27-domingo',
-                    '28-segunda',
-                    '29-terça',
-                    '30-quarta',
-                    '31-quinta'
-                  );
-                } else {
-                  if (day[1] === 'sábado') {
-                    week.push(
-                      '26-domingo',
-                      '27-segunda',
-                      '28-terça',
-                      '29-quarta',
-                      '30-quinta',
-                      '31-sexta'
-                    );
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      if (day[1] !== 'sábado') {
-        week.push(days[i]);
-
-        if (i === days.length - 1) {
-          if (day[1] === 'segunda') {
-            week.push('1-terça', '2-quarta', '3-quinta', '4-sexta', '5-sábado');
-          } else {
-            if (day[1] === 'terça') {
-              week.push('1-quarta', '2-quinta', '3-sexta', '4-sábado');
-            } else {
-              if (day[1] === 'quarta') {
-                week.push('1-quinta', '2-sexta', '3-sábado');
-              } else {
-                if (day[1] === 'quinta') {
-                  week.push('1-sexta', '2-sábado');
-                } else {
-                  if (day[1] === 'sexta') {
-                    week.push('1-sábado');
-                  } else {
-                    if (day[1] === 'domingo') {
-                      week.push(
-                        '1-segunda',
-                        '2-terça',
-                        '3-quarta',
-                        '4-quinta',
-                        '5-sexta',
-                        '6-sábado'
-                      );
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          separeteWeeks.push(week);
-
-          week = [];
-        }
-      } else {
-        week.push(days[i]);
-
-        separeteWeeks.push(week);
-
-        week = [];
-      }
-    }
-
-    return separeteWeeks;
-  }
-
-  function daysIntoYear(date: Date) {
-    return (
-      (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
-        Date.UTC(date.getFullYear(), 0, 0)) /
-      24 /
-      60 /
-      60 /
-      1000
-    );
-  }
-
-  function getWeekCalendar() {
-    const allWeeks = getWeeks();
-
-    const dayOfYear = daysIntoYear(new Date());
-
-    let weekOfYear = Math.ceil(dayOfYear / 7);
-
-    let weeksOfActualMonth: string[][] = [];
-
-    weeksOfActualMonth.push(allWeeks[weekOfYear - 1]);
-
-    const week = (
-      <>
-        {weeksOfActualMonth.map((week) => {
-          return (
-            <>
-              {week.map((day) => {
-                const separateDay = day.split('-');
-
-                return (
-                  <>
-                    <S.DayContainer
-                      today={
-                        new Date().getDate() === Number(separateDay[0])
-                          ? true
-                          : false
-                      }
-                    >
-                      <S.DayText>
-                        {separateDay[1].split('')[0].toUpperCase()}
-                      </S.DayText>
-
-                      {dates.filter((date) => date === Number(separateDay[0]))
-                        .length !== 0 && (
-                        <S.CalendarImg
-                          name={
-                            Number(separateDay[0]) === 16
-                              ? 'bell-outline'
-                              : 'alert-circle-outline'
-                          }
-                        />
-                      )}
-
-                      <S.DayText>{separateDay[0]}</S.DayText>
-                    </S.DayContainer>
-                  </>
-                );
-              })}
-            </>
-          );
-        })}
-      </>
-    );
-
-    return week;
-  }
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getInvites();
-  }, []);
+    const getUser = async () => {
+      try {
+        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        setCompleteUser(response.data);
+        setOpen(!response.data.calendar_found);
+      } catch (error) {
+        console.log(error);
+        if (error.response.data.message === 'User Not Found') {
+          deleteAsyncStorage();
+        }
+      }
+    };
+    getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isFocused]);
 
-  async function getInvites() {
-    try {
-      const { data } = await api.post('invites/listInvitesByUser', {
-        phone: phoneUser,
-      });
-      setInvites(data);
-      setNumberInvites(data.length);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const getInvites = async () => {
+      try {
+        if (completeUser !== null) {
+          const response = await CalendarServices.getUserInvites(
+            completeUser.user?.email
+          );
+          setInvites(response);
+          setNumberInvites(response.length);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    user?.email && getInvites();
+  }, [completeUser, user?.email]);
 
-    try {
-      const { data } = await api.post('invites/listEventsByUser', {
-        phone: phoneUser,
-      });
-      setEvents(data);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  useEffect(() => {
+    const getEvents = async () => {
+      try {
+        if (completeUser !== null) {
+          const response = await CalendarServices.getUserEvents(
+            completeUser.user?.email
+          );
+          setEvents(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    user?.email && getEvents();
+  }, [completeUser, user?.email]);
 
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
-  const [invites, setInvites] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [numberInvites, setNumberInvites] = useState();
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [numberInvites, setNumberInvites] = useState<number>(null);
 
   const handleEventsPress = () => {
     setSelectedOption('events');
@@ -262,28 +93,29 @@ const MainScreen: React.FC = ({ navigation }) => {
 
   return (
     <S.Container>
+      <Modal transparent visible={open}>
+        <ModalCalendar />
+      </Modal>
       <S.Header>
-        <S.Name>Olá {nameUser}!</S.Name>
+        <S.Name>Olá {user?.name}!</S.Name>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate(
-              'Profile'
-              // name: name,
-              // imageUser: imageUser,
-            );
+            navigation.navigate('Profile', {
+              name: user?.name,
+              imageUser: user?.photo,
+              email: completeUser?.user?.email,
+              phone: user.phone,
+            });
           }}
         >
-          {imageOfUser ? (
-            <S.Icon source={imageOfUser} />
+          {user?.photo ? (
+            <S.Icon source={{ uri: user.photo }} />
           ) : (
             <S.Icon source={IconProfile} />
           )}
         </TouchableOpacity>
       </S.Header>
-      {!showCompleteCalendar && (
-        <S.CalendarContainer>{getWeekCalendar()}</S.CalendarContainer>
-      )}
-      <StatusBar hidden={true} />
+      <Calendar />
       <S.Body>
         <S.ContainerOptions>
           <S.OptionEvents onPress={handleEventsPress} Option={selectedOption}>
@@ -291,7 +123,7 @@ const MainScreen: React.FC = ({ navigation }) => {
           </S.OptionEvents>
           <S.OptionInvite onPress={handleInvitePress} Option={selectedOption}>
             <S.Invite Option={selectedOption}>Convites</S.Invite>
-            {selectedOption === 'invite' ? (
+            {numberInvites ? (
               <S.NumberInvites>
                 <S.Number>{numberInvites}</S.Number>
               </S.NumberInvites>
@@ -306,36 +138,22 @@ const MainScreen: React.FC = ({ navigation }) => {
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
-                    adress={event.address}
-                    nameEvent={event.name}
-                    event="presencial"
-                    month={moment(event.date)
-                      .locale('pt-br')
-                      .format('MMM')
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                    day={moment(event.date).format('DD')}
-                    date={event.date}
-                    descrition={event.description}
-                    beginHour={event.beginHour}
-                    endHour={event.endHour}
-                    invites={event.guests}
+                    key={event.element.id}
+                    event={event}
+                    navigation={navigation}
                   />
                 </React.Fragment>
               ))}
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
-              {invites.map((event, index) => (
+              {invites.map((invite, index) => (
                 <React.Fragment key={index}>
                   <CardsInvite
-                    adress={event.address}
-                    name={event.name}
-                    event="presencial"
-                    image={Picture2}
-                    date={moment(event.date).format('DD/MM/YYYY')}
-                    descrition={event.description}
-                    beginHour={event.beginHour}
-                    endHour={event.endHour}
+                    key={invite.element.id}
+                    invite={invite}
+                    location="presencial"
+                    navigation={navigation}
                   />
                 </React.Fragment>
               ))}

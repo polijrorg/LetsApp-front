@@ -2,16 +2,15 @@ import * as S from './styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { api } from '@services/api';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useContext, useEffect } from 'react';
+import useAuth from '@hooks/useAuth';
+import React, { useState, useEffect, createRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Keyboard,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 import * as yup from 'yup';
 
 const Logo = require('../../assets/Logo.png');
@@ -31,12 +30,13 @@ const ValidationSchema = yup.object({
   DDD: yup.string().required('Informe seu DDD').length(2, 'DDD inválido'),
 });
 
-const Autentication: React.FC = ({ navigation }) => {
+const Autentication = ({ navigation }) => {
+  const { register } = useAuth();
+  const DDDref = createRef<TextInput>();
+  const phoneRef = createRef<TextInput>();
+
   const [DDD, setDDD] = useState('');
   const [phone, setPhone] = useState('');
-  const { setPhoneUser } = useContext(ProfileContext);
-
-  const Phone = `+55${DDD}${phone}`;
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -50,13 +50,8 @@ const Autentication: React.FC = ({ navigation }) => {
 
   async function handleSignUp() {
     try {
-      const { data } = await api.post('/register', {
-        phone: Phone,
-      });
-      setPhoneUser(Phone);
-
-      console.log(data);
-
+      const formattedPhone = `+55${DDD}${phone}`;
+      await register({ phone: formattedPhone });
       navigation.navigate('VerificationCode');
     } catch (error) {
       console.log(error);
@@ -85,24 +80,28 @@ const Autentication: React.FC = ({ navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  });
+
+  const handleAutoTab = () => {
+    phoneRef.current.focus();
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-160}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.Title>LetsApp</S.Title>
-            <S.Descrition>
+            <S.Description>
               Você receberá em breve um SMS com o código de verificação.
-            </S.Descrition>
+            </S.Description>
             <Input
               arrow={true}
               height="32px"
               width="304px"
               placeholder="Brasil"
+              editable={false}
             />
             <S.ContainerInputs>
               <S.Errors>
@@ -122,8 +121,12 @@ const Autentication: React.FC = ({ navigation }) => {
                           onChange(inputValue);
                           setDDD(inputValue);
                         }
+                        if (e.length === 2) {
+                          handleAutoTab();
+                        }
                       }}
                       keyboardType="numeric"
+                      ref={DDDref}
                     />
                   )}
                 />
@@ -149,6 +152,7 @@ const Autentication: React.FC = ({ navigation }) => {
                         }
                       }}
                       keyboardType="numeric"
+                      ref={phoneRef}
                     />
                   )}
                 />

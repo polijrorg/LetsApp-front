@@ -1,93 +1,120 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
-import { ModalCard } from '@components/Modal';
+import AddContact from '@components/Modals/AddContact';
+import useAuth from '@hooks/useAuth';
+import useInvite from '@hooks/useInvite';
+import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
 import * as Contacts from 'expo-contacts';
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState, useContext } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import { Modal } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { Alert, Pressable, TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 const IconSearch = require('../../assets/IconSearch.png');
 const IconEmail = require('../../assets/Email.png');
-const IconSend = require('../../assets/Send.png');
 const Check = require('../../assets/Check.png');
 
-const SelectGuests: React.FC = ({ navigation }) => {
+const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
-  const [email, setEmail] = useState('');
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(null);
+  const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [addParticipants, setAddParticipants] = useState([]);
 
-  const { phoneUser, setContactSelected } = useContext(ProfileContext);
+  const { user } = useAuth();
 
-  const addParticipant = () => {
-    if (name && phoneNumber) {
-      const newParticipant = { name, phoneNumber, email };
-      setAddParticipants([...addParticipants, newParticipant]);
-      setName('');
-      setPhoneNumber('');
-      setEmail('');
-      addNewParticipant();
-    }
-  };
-
-  async function addNewParticipant() {
-    // try {
-    //   const { data } = await api.post('addContact', {
-    //     userPhone: phoneUser,
-    //     phone: phoneNumber,
-    //     name: name,
-    //     email: 'caiogiro10@gmail.com',
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }
+  const {
+    contactSelected,
+    setContactSelected,
+    mandatoryContactSelected,
+    setMandatoryContactSelected,
+  } = useInvite();
 
   useEffect(() => {
-    (async () => {
+    const getUserContacts = async () => {
+      try {
+        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        setUserContacts(response.data.user.contatos);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserContacts();
+  }, [user, open]);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    const getContacts = async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
           fields: [Contacts.Fields.PhoneNumbers],
+          sort: Contacts.SortTypes.FirstName,
         });
         setContacts(data);
       }
-    })();
+    };
+    getContacts();
   }, []);
 
-  const [selectedParticipants, setSelectedParticipants] = useState([]);
-  setContactSelected(selectedParticipants);
-
-  const toggleParticipantSelection = (participant) => {
+  const toggleParticipantSelection = async (participant) => {
     // Verifica se o participante já foi selecionado
-    const isSelected = selectedParticipants.some(
-      (p) => p.name === participant.name
+    const isSelected = contactSelected.some((p) => p.id === participant.id);
+    const isMandatory = mandatoryContactSelected.some(
+      (p) => p.id === participant.id
     );
 
     if (isSelected) {
-      // Remove o participante do array de selecionados
-      setSelectedParticipants((prevParticipants) =>
-        prevParticipants.filter((p) => p.name !== participant.name)
+      const possibleMandatory =
+        (await UserServices.isPossibleMandatoryUser({
+          phone: participant.phone,
+          email: participant.email,
+        })) || false;
+
+      if (!possibleMandatory) {
+        Alert.alert(
+          'Contato não registrado no Lets App',
+          'Não temos acesso ao seu calendário, enviaremos um convite por email/sms'
+        );
+        // Remove o participante do array de selecionados e adiciona aos mandatorios
+        setContactSelected((prevParticipants) =>
+          prevParticipants.filter((p) => p.id !== participant.id)
+        );
+        return;
+      }
+      // Remove o participante do array de selecionados e adiciona aos mandatorios
+      setContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.id !== participant.id)
+      );
+      setMandatoryContactSelected((prevParticipants) => [
+        ...prevParticipants,
+        participant,
+      ]);
+    } else if (isMandatory) {
+      // Remove o participante do array de mandatorios
+      setMandatoryContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.id !== participant.id)
       );
     } else {
       // Adiciona o participante ao array de selecionados
-      setSelectedParticipants((prevParticipants) => [
+      setContactSelected((prevParticipants) => [
         ...prevParticipants,
         participant,
       ]);
     }
   };
 
+  useEffect(() => {
+    console.log('Contatos selecionados', contactSelected);
+    console.log('Contatos obrigatórios', mandatoryContactSelected);
+  }, [contactSelected, mandatoryContactSelected]);
+
   return (
     <S.Body>
-      <StatusBar hidden={true} />
       <S.Header>
         <TouchableOpacity
           onPress={() => {
@@ -109,11 +136,7 @@ const SelectGuests: React.FC = ({ navigation }) => {
           onChangeText={(texto) => setSearch(texto)}
         />
       </S.ContainerSearch>
-      <TouchableOpacity
-        onPress={() => {
-          setOpen(true);
-        }}
-      >
+      <Pressable onPress={handleOpen}>
         <S.ContainerEmail>
           <S.ContainerIcon>
             <S.IconEmail source={IconEmail} />
@@ -122,33 +145,27 @@ const SelectGuests: React.FC = ({ navigation }) => {
             <S.AddContact>Adicionar Contato</S.AddContact>
           </S.Email>
         </S.ContainerEmail>
-      </TouchableOpacity>
-      <ModalCard
-        Open={open}
-        setOpen={setOpen}
-        navigation={navigation}
-        screen="SelectGuests"
-        type="Contact"
-        name={name}
-        setName={setName}
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
-        email={email}
-        setEmail={setEmail}
-        addParticipant={addParticipant}
-      />
+      </Pressable>
+      <Modal isOpen={open}>
+        <AddContact setOpen={setOpen} userPhone={user.phone} />
+      </Modal>
       <S.Scroll>
-        <S.ContainerSubtitle>
-          <S.Subtitle>Contatos Adicionados</S.Subtitle>
-          <S.Mandatory>Obrigatório?</S.Mandatory>
-        </S.ContainerSubtitle>
-        {addParticipants.map((participant, index) => (
+        {userContacts?.lenght > 0 && (
+          <S.ContainerSubtitle>
+            <S.Subtitle>Contatos LetsApp</S.Subtitle>
+            <S.Mandatory>Obrigatório?</S.Mandatory>
+          </S.ContainerSubtitle>
+        )}
+        {userContacts?.map((participant, index) => (
           <React.Fragment key={index}>
             <Contact
               name={participant.name}
-              phoneOrEmail={participant.phoneNumber}
-              email={participant.email}
+              phoneOrEmail={participant.email || participant.phone}
               onPress={() => toggleParticipantSelection(participant)}
+              isSelected={contactSelected.some((p) => p.id === participant.id)}
+              isMandatory={mandatoryContactSelected.some(
+                (p) => p.id === participant.id
+              )}
             />
           </React.Fragment>
         ))}
@@ -166,13 +183,23 @@ const SelectGuests: React.FC = ({ navigation }) => {
                     ? event.phoneNumbers[0].number
                     : 'Nenhum contato disponível'
                 }
+                onPress={() => toggleParticipantSelection(event)}
+                isSelected={contactSelected.some((p) => p.id === event.id)}
+                isMandatory={mandatoryContactSelected.some(
+                  (p) => p.id === event.id
+                )}
               />
             </React.Fragment>
           ))}
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity
-          onPress={() => navigation.navigate('DateAndSchedule')}
+          onPress={() =>
+            navigation.navigate('DateAndSchedule', {
+              contactSelected,
+              mandatoryContactSelected,
+            })
+          }
         >
           <S.Check source={Check} />
         </TouchableOpacity>

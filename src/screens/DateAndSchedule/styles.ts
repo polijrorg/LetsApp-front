@@ -4,9 +4,10 @@ import { TextInputMask } from 'react-native-masked-text';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
-  flex: 1;
+  width: 100%;
+  height: 100%;
   padding: 16px 40px 0px;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const ContainerTitle = styled.View`
@@ -14,7 +15,7 @@ export const ContainerTitle = styled.View`
   width: 100%;
   align-items: center;
   justify-content: center;
-  margin-top: 36px;
+  margin-top: 48px;
   margin-bottom: 36px;
 `;
 
@@ -36,7 +37,7 @@ export const AllDescrition = styled.View`
   margin-bottom: 48px;
 `;
 
-export const Descrition = styled.View`
+export const Description = styled.View`
   flex-direction: row;
   align-items: center;
 `;
@@ -82,11 +83,12 @@ export const Buttons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 40px;
 `;
 
 export const Wrapper = styled(KeyboardAvoidingView)`
   align-items: center;
-  background-color: ${theme.colors.White};
+  background-color: ${theme.colors.white};
 `;
 
 export const Content = styled.View`

@@ -1,4 +1,5 @@
 import { theme } from '@styles/default.theme';
+import { View } from 'react-native';
 import styled from 'styled-components/native';
 
 type ContactProps = {
@@ -17,30 +18,37 @@ export const ContainerContact = styled.TouchableOpacity<ContactProps>`
   justify-content: space-between;
 `;
 
-export const ContainerIcon = styled.View`
+export const ContainerIcon = styled(View)`
   align-items: center;
   margin-right: 12px;
 `;
 
 export const Icon = styled.Image`
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
 `;
 
-export const Data = styled.View`
+export const Data = styled(View)`
   display: flex;
+  justify-content: space-between;
+  padding: 2px 0px;
 `;
 
 export const Name = styled.Text`
   font-size: 16px;
   font-family: 'Roboto';
+  color: ${theme.colors.highEmphasis};
 `;
 
 export const PhoneOrEmail = styled.Text`
   color: ${theme.colors.lowEmphasis};
-  font-family: 'Roboto';
+  font-size: 12px;
+  font-family: 'RobotoLight';
+  line-height: 20px;
+  letter-spacing: 0.25px;
 `;
 
-export const ContainerAll = styled.View`
+export const ContentWrapper = styled(View)`
   flex-direction: row;
 `;

@@ -1,24 +1,28 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useCountDown from '@components/CountDown';
 import InputCode from '@components/InputCode';
+import useAuth from '@hooks/useAuth';
+import UserServices from '@services/UserServices';
 import { api } from '@services/api';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
-import { ProfileContext } from 'src/contexts/ProfileContext';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 const Phone = require('../../assets/PhoneIcon.png');
 
-const VerificationCode: React.FC = ({ navigation }) => {
+const VerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState('');
-  const { phoneUser } = useContext(ProfileContext);
+  const [countdown, setCountdown] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const { secondsLeft, startCountDown } = useCountDown();
+  const { initialUser } = useAuth();
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -38,22 +42,35 @@ const VerificationCode: React.FC = ({ navigation }) => {
     }
   );
 
+  const handleCountdown = async () => {
+    await UserServices.resendCode(initialUser.phone);
+    setCountdown(true);
+    startCountDown(60);
+    setElapsedTime(0);
+  };
+
+  useEffect(() => {
+    setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+    if (elapsedTime === 60) {
+      setCountdown(false);
+      setElapsedTime(0);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secondsLeft]);
+
   useEffect(() => {
     const handleSmsReceived = async (message) => {
-      const verificationCode = message.body.match(/\d{6}/)[0];
-      setVerificationCode(verificationCode);
+      const code = message.body.match(/\d{6}/)[0];
+      setVerificationCode(code);
       try {
-        const { data } = await api.post('/verify', {
+        await api.post('/verify', {
           verificationCode,
         });
-        console.log(data);
         navigation.navigate('Profile');
       } catch (error) {
         console.log(error);
       }
-      // if (verificationCode === '111111') {
-      //   navigation.navigate('Home');
-      // }
     };
     const subscription = SmsListener.addListener(handleSmsReceived);
     return () => {
@@ -61,13 +78,13 @@ const VerificationCode: React.FC = ({ navigation }) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-200}>
         <S.Body>
-          <StatusBar hidden={true} />
           <S.Content>
             <S.Logo source={Logo} />
             <S.ContainerTitle>
@@ -81,36 +98,42 @@ const VerificationCode: React.FC = ({ navigation }) => {
               value={verificationCode}
               onChange={async (value) => {
                 setVerificationCode(value);
-                try {
-                  const { data } = await api.post('/verify', {
-                    phone: phoneUser,
-                    code: parseInt(value, 10),
-                  });
-                  console.log(data);
-                  navigation.navigate('InitialData');
-                } catch (error) {
-                  console.log(error);
+                if (value.length === 6) {
+                  try {
+                    await api.post('/verify', {
+                      phone: initialUser.phone,
+                      code: parseInt(value, 10),
+                    });
+                    navigation.navigate('InitialData');
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }
               }}
               keyboardType="numeric"
             />
-            <S.Descrition>
+            <S.Description>
               Preencha aqui com o código recebido por SMS
-            </S.Descrition>
+            </S.Description>
             <TouchableOpacity
-              activeOpacity={1.0}
+              activeOpacity={0.5}
+              disabled={countdown}
+              style={{ opacity: countdown ? 0.8 : 1 }}
               onPress={() => {
-                navigation.navigate('InitialData');
+                // navigation.navigate('InitialData');
+                handleCountdown();
               }}
             >
               <Button
                 width="328px"
-                backgroundColor="#3446E4"
+                backgroundColor={countdown ? '#949494' : '#3446E4'}
                 borderColor="transparent"
                 hasIcon={true}
                 icon={Message}
                 title="Reenviar código"
                 titleColor="#FAFAFA"
+                secondsLeft={secondsLeft}
+                countDown={countdown}
               />
             </TouchableOpacity>
             <TouchableOpacity

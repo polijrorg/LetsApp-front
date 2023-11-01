@@ -1,10 +1,11 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import useInvite from '@hooks/useInvite';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { theme } from '@styles/default.theme';
 import { format } from 'date-fns';
-import { StatusBar } from 'expo-status-bar';
 import moment from 'moment-timezone';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   Pressable,
   Keyboard,
@@ -12,8 +13,9 @@ import {
   TouchableWithoutFeedback,
   Platform,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
-import { ProfileContext } from 'src/contexts/ProfileContext';
+import Toast from 'react-native-root-toast';
 
 const styles = StyleSheet.create({
   datePicker: {
@@ -21,7 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DateAndSchedule: React.FC = ({ navigation }) => {
+const DateAndSchedule = ({ navigation }) => {
   const IconClock = require('../../assets/ClockIcon.png');
   const IconDate = require('../../assets/DateIcon.png');
 
@@ -36,22 +38,42 @@ const DateAndSchedule: React.FC = ({ navigation }) => {
   const [durations, setDurations] = useState('');
 
   const { setDateStart, setDateEnd, setTimeStart, setTimeEnd, setDuration } =
-    useContext(ProfileContext);
+    useInvite();
 
   const sendData = () => {
+    if (moment(date).diff(new Date(), 'days') < 0) {
+      displayDateErrorToast('❌ Data de início inválida');
+      return;
+    } else if (moment(date1).diff(date) < 0) {
+      displayDateErrorToast('❌ Intervalo de datas inválido');
+      return;
+    } else if (!durations || parseInt(durations, 10) === 0) {
+      displayDateErrorToast('❌ Selecione a duração do evento');
+      return;
+    } else if (moment(time1).diff(time, 'minutes') < parseInt(durations, 10)) {
+      displayDateErrorToast('❌ Intervalo de tempo inválido');
+      return;
+    }
     setDateStart(date);
     setDateEnd(date1);
     setTimeStart(time);
     setTimeEnd(time1);
     setDuration(durations);
+    navigation.navigate('SuggestSchedule');
   };
 
   const toggleStartPicker = () => {
     setShowStartPicker(!showStartPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
   };
 
   const toggleEndPicker = () => {
     setShowEndPicker(!showEndPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowStartPicker(false);
   };
 
   const onChangeStart = (event, selectedDate) => {
@@ -74,10 +96,23 @@ const DateAndSchedule: React.FC = ({ navigation }) => {
 
   const toggleTimeStartPicker = () => {
     setShowTimeStart(!showTimeStart);
+    setShowTimeEnd(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const toggleTimeEndPicker = () => {
     setShowTimeEnd(!showTimeEnd);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
+  };
+
+  const disableSpinners = () => {
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const onChangeTimeStart = (event, selectedDate) => {
@@ -98,177 +133,195 @@ const DateAndSchedule: React.FC = ({ navigation }) => {
     }
   };
 
+  function displayDateErrorToast(message: string) {
+    Toast.show(message, {
+      duration: Toast.durations.SHORT,
+      position: 120,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      backgroundColor: theme.colors.white,
+      textColor: theme.colors.highEmphasis,
+    });
+  }
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <S.Wrapper behavior="position" keyboardVerticalOffset={-120}>
-        <S.Body>
-          <StatusBar hidden={true} />
-          <S.ContainerTitle>
-            <S.Title>Criar Novo Evento</S.Title>
-          </S.ContainerTitle>
-          <S.AllDescrition>
-            <S.Subtitle>Intervalo de Datas</S.Subtitle>
-            <S.Descrition>
-              <S.Icon source={IconDate} />
-              <S.Text>Início:</S.Text>
-              {showStartPicker && (
-                <DateTimePicker
-                  mode="date"
-                  display="spinner"
-                  value={date}
-                  onChange={onChangeStart}
-                />
-              )}
-              <S.ContainerInputDate>
-                {!showStartPicker && (
-                  <Pressable onPress={toggleStartPicker}>
-                    <S.inputDate
-                      placeholder="Selecione uma data de início"
-                      value={moment(date.toDateString()).format('DD/MM/YYYY')}
-                      onChangeText={setDate}
-                      editable={false}
-                      onPressIn={toggleStartPicker}
-                    />
-                  </Pressable>
+    <S.Wrapper behavior="position" keyboardVerticalOffset={-120}>
+      <ScrollView>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+            disableSpinners();
+          }}
+        >
+          <S.Body>
+            <S.ContainerTitle>
+              <S.Title>Criar Novo Evento</S.Title>
+            </S.ContainerTitle>
+            <S.AllDescrition>
+              <S.Subtitle>Intervalo de Datas</S.Subtitle>
+              <S.Description>
+                <S.Icon source={IconDate} />
+                <S.Text>Início:</S.Text>
+                {showStartPicker && (
+                  <DateTimePicker
+                    mode="date"
+                    display="spinner"
+                    value={date}
+                    onChange={onChangeStart}
+                    themeVariant="light"
+                  />
                 )}
-              </S.ContainerInputDate>
-            </S.Descrition>
-            <S.Descrition>
-              <S.Icon source={IconDate} />
-              <S.Text>Fim:</S.Text>
-              {showEndPicker && (
-                <DateTimePicker
-                  mode="date"
-                  display="spinner"
-                  value={date1}
-                  onChange={onChangeEnd}
-                  positiveButton={{ label: 'OK', textColor: 'black' }}
-                  negativeButton={{ label: 'Cancel', textColor: 'red' }}
-                  style={styles.datePicker}
-                />
-              )}
-              <S.ContainerInputDate>
-                {!showEndPicker && (
-                  <Pressable onPress={toggleEndPicker}>
-                    <S.inputDate
-                      placeholder="Selecione uma data de término"
-                      value={moment(date1.toDateString()).format('DD/MM/YYYY')}
-                      onChangeText={setDate1}
-                      editable={false}
-                      onPressIn={toggleEndPicker}
-                    />
-                  </Pressable>
+                <S.ContainerInputDate>
+                  {!showStartPicker && (
+                    <Pressable onPress={toggleStartPicker}>
+                      <S.inputDate
+                        placeholder="Selecione uma data de início"
+                        value={moment(date).format('DD/MM/YYYY')}
+                        onChangeText={setDate}
+                        editable={false}
+                        onPressIn={toggleStartPicker}
+                      />
+                    </Pressable>
+                  )}
+                </S.ContainerInputDate>
+              </S.Description>
+              <S.Description>
+                <S.Icon source={IconDate} />
+                <S.Text>Fim:</S.Text>
+                {showEndPicker && (
+                  <DateTimePicker
+                    mode="date"
+                    display="spinner"
+                    value={date1}
+                    onChange={onChangeEnd}
+                    style={styles.datePicker}
+                    themeVariant="light"
+                  />
                 )}
-              </S.ContainerInputDate>
-            </S.Descrition>
-          </S.AllDescrition>
-          <S.AllDescrition>
-            <S.Subtitle>Intervalo de Tempo</S.Subtitle>
-            <S.Descrition>
-              <S.Icon source={IconClock} />
-              <S.Text>De:</S.Text>
-              {showTimeStart && (
-                <DateTimePicker
-                  mode="time"
-                  display="spinner"
-                  value={time}
-                  onChange={onChangeTimeStart}
-                />
-              )}
-              <S.ContainerInputDate>
-                {!showTimeStart && (
-                  <Pressable onPress={toggleTimeStartPicker}>
-                    <S.inputDate
-                      placeholder="Selecione um horário de início"
-                      value={format(time, 'HH:mm')}
-                      onChangeText={setTime}
-                      editable={false}
-                      onPressIn={toggleTimeStartPicker}
-                    />
-                  </Pressable>
+                <S.ContainerInputDate>
+                  {!showEndPicker && (
+                    <Pressable onPress={toggleEndPicker}>
+                      <S.inputDate
+                        placeholder="Selecione uma data de término"
+                        value={moment(date1).format('DD/MM/YYYY')}
+                        onChangeText={setDate1}
+                        editable={false}
+                        onPressIn={toggleEndPicker}
+                      />
+                    </Pressable>
+                  )}
+                </S.ContainerInputDate>
+              </S.Description>
+            </S.AllDescrition>
+            <S.AllDescrition>
+              <S.Subtitle>Intervalo de Tempo</S.Subtitle>
+              <S.Description>
+                <S.Icon source={IconClock} />
+                <S.Text>De:</S.Text>
+                {showTimeStart && (
+                  <DateTimePicker
+                    mode="time"
+                    display="spinner"
+                    value={time}
+                    onChange={onChangeTimeStart}
+                    themeVariant="light"
+                  />
                 )}
-              </S.ContainerInputDate>
-            </S.Descrition>
-            <S.Descrition>
-              <S.Icon source={IconClock} />
-              <S.Text>Até:</S.Text>
-              {showTimeEnd && (
-                <DateTimePicker
-                  mode="time"
-                  display="spinner"
-                  value={time1}
-                  onChange={onChangeTimeEnd}
-                />
-              )}
-              <S.ContainerInputDate>
-                {!showTimeEnd && (
-                  <Pressable onPress={toggleTimeEndPicker}>
-                    <S.inputDate
-                      placeholder="Selecione o fim do intervalo"
-                      value={format(time1, 'HH:mm')}
-                      onChangeText={setTime1}
-                      editable={false}
-                      onPressIn={toggleTimeEndPicker}
-                    />
-                  </Pressable>
+                <S.ContainerInputDate>
+                  {!showTimeStart && (
+                    <Pressable onPress={toggleTimeStartPicker}>
+                      <S.inputDate
+                        placeholder="Selecione um horário de início"
+                        value={format(time, 'HH:mm')}
+                        onChangeText={setTime}
+                        editable={false}
+                        onPressIn={toggleTimeStartPicker}
+                      />
+                    </Pressable>
+                  )}
+                </S.ContainerInputDate>
+              </S.Description>
+              <S.Description>
+                <S.Icon source={IconClock} />
+                <S.Text>Até:</S.Text>
+                {showTimeEnd && (
+                  <DateTimePicker
+                    mode="time"
+                    display="spinner"
+                    value={time1}
+                    onChange={onChangeTimeEnd}
+                    themeVariant="light"
+                  />
                 )}
-              </S.ContainerInputDate>
-            </S.Descrition>
-          </S.AllDescrition>
-          <S.AllDescrition>
-            <S.Subtitle>Duração Estimada</S.Subtitle>
-            <S.Descrition>
-              <S.Icon source={IconClock} />
-              <S.Text>Tempo:</S.Text>
-              <S.ContainerInputDate>
-                <S.InputDate
-                  type="datetime"
-                  options={{
-                    format: 'HH:mm',
-                  }}
-                  placeholder="00h:00min"
-                  value={durations}
-                  onChangeText={(word) => {
-                    setDurations(word);
-                  }}
+                <S.ContainerInputDate>
+                  {!showTimeEnd && (
+                    <Pressable onPress={toggleTimeEndPicker}>
+                      <S.inputDate
+                        placeholder="Selecione o fim do intervalo"
+                        value={format(time1, 'HH:mm')}
+                        onChangeText={setTime1}
+                        editable={false}
+                        onPressIn={toggleTimeEndPicker}
+                      />
+                    </Pressable>
+                  )}
+                </S.ContainerInputDate>
+              </S.Description>
+            </S.AllDescrition>
+            <S.AllDescrition>
+              <S.Subtitle>Duração Estimada</S.Subtitle>
+              <S.Description>
+                <S.Icon source={IconClock} />
+                <S.Text>Tempo:</S.Text>
+                <S.ContainerInputDate>
+                  <S.InputDate
+                    type="only-numbers"
+                    placeholder="00min"
+                    placeholderTextColor={theme.colors.lowEmphasis}
+                    value={durations}
+                    onChangeText={(word) => {
+                      setDurations(word);
+                    }}
+                    onPressIn={disableSpinners}
+                  />
+                </S.ContainerInputDate>
+              </S.Description>
+            </S.AllDescrition>
+            <S.Buttons>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('SelectGuests');
+                }}
+              >
+                <Button
+                  width="136px"
+                  backgroundColor="#FAFAFA"
+                  borderColor="#949494"
+                  hasIcon={false}
+                  title="Voltar"
+                  titleColor="#949494"
                 />
-              </S.ContainerInputDate>
-            </S.Descrition>
-          </S.AllDescrition>
-          <S.Buttons>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SelectGuests');
-              }}
-            >
-              <Button
-                width="136px"
-                backgroundColor="#FAFAFA"
-                borderColor="#949494"
-                hasIcon={false}
-                title="Voltar"
-                titleColor="#949494"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                sendData();
-                navigation.navigate('SuggestSchedule');
-              }}
-            >
-              <Button
-                width="136px"
-                backgroundColor="#3446E4"
-                borderColor="transparent"
-                hasIcon={false}
-                title="Enviar"
-                titleColor="#FAFAFA"
-              />
-            </TouchableOpacity>
-          </S.Buttons>
-        </S.Body>
-      </S.Wrapper>
-    </TouchableWithoutFeedback>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  sendData();
+                }}
+              >
+                <Button
+                  width="136px"
+                  backgroundColor="#3446E4"
+                  borderColor="transparent"
+                  hasIcon={false}
+                  title="Enviar"
+                  titleColor="#FAFAFA"
+                />
+              </TouchableOpacity>
+            </S.Buttons>
+          </S.Body>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </S.Wrapper>
   );
 };
 

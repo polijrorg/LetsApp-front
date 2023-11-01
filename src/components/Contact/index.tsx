@@ -1,6 +1,5 @@
 import * as S from './styles';
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { CheckBox } from 'react-native-elements';
 
 export type ContactProps = {
@@ -8,53 +7,45 @@ export type ContactProps = {
   phoneOrEmail: string;
   email?: string;
   onPress?: () => void;
+  isDisabled?: boolean;
+  isSelected?: boolean;
+  isMandatory?: boolean;
 };
 
 const ContactIcon = require('../../assets/Contact.png');
+const InvitedContactIcon = require('../../assets/BlueUserCircle.png');
 
 const Contact: React.FC<ContactProps> = ({
   name,
   phoneOrEmail,
   email,
   onPress,
+  isDisabled,
+  isSelected,
+  isMandatory,
 }) => {
-  const [isSelected, setIsSelected] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
-
-  const handleClick = () => {
-    if (isSelected === false) {
-      setIsSelected(true);
-    } else {
-      setIsSelected(false);
-    }
-
-    if (onPress) {
-      onPress();
-    }
-    // setHasBorder(!hasBorder);
-    // onClick(title);
-  };
-
   return (
-    <S.ContainerContact onPress={handleClick} isSelected={isSelected}>
-      <S.ContainerAll>
-        <S.ContainerIcon>
-          <S.Icon source={ContactIcon} />
-        </S.ContainerIcon>
+    <S.ContainerContact
+      onPress={onPress}
+      isSelected={(!isDisabled && isSelected) || isMandatory}
+      activeOpacity={isDisabled ? 1 : 0.2}
+    >
+      <S.ContentWrapper>
+        <S.Icon source={isDisabled ? InvitedContactIcon : ContactIcon} />
         <S.Data>
           <S.Name>{name}</S.Name>
           <S.PhoneOrEmail>{phoneOrEmail}</S.PhoneOrEmail>
-          <S.PhoneOrEmail>{email}</S.PhoneOrEmail>
+          {email ? <S.PhoneOrEmail>{email}</S.PhoneOrEmail> : <></>}
         </S.Data>
-      </S.ContainerAll>
-      {isSelected ? (
+      </S.ContentWrapper>
+      {!isDisabled && (isSelected || isMandatory) ? (
         <CheckBox
           checkedIcon="check"
           uncheckedIcon="square-o"
           checkedColor="#3446E4"
           uncheckedColor="#3446E4"
-          checked={isPressed}
-          onPress={() => setIsPressed(!isPressed)}
+          checked={isMandatory}
+          disabled={isDisabled}
         />
       ) : null}
     </S.ContainerContact>

@@ -1,9 +1,11 @@
 import * as S from './styles';
 import Button from '@components/Button';
+import FixedInput from '@components/FixedInput';
 import Input from '@components/Input';
+import useAuth from '@hooks/useAuth';
+import { IDeleteUserRequest } from '@services/UserServices';
 import { api } from '@services/api';
-import { UserContext } from '@utils/UserContext';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -46,16 +48,16 @@ export const ModalCard: React.FC<ModalProps> = ({
   const [inputs, setInputs] = useState([]);
   const Message = require('../../assets/MessageIcon.png');
 
+  const { deleteUser, user } = useAuth();
+
   const handleAddInput = (value) => {
     setInputs([...inputs, value]);
   };
 
-  const { userId } = useContext(UserContext);
-
   async function handleSendData() {
     try {
       const form = new FormData();
-      form.append('id', userId);
+      form.append('id', user.id);
       form.append('email', valueEmail);
 
       const { data } = await api.post('/updateEmail', form, {
@@ -72,21 +74,31 @@ export const ModalCard: React.FC<ModalProps> = ({
     }
   }
 
+  async function DeleteAccount() {
+    try {
+      await deleteUser({
+        phone: user.phone,
+      } as IDeleteUserRequest);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   let title;
-  let descrition;
+  let description;
 
   if (type === 'Schedule') {
     title = 'Vincular Nova Agenda';
-    descrition = 'Concordo com os termos de uso.';
+    description = 'Concordo com os termos de uso.';
   } else if (type === 'Number') {
     title = 'Adicionar Novo Número';
-    descrition = '';
+    description = '';
   } else if (type === 'Account') {
     title = 'Apagar conta';
-    descrition = 'Tem certeza que deseja apagar a conta?';
+    description = 'Tem certeza que deseja apagar a conta?';
   } else if (type === 'Contact') {
     title = 'Adicionar Novo Contato';
-    descrition = '';
+    description = '';
   }
 
   return (
@@ -120,32 +132,31 @@ export const ModalCard: React.FC<ModalProps> = ({
             </S.ContainerInputs>
           ) : type === 'Contact' ? (
             <S.ContainerInputsContact>
-              <Input
+              <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Nome"
                 value={name}
-                onChange={setName}
+                setValue={setName}
               />
-              <></>
-              <Input
+              {/* <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Telefone"
                 value={phoneNumber}
-                onChange={setPhoneNumber}
-              />
-              <Input
+                setValue={setPhoneNumber}
+              /> */}
+              <FixedInput
                 height="32px"
                 width="278px"
                 placeholder="Email"
                 value={email}
-                onChange={setEmail}
+                setValue={setEmail}
               />
             </S.ContainerInputsContact>
           ) : null}
           <S.ContainerDescrition>
-            <S.Descrtion type={type}>{descrition}</S.Descrtion>
+            <S.Descrtion type={type}>{description}</S.Descrtion>
             {type === 'Schedule' ? (
               <CheckBox
                 checkedIcon="check"
@@ -162,7 +173,7 @@ export const ModalCard: React.FC<ModalProps> = ({
               if (screen) {
                 navigation.navigate(screen);
               }
-              handleAddInput(Input);
+              // handleAddInput(Input);
               handleSendData();
               setOpen(false);
               if (type === 'Contact') {
@@ -172,24 +183,32 @@ export const ModalCard: React.FC<ModalProps> = ({
           >
             {type === 'Account' ? (
               <S.ContainerButtons>
-                <Button
-                  backgroundColor="#FAFAFA"
-                  width="112px"
-                  title="Cancelar"
-                  titleColor="#FF0000"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Message}
-                />
-                <Button
-                  backgroundColor="#FF0000"
-                  width="112px"
-                  title="Apagar"
-                  titleColor="#FAFAFA"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Message}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <Button
+                    backgroundColor="#FAFAFA"
+                    width="112px"
+                    title="Cancelar"
+                    titleColor="#FF0000"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Message}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={DeleteAccount}>
+                  <Button
+                    backgroundColor="#FF0000"
+                    width="112px"
+                    title="Apagar"
+                    titleColor="#FAFAFA"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Message}
+                  />
+                </TouchableOpacity>
               </S.ContainerButtons>
             ) : (
               <Icon name="check" size={30} color="#3446E4" />
