@@ -49,10 +49,16 @@ const DateAndSchedule = ({ navigation }) => {
 
   const toggleStartPicker = () => {
     setShowStartPicker(!showStartPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
   };
 
   const toggleEndPicker = () => {
     setShowEndPicker(!showEndPicker);
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowStartPicker(false);
   };
 
   const onChangeStart = (event, selectedDate) => {
@@ -75,10 +81,23 @@ const DateAndSchedule = ({ navigation }) => {
 
   const toggleTimeStartPicker = () => {
     setShowTimeStart(!showTimeStart);
+    setShowTimeEnd(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const toggleTimeEndPicker = () => {
     setShowTimeEnd(!showTimeEnd);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
+  };
+
+  const disableSpinners = () => {
+    setShowTimeEnd(false);
+    setShowTimeStart(false);
+    setShowEndPicker(false);
+    setShowStartPicker(false);
   };
 
   const onChangeTimeStart = (event, selectedDate) => {
@@ -102,7 +121,12 @@ const DateAndSchedule = ({ navigation }) => {
   return (
     <S.Wrapper behavior="position" keyboardVerticalOffset={-120}>
       <ScrollView>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+            disableSpinners();
+          }}
+        >
           <S.Body>
             <S.ContainerTitle>
               <S.Title>Criar Novo Evento</S.Title>
@@ -232,6 +256,7 @@ const DateAndSchedule = ({ navigation }) => {
                     onChangeText={(word) => {
                       setDurations(word);
                     }}
+                    onPressIn={disableSpinners}
                   />
                 </S.ContainerInputDate>
               </S.Description>

@@ -84,7 +84,8 @@ const SelectGuests = ({ navigation }) => {
 
       if (!possibleMandatory) {
         Alert.alert(
-          'Contato não registrado no Lets App, enviaremos um convite por email/sms'
+          'Contato não registrado no Lets App',
+          'Não temos acesso ao seu calendário, enviaremos um convite por email/sms'
         );
       }
       // Remove o participante do array de selecionados e adiciona aos mandatorios
