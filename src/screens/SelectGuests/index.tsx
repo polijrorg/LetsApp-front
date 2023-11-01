@@ -21,7 +21,6 @@ const SelectGuests = ({ navigation }) => {
   const [contacts, setContacts] = useState(null);
   const [userContacts, setUserContacts] = useState(null);
   const [open, setOpen] = useState(false);
-  const [possibleMandatory, setPossibleMandatory] = useState(true);
 
   const { user } = useAuth();
 
@@ -62,7 +61,7 @@ const SelectGuests = ({ navigation }) => {
     getContacts();
   }, []);
 
-  const toggleParticipantSelection = (participant) => {
+  const toggleParticipantSelection = async (participant) => {
     // Verifica se o participante já foi selecionado
     const isSelected = contactSelected.some((p) => p.id === participant.id);
     const isMandatory = mandatoryContactSelected.some(
@@ -70,17 +69,11 @@ const SelectGuests = ({ navigation }) => {
     );
 
     if (isSelected) {
-      // Verifica se contato pode ser obrigatório
-      const isPossibleMandatory = async () => {
-        const response = await UserServices.isPossibleMandatoryUser({
+      const possibleMandatory =
+        (await UserServices.isPossibleMandatoryUser({
           phone: participant.phone,
           email: participant.email,
-        });
-
-        setPossibleMandatory(response || false);
-      };
-
-      isPossibleMandatory();
+        })) || false;
 
       if (!possibleMandatory) {
         Alert.alert(
