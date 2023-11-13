@@ -108,11 +108,6 @@ const SelectGuests = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    console.log('Contatos selecionados', contactSelected);
-    console.log('Contatos obrigatórios', mandatoryContactSelected);
-  }, [contactSelected, mandatoryContactSelected]);
-
   return (
     <S.Body>
       <S.Header>
@@ -133,7 +128,7 @@ const SelectGuests = ({ navigation }) => {
           placeholder="Pesquisar..."
           placeholderTextColor={theme.colors.mediumEmphasis}
           value={search}
-          onChangeText={(texto) => setSearch(texto)}
+          onChangeText={(texto: string) => setSearch(texto)}
         />
       </S.ContainerSearch>
       <Pressable onPress={handleOpen}>
@@ -156,41 +151,47 @@ const SelectGuests = ({ navigation }) => {
             <S.Mandatory>Obrigatório?</S.Mandatory>
           </S.ContainerSubtitle>
         )}
-        {userContacts?.map((participant, index) => (
-          <React.Fragment key={index}>
-            <Contact
-              name={participant.name}
-              phoneOrEmail={participant.email || participant.phone}
-              onPress={() => toggleParticipantSelection(participant)}
-              isSelected={contactSelected.some((p) => p.id === participant.id)}
-              isMandatory={mandatoryContactSelected.some(
-                (p) => p.id === participant.id
-              )}
-            />
-          </React.Fragment>
-        ))}
+        {userContacts
+          ?.filter((participant) => participant.name?.includes(search))
+          .map((participant, index) => (
+            <React.Fragment key={index}>
+              <Contact
+                name={participant.name}
+                phoneOrEmail={participant.email || participant.phone}
+                onPress={() => toggleParticipantSelection(participant)}
+                isSelected={contactSelected.some(
+                  (p) => p.id === participant.id
+                )}
+                isMandatory={mandatoryContactSelected.some(
+                  (p) => p.id === participant.id
+                )}
+              />
+            </React.Fragment>
+          ))}
         <S.ContainerSubtitle>
           <S.Subtitle>Minha Agenda</S.Subtitle>
           <S.Mandatory>Obrigatório?</S.Mandatory>
         </S.ContainerSubtitle>
         {contacts &&
-          contacts.map((event, index) => (
-            <React.Fragment key={index}>
-              <Contact
-                name={event.name}
-                phoneOrEmail={
-                  event.phoneNumbers && event.phoneNumbers[0]
-                    ? event.phoneNumbers[0].number
-                    : 'Nenhum contato disponível'
-                }
-                onPress={() => toggleParticipantSelection(event)}
-                isSelected={contactSelected.some((p) => p.id === event.id)}
-                isMandatory={mandatoryContactSelected.some(
-                  (p) => p.id === event.id
-                )}
-              />
-            </React.Fragment>
-          ))}
+          contacts
+            .filter((participant) => participant.name?.includes(search))
+            .map((event, index) => (
+              <React.Fragment key={index}>
+                <Contact
+                  name={event.name}
+                  phoneOrEmail={
+                    event.phoneNumbers && event.phoneNumbers[0]
+                      ? event.phoneNumbers[0].number
+                      : 'Nenhum contato disponível'
+                  }
+                  onPress={() => toggleParticipantSelection(event)}
+                  isSelected={contactSelected.some((p) => p.id === event.id)}
+                  isMandatory={mandatoryContactSelected.some(
+                    (p) => p.id === event.id
+                  )}
+                />
+              </React.Fragment>
+            ))}
       </S.Scroll>
       <S.IconCheck>
         <TouchableOpacity
