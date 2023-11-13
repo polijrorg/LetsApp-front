@@ -81,6 +81,12 @@ const VerificationCode = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
+  useEffect(() => {
+    initialUser.name ? UserServices.resendCode(initialUser.phone) : null;
+    console.log(initialUser.name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <S.Wrapper behavior="position" keyboardVerticalOffset={-200}>
@@ -120,7 +126,6 @@ const VerificationCode = ({ navigation }) => {
               disabled={countdown}
               style={{ opacity: countdown ? 0.8 : 1 }}
               onPress={() => {
-                // navigation.navigate('InitialData');
                 handleCountdown();
               }}
             >
