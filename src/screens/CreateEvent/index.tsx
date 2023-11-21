@@ -7,7 +7,7 @@ import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
 import { createURL } from 'expo-linking';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
   Keyboard,
