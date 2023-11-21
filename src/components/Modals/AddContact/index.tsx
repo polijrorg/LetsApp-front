@@ -9,36 +9,43 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  // name?: string;
-  // setName: (name: string) => void;
-  // email?: string;
-  // phone?: string;
-  // setPhone: (name: string) => void;
-  // setEmail: (name: string) => void;
   userPhone?: string;
 }
 
-const AddContact: React.FC<Props> = ({
-  setOpen,
-  // name,
-  // setName,
-  // email,
-  // setEmail,
-  // phone,
-  // setPhone,
-  userPhone,
-}) => {
+const AddContact: React.FC<Props> = ({ setOpen, userPhone }) => {
   const [selected, setSelected] = useState('Telefone');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
+  const handleNumberFormat = (input: string) => {
+    const unsignedPhoneNumber = input.replace(/[\s()-]/g, '');
+    let formattedPhoneNumber: string;
+    if (unsignedPhoneNumber.length > 1 && unsignedPhoneNumber.length < 11) {
+      formattedPhoneNumber = `(${unsignedPhoneNumber.slice(
+        0,
+        2
+      )}) ${unsignedPhoneNumber.slice(2)}`;
+    } else if (unsignedPhoneNumber.length === 11) {
+      formattedPhoneNumber = `(${unsignedPhoneNumber.slice(
+        0,
+        2
+      )}) ${unsignedPhoneNumber.slice(2, 7)}-${unsignedPhoneNumber.slice(7)}`;
+    }
+
+    setPhone(formattedPhoneNumber);
+  };
+
   const handleAddContact = async () => {
+    const unsignedPhoneNumber = phone.replace(/[\s()-]/g, '');
+    const formattedPhoneNumber = `+55${unsignedPhoneNumber.slice(
+      unsignedPhoneNumber.length - 11
+    )}`;
     try {
       await CalendarServices.addContact({
         email: selected === 'Email' ? email : null,
         name,
-        phone: selected === 'Telefone' ? phone : null,
+        phone: selected === 'Telefone' ? formattedPhoneNumber : null,
         userPhone: userPhone,
       });
       setOpen(false);
@@ -91,7 +98,7 @@ const AddContact: React.FC<Props> = ({
               width="100%"
               placeholder="Insira o telefone"
               value={phone}
-              setValue={setPhone}
+              setValue={handleNumberFormat}
             />
           ) : (
             <FixedInput
