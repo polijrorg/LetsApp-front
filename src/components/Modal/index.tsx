@@ -38,21 +38,21 @@ export const ModalCard: React.FC<ModalProps> = ({
   valueEmail,
   name,
   setName,
-  phoneNumber,
-  setPhoneNumber,
+  // phoneNumber,
+  // setPhoneNumber,
   email,
   setEmail,
   addParticipant,
 }: ModalProps) => {
   const [isSelected, setSelected] = useState(false);
-  const [inputs, setInputs] = useState([]);
+  // const [inputs, setInputs] = useState([]);
   const Message = require('../../assets/MessageIcon.png');
 
   const { deleteUser, user } = useAuth();
 
-  const handleAddInput = (value) => {
-    setInputs([...inputs, value]);
-  };
+  // const handleAddInput = (value) => {
+  //   setInputs([...inputs, value]);
+  // };
 
   async function handleSendData() {
     try {
