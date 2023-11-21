@@ -79,6 +79,7 @@ const CreateEvent = ({ navigation }) => {
     }
     setAddressError(false);
     const prefix = createURL('/lest-app');
+
     try {
       if (user.type === 'GOOGLE') {
         await CalendarServices.createGoogleEvent({
@@ -93,13 +94,19 @@ const CreateEvent = ({ navigation }) => {
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map(
-            (contact) =>
-              contact.email ||
+          optionalAttendees: contactSelected.map((contact) => {
+            if (contact.email) return contact.email;
+            if (contact.phone.length === 9) {
+              return `+55${user.phone.slice(3, 5)}${contact.phone.replace(
+                /[\s()-]/g,
+                ''
+              )}`;
+            } else {
               `+55${contact.phone
                 .replace(/[\s()-]/g, '')
-                .slice(contact.phone.length - 11)}`
-          ),
+                .slice(contact.phone.length - 11)}`;
+            }
+          }),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')
@@ -122,9 +129,19 @@ const CreateEvent = ({ navigation }) => {
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map(
-            (contact) => contact.email || contact.phone
-          ),
+          optionalAttendees: contactSelected.map((contact) => {
+            if (contact.email) return contact.email;
+            if (contact.phone.length === 9) {
+              return `+55${user.phone.slice(3, 5)}${contact.phone.replace(
+                /[\s()-]/g,
+                ''
+              )}`;
+            } else {
+              `+55${contact.phone
+                .replace(/[\s()-]/g, '')
+                .slice(contact.phone.length - 11)}`;
+            }
+          }),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')
