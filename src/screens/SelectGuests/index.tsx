@@ -3,6 +3,7 @@ import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
+import IContact from '@interfaces/Contacts';
 import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
@@ -63,6 +64,7 @@ const SelectGuests = ({ navigation }) => {
 
   const toggleParticipantSelection = async (participant) => {
     // Verifica se o participante já foi selecionado
+
     const isSelected = contactSelected.some((p) => p.id === participant.id);
     const isMandatory = mandatoryContactSelected.some(
       (p) => p.id === participant.id
@@ -71,7 +73,7 @@ const SelectGuests = ({ navigation }) => {
     if (isSelected) {
       const possibleMandatory =
         (await UserServices.isPossibleMandatoryUser({
-          phone: participant.phone,
+          phone: participant.phone || participant.phoneNumbers[0].number,
           email: participant.email,
         })) || false;
 
@@ -101,9 +103,17 @@ const SelectGuests = ({ navigation }) => {
       );
     } else {
       // Adiciona o participante ao array de selecionados
+      const usersPhoneParticipant: IContact = {
+        id: participant.id,
+        userId: user.id,
+        name: participant.name,
+        phone: participant.phone || participant.phoneNumbers[0].number,
+        email: participant.email,
+      };
+
       setContactSelected((prevParticipants) => [
         ...prevParticipants,
-        participant,
+        usersPhoneParticipant,
       ]);
     }
   };

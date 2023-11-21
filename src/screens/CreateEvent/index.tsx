@@ -97,14 +97,16 @@ const CreateEvent = ({ navigation }) => {
           optionalAttendees: contactSelected.map((contact) => {
             if (contact.email) return contact.email;
             if (contact.phone.length === 9) {
-              return `+55${user.phone.slice(3, 5)}${contact.phone.replace(
-                /[\s()-]/g,
-                ''
-              )}`;
+              const phone = `+55${user.phone.slice(
+                3,
+                5
+              )}${contact.phone.replace(/[\s()-]/g, '')}`;
+              return phone;
             } else {
-              `+55${contact.phone
+              const phone = `+55${contact.phone
                 .replace(/[\s()-]/g, '')
                 .slice(contact.phone.length - 11)}`;
+              return phone;
             }
           }),
           beginSearch: moment(dateStart)
@@ -132,14 +134,16 @@ const CreateEvent = ({ navigation }) => {
           optionalAttendees: contactSelected.map((contact) => {
             if (contact.email) return contact.email;
             if (contact.phone.length === 9) {
-              return `+55${user.phone.slice(3, 5)}${contact.phone.replace(
-                /[\s()-]/g,
-                ''
-              )}`;
+              const phone = `+55${user.phone.slice(
+                3,
+                5
+              )}${contact.phone.replace(/[\s()-]/g, '')}`;
+              return phone;
             } else {
-              `+55${contact.phone
+              const phone = `+55${contact.phone
                 .replace(/[\s()-]/g, '')
                 .slice(contact.phone.length - 11)}`;
+              return phone;
             }
           }),
           beginSearch: moment(dateStart)

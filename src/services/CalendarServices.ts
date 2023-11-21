@@ -165,6 +165,7 @@ export default class CalendarServices {
   static async createOutlookEvent(
     data: ICreateEvent
   ): Promise<ICreateEventResponse> {
+    console.log(data);
     const response = await api.post('/createOutlookEvent', {
       name: data.name,
       phone: data.phone,
