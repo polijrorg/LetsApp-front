@@ -149,7 +149,7 @@ const SuggestNewTime = ({ navigation, route }) => {
             backgroundColor="#3446E4"
             borderColor="transparent"
             hasIcon={false}
-            title="Enviar"
+            title="Próximo"
             titleColor="#FAFAFA"
           />
         </TouchableOpacity>
