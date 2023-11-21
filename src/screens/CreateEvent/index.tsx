@@ -94,7 +94,11 @@ const CreateEvent = ({ navigation }) => {
           description: description,
           createMeetLink: online,
           optionalAttendees: contactSelected.map(
-            (contact) => contact.email || contact.phone
+            (contact) =>
+              contact.email ||
+              `+55${contact.phone
+                .replace(/[\s()-]/g, '')
+                .slice(contact.phone.length - 11)}`
           ),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
