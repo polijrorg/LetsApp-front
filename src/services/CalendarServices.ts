@@ -165,6 +165,7 @@ export default class CalendarServices {
   static async createOutlookEvent(
     data: ICreateEvent
   ): Promise<ICreateEventResponse> {
+    console.log(data);
     const response = await api.post('/createOutlookEvent', {
       name: data.name,
       phone: data.phone,
@@ -178,8 +179,6 @@ export default class CalendarServices {
       beginSearch: data.beginSearch,
       endSearch: data.endSearch,
     });
-
-    console.log(response);
 
     const linkNotificationResponses: string[] = [];
 

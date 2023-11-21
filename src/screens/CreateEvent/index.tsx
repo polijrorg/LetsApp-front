@@ -7,7 +7,7 @@ import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
 import { createURL } from 'expo-linking';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
   Keyboard,
@@ -20,20 +20,6 @@ const Office = require('../../assets/Office.png');
 // const Edition = require('../../assets/Edition.png');
 
 const CreateEvent = ({ navigation }) => {
-  // const [nameEvent, setNameEvent] = useState('Nome do Evento');
-  // const [isEditing, setIsEditing] = useState(false);
-
-  // const handleIconClick = () => {
-  //   setIsEditing(true);
-  // };
-
-  // const handleNameEventBlur = () => {
-  //   setIsEditing(false);
-  //   if (nameEvent === '') {
-  //     setNameEvent('Nome do Evento');
-  //   }
-  // };
-
   const {
     selectedSchedule,
     mandatoryContactSelected,
@@ -79,6 +65,7 @@ const CreateEvent = ({ navigation }) => {
     }
     setAddressError(false);
     const prefix = createURL('/lest-app');
+
     try {
       if (user.type === 'GOOGLE') {
         await CalendarServices.createGoogleEvent({

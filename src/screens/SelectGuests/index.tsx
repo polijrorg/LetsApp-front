@@ -3,6 +3,7 @@ import Contact from '@components/Contact';
 import AddContact from '@components/Modals/AddContact';
 import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
+import IContact from '@interfaces/Contacts';
 import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
@@ -63,6 +64,7 @@ const SelectGuests = ({ navigation }) => {
 
   const toggleParticipantSelection = async (participant) => {
     // Verifica se o participante já foi selecionado
+
     const isSelected = contactSelected.some((p) => p.id === participant.id);
     const isMandatory = mandatoryContactSelected.some(
       (p) => p.id === participant.id
@@ -71,7 +73,7 @@ const SelectGuests = ({ navigation }) => {
     if (isSelected) {
       const possibleMandatory =
         (await UserServices.isPossibleMandatoryUser({
-          phone: participant.phone,
+          phone: participant.phone || participant.phoneNumbers[0].number,
           email: participant.email,
         })) || false;
 
@@ -100,10 +102,32 @@ const SelectGuests = ({ navigation }) => {
         prevParticipants.filter((p) => p.id !== participant.id)
       );
     } else {
+      // Formata o telefone do participante
+      const unsignedPhone = participant.phoneNumbers[0].number.replace(
+        /[\s()-]/g,
+        ''
+      );
+      let formattedPhone;
+      if (unsignedPhone.length === 9) {
+        formattedPhone = `+55${user.phone.slice(3, 5)}${unsignedPhone}`;
+      } else if (unsignedPhone.length === 8) {
+        formattedPhone = `+55${user.phone.slice(3, 5)}9${unsignedPhone}`;
+      } else if (unsignedPhone.length >= 11) {
+        formattedPhone = `+55${unsignedPhone.slice(unsignedPhone.length - 11)}`;
+      }
+
+      const usersPhoneParticipant: IContact = {
+        id: participant.id,
+        userId: user.id,
+        name: participant.name,
+        phone: participant.phone || formattedPhone,
+        email: participant.email,
+      };
+
       // Adiciona o participante ao array de selecionados
       setContactSelected((prevParticipants) => [
         ...prevParticipants,
-        participant,
+        usersPhoneParticipant,
       ]);
     }
   };
