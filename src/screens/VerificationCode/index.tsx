@@ -124,6 +124,7 @@ const VerificationCode = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.5}
               disabled={countdown}
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{ opacity: countdown ? 0.8 : 1 }}
               onPress={() => {
                 handleCountdown();
