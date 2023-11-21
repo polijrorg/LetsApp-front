@@ -21,12 +21,12 @@ const AddContact: React.FC<Props> = ({ setOpen, userPhone }) => {
   const handleNumberFormat = (input: string) => {
     const unsignedPhoneNumber = input.replace(/[\s()-]/g, '');
     let formattedPhoneNumber: string;
-    if (unsignedPhoneNumber.length > 1 && unsignedPhoneNumber.length < 11) {
+    if (unsignedPhoneNumber.length > 2 && unsignedPhoneNumber.length < 11) {
       formattedPhoneNumber = `(${unsignedPhoneNumber.slice(
         0,
         2
       )}) ${unsignedPhoneNumber.slice(2)}`;
-    } else if (unsignedPhoneNumber.length === 11) {
+    } else if (unsignedPhoneNumber.length >= 11) {
       formattedPhoneNumber = `(${unsignedPhoneNumber.slice(
         0,
         2
