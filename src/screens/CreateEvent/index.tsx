@@ -20,20 +20,6 @@ const Office = require('../../assets/Office.png');
 // const Edition = require('../../assets/Edition.png');
 
 const CreateEvent = ({ navigation }) => {
-  // const [nameEvent, setNameEvent] = useState('Nome do Evento');
-  // const [isEditing, setIsEditing] = useState(false);
-
-  // const handleIconClick = () => {
-  //   setIsEditing(true);
-  // };
-
-  // const handleNameEventBlur = () => {
-  //   setIsEditing(false);
-  //   if (nameEvent === '') {
-  //     setNameEvent('Nome do Evento');
-  //   }
-  // };
-
   const {
     selectedSchedule,
     mandatoryContactSelected,
@@ -94,21 +80,9 @@ const CreateEvent = ({ navigation }) => {
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map((contact) => {
-            if (contact.email) return contact.email;
-            if (contact.phone.length === 9) {
-              const phone = `+55${user.phone.slice(
-                3,
-                5
-              )}${contact.phone.replace(/[\s()-]/g, '')}`;
-              return phone;
-            } else {
-              const phone = `+55${contact.phone
-                .replace(/[\s()-]/g, '')
-                .slice(contact.phone.length - 11)}`;
-              return phone;
-            }
-          }),
+          optionalAttendees: contactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')
@@ -131,21 +105,9 @@ const CreateEvent = ({ navigation }) => {
           address: online ? '' : address,
           description: description,
           createMeetLink: online,
-          optionalAttendees: contactSelected.map((contact) => {
-            if (contact.email) return contact.email;
-            if (contact.phone.length === 9) {
-              const phone = `+55${user.phone.slice(
-                3,
-                5
-              )}${contact.phone.replace(/[\s()-]/g, '')}`;
-              return phone;
-            } else {
-              const phone = `+55${contact.phone
-                .replace(/[\s()-]/g, '')
-                .slice(contact.phone.length - 11)}`;
-              return phone;
-            }
-          }),
+          optionalAttendees: contactSelected.map(
+            (contact) => contact.email || contact.phone
+          ),
           beginSearch: moment(dateStart)
             .tz('America/Sao_Paulo')
             .startOf('day')

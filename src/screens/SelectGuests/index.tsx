@@ -102,15 +102,29 @@ const SelectGuests = ({ navigation }) => {
         prevParticipants.filter((p) => p.id !== participant.id)
       );
     } else {
-      // Adiciona o participante ao array de selecionados
+      // Formata o telefone do participante
+      const unsignedPhone = participant.phoneNumbers[0].number.replace(
+        /[\s()-]/g,
+        ''
+      );
+      let formattedPhone;
+      if (unsignedPhone.length === 9) {
+        formattedPhone = `+55${user.phone.slice(3, 5)}${unsignedPhone}`;
+      } else if (unsignedPhone.length === 8) {
+        formattedPhone = `+55${user.phone.slice(3, 5)}9${unsignedPhone}`;
+      } else if (unsignedPhone.length >= 11) {
+        formattedPhone = `+55${unsignedPhone.slice(unsignedPhone.length - 11)}`;
+      }
+
       const usersPhoneParticipant: IContact = {
         id: participant.id,
         userId: user.id,
         name: participant.name,
-        phone: participant.phone || participant.phoneNumbers[0].number,
+        phone: participant.phone || formattedPhone,
         email: participant.email,
       };
 
+      // Adiciona o participante ao array de selecionados
       setContactSelected((prevParticipants) => [
         ...prevParticipants,
         usersPhoneParticipant,

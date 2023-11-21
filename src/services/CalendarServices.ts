@@ -180,8 +180,6 @@ export default class CalendarServices {
       endSearch: data.endSearch,
     });
 
-    console.log(response);
-
     const linkNotificationResponses: string[] = [];
 
     const responses = response.data.pseudoGuests.map(
