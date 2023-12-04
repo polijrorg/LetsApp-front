@@ -71,29 +71,33 @@ const SelectGuests = ({ navigation }) => {
     getContacts();
   }, []);
 
-  const toggleParticipantSelection = async (participant) => {
-    // Verifica se o participante já foi selecionado
-
-    const isSelected = contactSelected.some((p) => p.id === participant.id);
+  const toggleMandatory = async (participant) => {
     const isMandatory = mandatoryContactSelected.some(
       (p) => p.id === participant.id
     );
 
-    if (isSelected) {
-      const possibleMandatory =
-        (await UserServices.isPossibleMandatoryUser({
-          phone: participant.phone || participant.phoneNumbers[0].number,
-          email: participant.email,
-        })) || false;
+    const formattedPhone = formatPhone(participant);
 
+    const possibleMandatory =
+      (await UserServices.isPossibleMandatoryUser({
+        phone: formattedPhone.phone,
+        email: participant.email,
+      })) || false;
+
+    if (isMandatory) {
+      // Remove o participante do array de mandatorios e adiciona aos selecionados
+      setMandatoryContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.id !== participant.id)
+      );
+      setContactSelected((prevParticipants) => [
+        ...prevParticipants,
+        formattedPhone,
+      ]);
+    } else {
       if (!possibleMandatory) {
         Alert.alert(
           'Contato não registrado no Lets App',
           'Não temos acesso ao seu calendário, enviaremos um convite por email/sms'
-        );
-        // Remove o participante do array de selecionados e adiciona aos mandatorios
-        setContactSelected((prevParticipants) =>
-          prevParticipants.filter((p) => p.id !== participant.id)
         );
         return;
       }
@@ -103,20 +107,52 @@ const SelectGuests = ({ navigation }) => {
       );
       setMandatoryContactSelected((prevParticipants) => [
         ...prevParticipants,
-        participant,
+        formattedPhone,
       ]);
+    }
+  };
+
+  const toggleParticipantSelection = async (participant) => {
+    // Verifica se o participante já foi selecionado
+    const isSelected = contactSelected.some((p) => p.id === participant.id);
+    const isMandatory = mandatoryContactSelected.some(
+      (p) => p.id === participant.id
+    );
+
+    if (isSelected) {
+      // Remove o participante do array de selecionados
+      setContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.id !== participant.id)
+      );
     } else if (isMandatory) {
-      // Remove o participante do array de mandatorios
+      // Remove o participante do array de mandatorios e de selecionados
       setMandatoryContactSelected((prevParticipants) =>
         prevParticipants.filter((p) => p.id !== participant.id)
       );
+      setContactSelected((prevParticipants) =>
+        prevParticipants.filter((p) => p.id !== participant.id)
+      );
     } else {
-      // Formata o telefone do participante
-      const unsignedPhone = participant.phoneNumbers[0].number.replace(
+      const formattedPhone = formatPhone(participant);
+      setContactSelected((prevParticipants) => [
+        ...prevParticipants,
+        formattedPhone,
+      ]);
+    }
+  };
+
+  const formatPhone = (participant) => {
+    // Formata o telefone do participante
+    let unsignedPhone: string | any[];
+    if (participant.phoneNumbers) {
+      unsignedPhone = participant.phoneNumbers[0]?.number?.replace(
         /[\s()-]/g,
         ''
       );
-      let formattedPhone;
+    }
+
+    let formattedPhone: string;
+    if (unsignedPhone) {
       if (unsignedPhone.length === 9) {
         formattedPhone = `+55${user.phone.slice(3, 5)}${unsignedPhone}`;
       } else if (unsignedPhone.length === 8) {
@@ -124,21 +160,17 @@ const SelectGuests = ({ navigation }) => {
       } else if (unsignedPhone.length >= 11) {
         formattedPhone = `+55${unsignedPhone.slice(unsignedPhone.length - 11)}`;
       }
-
-      const usersPhoneParticipant: IContact = {
-        id: participant.id,
-        userId: user.id,
-        name: participant.name,
-        phone: participant.phone || formattedPhone,
-        email: participant.email,
-      };
-
-      // Adiciona o participante ao array de selecionados
-      setContactSelected((prevParticipants) => [
-        ...prevParticipants,
-        usersPhoneParticipant,
-      ]);
     }
+
+    const usersPhoneParticipant: IContact = {
+      id: participant.id,
+      userId: user.id,
+      name: participant.name,
+      phone: participant.phone || formattedPhone,
+      email: participant.email,
+    };
+
+    return usersPhoneParticipant;
   };
 
   return (
@@ -198,6 +230,7 @@ const SelectGuests = ({ navigation }) => {
                   name={participant.name}
                   phoneOrEmail={participant.email || participant.phone}
                   onPress={() => toggleParticipantSelection(participant)}
+                  onPressMandatory={() => toggleMandatory(participant)}
                   isSelected={contactSelected.some(
                     (p) => p.id === participant.id
                   )}
@@ -224,6 +257,7 @@ const SelectGuests = ({ navigation }) => {
                         : 'Nenhum contato disponível'
                     }
                     onPress={() => toggleParticipantSelection(event)}
+                    onPressMandatory={() => toggleMandatory(event)}
                     isSelected={contactSelected.some((p) => p.id === event.id)}
                     isMandatory={mandatoryContactSelected.some(
                       (p) => p.id === event.id

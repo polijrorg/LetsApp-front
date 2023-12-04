@@ -1,5 +1,6 @@
 import * as S from './styles';
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 
 export type ContactProps = {
@@ -7,6 +8,7 @@ export type ContactProps = {
   phoneOrEmail: string;
   email?: string;
   onPress?: () => void;
+  onPressMandatory?: () => void;
   isDisabled?: boolean;
   isSelected?: boolean;
   isMandatory?: boolean;
@@ -20,7 +22,8 @@ const Contact: React.FC<ContactProps> = ({
   phoneOrEmail,
   email,
   onPress,
-  isDisabled,
+  onPressMandatory,
+  isDisabled = false,
   isSelected,
   isMandatory,
 }) => {
@@ -39,14 +42,21 @@ const Contact: React.FC<ContactProps> = ({
         </S.Data>
       </S.ContentWrapper>
       {!isDisabled && (isSelected || isMandatory) ? (
-        <CheckBox
-          checkedIcon="check"
-          uncheckedIcon="square-o"
-          checkedColor="#3446E4"
-          uncheckedColor="#3446E4"
-          checked={isMandatory}
-          disabled={isDisabled}
-        />
+        <TouchableOpacity
+          onPress={() => {
+            console.log('manddataodiru');
+          }}
+        >
+          <CheckBox
+            checkedIcon="check"
+            uncheckedIcon="square-o"
+            checkedColor="#3446E4"
+            uncheckedColor="#3446E4"
+            checked={isMandatory}
+            disabled={isDisabled}
+            onPress={onPressMandatory}
+          />
+        </TouchableOpacity>
       ) : null}
     </S.ContainerContact>
   );
