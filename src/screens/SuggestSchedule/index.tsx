@@ -90,7 +90,6 @@ const SuggestSchedule = ({ navigation }) => {
 
   const handleCardSelect = (day: string, index: number) => {
     setSelectedCardsByDay((prevSelected) => ({
-      ...prevSelected,
       [day]: prevSelected[day] === index ? null : index,
     }));
   };
@@ -100,13 +99,14 @@ const SuggestSchedule = ({ navigation }) => {
       <S.ContainerTitle>
         <S.Title>Sugerir Horário</S.Title>
       </S.ContainerTitle>
-      <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
-        <S.Scroll showsVerticalScrollIndicator={false}>
-          {Object.entries(schedulesByDate).map(([day]) => {
-            const selectedDayIndex = selectedCardsByDay[day];
-            return (
-              <S.ScheduleContainer key={day}>
-                <S.Subtitle>{day}</S.Subtitle>
+      <S.Scroll showsVerticalScrollIndicator={false}>
+        {Object.entries(schedulesByDate).map(([day]) => {
+          const selectedDayIndex = selectedCardsByDay[day];
+          return (
+            <S.ScheduleContainer key={day}>
+              <S.Subtitle>{day}</S.Subtitle>
+
+              <S.Scroll horizontal showsHorizontalScrollIndicator={false}>
                 <S.ContainerSuggest>
                   {schedulesByDate[day].map((schedule, index) => {
                     const isSelected = index === selectedDayIndex;
@@ -126,10 +126,10 @@ const SuggestSchedule = ({ navigation }) => {
                     );
                   })}
                 </S.ContainerSuggest>
-              </S.ScheduleContainer>
-            );
-          })}
-        </S.Scroll>
+              </S.Scroll>
+            </S.ScheduleContainer>
+          );
+        })}
       </S.Scroll>
       <S.Buttons>
         <TouchableOpacity

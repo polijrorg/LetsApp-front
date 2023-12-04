@@ -45,8 +45,7 @@ export const Buttons = styled.View`
 `;
 
 export const Scroll = styled(ScrollView)`
-  margin-top: 8px;
-  height: 80%;
+  /* margin-top: 8px; */
   width: 100%;
 `;
 
