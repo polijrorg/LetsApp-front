@@ -22,6 +22,11 @@ export const ModalView = styled(View)`
   z-index: 15;
 `;
 
+export const TopWrapper = styled(View)`
+  width: 100%;
+  flex-direction: row;
+`;
+
 export const ConfirmButton = styled(TouchableOpacity)`
   padding: 8px;
 `;
@@ -39,7 +44,5 @@ export const IconBack = styled.Image`
 `;
 
 export const BackButton = styled(TouchableOpacity)`
-  position: absolute;
-  top: 32px;
-  left: 20px;
+  margin-right: 12px;
 `;

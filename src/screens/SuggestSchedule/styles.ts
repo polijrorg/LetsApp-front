@@ -1,5 +1,5 @@
 import { theme } from '@styles/default.theme';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Body = styled.View`
@@ -45,9 +45,29 @@ export const Buttons = styled.View`
 `;
 
 export const Scroll = styled(ScrollView)`
-  margin-top: 8px;
-  height: 80%;
+  /* margin-top: 8px; */
   width: 100%;
+`;
+
+export const SpinnerWrapper = styled(View)`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
+`;
+
+export const EmptyText = styled(Text)`
+  font-family: Roboto;
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.8px;
+  color: ${theme.colors.highEmphasis};
+  align-self: center;
+  text-align: center;
+  padding: 0px 24px;
 `;
 
 export const ScheduleContainer = styled.View``;

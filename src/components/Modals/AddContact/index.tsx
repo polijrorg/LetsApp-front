@@ -55,17 +55,21 @@ const AddContact: React.FC<Props> = ({ setOpen, userPhone }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => setOpen(false)}>
+    <TouchableWithoutFeedback>
       <S.Body>
         <S.ModalView>
-          {/* <S.BackButton
-          onPress={() => {
-            setOpen(false);
-          }}
-        >
-          <S.IconBack source={require('../../../assets/ArrowBackBlue.png')} />
-        </S.BackButton> */}
-          <S.Title>Adicionar novo contato</S.Title>
+          <S.TopWrapper>
+            <S.BackButton
+              onPress={() => {
+                setOpen(false);
+              }}
+            >
+              <S.IconBack
+                source={require('../../../assets/ArrowBackBlue.png')}
+              />
+            </S.BackButton>
+            <S.Title>Adicionar novo contato</S.Title>
+          </S.TopWrapper>
           <FixedInput
             height="40px"
             width="100%"

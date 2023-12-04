@@ -135,6 +135,12 @@ const MainScreen = ({ navigation }) => {
         <S.ScrollView showsVerticalScrollIndicator={false}>
           {showEvent ? (
             <S.ContainerEvent>
+              {events.length === 0 && (
+                <S.EmptyText>
+                  ⚠️ Clique no ícone de + para criar seu primeiro evento ou
+                  aceite um convite!
+                </S.EmptyText>
+              )}
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
@@ -147,6 +153,12 @@ const MainScreen = ({ navigation }) => {
             </S.ContainerEvent>
           ) : (
             <S.ContainerInvite>
+              {invites.length === 0 && (
+                <S.EmptyText>
+                  ⚠️ Você ainda não foi convidado para nenhum evento!
+                </S.EmptyText>
+              )}
+
               {invites.map((invite, index) => (
                 <React.Fragment key={index}>
                   <CardsInvite

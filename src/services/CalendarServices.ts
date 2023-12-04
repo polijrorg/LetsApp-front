@@ -1,6 +1,6 @@
 import UserServices from './UserServices';
 import { api } from './api';
-import Event from '@interfaces/Events';
+import Event, { EventElement } from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import PseudoGuest from '@interfaces/PseudoGuest';
 import SuggestedTimes from '@interfaces/SuggestedTimes';
@@ -210,13 +210,18 @@ export default class CalendarServices {
   }
 
   static async updateEvent(data: IUpdateEventRequest) {
-    console.log('entrou');
     const response = await api.post('/updateAllEvents', {
       phone: data.phone,
       idInvite: data.idInvite,
       begin: data.begin,
       end: data.end,
     });
+
+    return response.data;
+  }
+
+  static async getEventsInWeek(phone: string): Promise<EventElement[]> {
+    const response = await api.get(`/invites/listEventsInWeek/${phone}`);
 
     return response.data;
   }
