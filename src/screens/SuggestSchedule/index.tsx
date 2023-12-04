@@ -111,7 +111,12 @@ const SuggestSchedule = ({ navigation }) => {
         <S.ContainerTitle>
           <S.Title>Sugerir Horário</S.Title>
         </S.ContainerTitle>
-
+        {Object.entries(schedulesByDate).length === 0 && !isLoading && (
+          <S.EmptyText>
+            ⚠️ Não existe nenhum horário disponível no intervalo de datas e
+            horas selecionados!
+          </S.EmptyText>
+        )}
         <S.Scroll showsVerticalScrollIndicator={false}>
           {Object.entries(schedulesByDate).map(([day]) => {
             const selectedDayIndex = selectedCardsByDay[day];
