@@ -25,7 +25,7 @@ const Check = require('../../assets/Check.png');
 const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [contacts, setContacts] = useState(null);
-  const [userContacts, setUserContacts] = useState(null);
+  const [userContacts, setUserContacts] = useState<IContact[]>([]);
   const [open, setOpen] = useState(false);
 
   const { user } = useAuth();
@@ -215,13 +215,13 @@ const SelectGuests = ({ navigation }) => {
         <Modal isOpen={open}>
           <AddContact setOpen={setOpen} userPhone={user.phone} />
         </Modal>
+        {userContacts?.length > 0 && (
+          <S.ContainerSubtitle>
+            <S.Subtitle>Contatos</S.Subtitle>
+            <S.Mandatory>Obrigatório?</S.Mandatory>
+          </S.ContainerSubtitle>
+        )}
         <S.Scroll>
-          {userContacts?.lenght > 0 && (
-            <S.ContainerSubtitle>
-              <S.Subtitle>Contatos LetsApp</S.Subtitle>
-              <S.Mandatory>Obrigatório?</S.Mandatory>
-            </S.ContainerSubtitle>
-          )}
           {userContacts
             ?.filter((participant) => participant.name?.includes(search))
             .map((participant, index) => (
