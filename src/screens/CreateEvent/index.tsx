@@ -110,7 +110,7 @@ const CreateEvent = ({ navigation }) => {
           endSearch,
         });
       }
-      // navigation.navigate('MainScreen');
+      navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }

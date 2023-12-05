@@ -26,6 +26,7 @@ const SelectGuests = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [contacts, setContacts] = useState(null);
   const [userContacts, setUserContacts] = useState<IContact[]>([]);
+  const [selections, setSelections] = useState([]);
   const [open, setOpen] = useState(false);
 
   const { user } = useAuth();
@@ -112,6 +113,16 @@ const SelectGuests = ({ navigation }) => {
     }
   };
 
+  const pushForward = (participant: any) => {
+    setSelections((prevParticipants) => [...prevParticipants, participant]);
+  };
+
+  const pop = (participant: any) => {
+    setSelections((prevParticipants) =>
+      prevParticipants.filter((p) => p.id !== participant.id)
+    );
+  };
+
   const toggleParticipantSelection = async (participant) => {
     // Verifica se o participante já foi selecionado
     const isSelected = contactSelected.some((p) => p.id === participant.id);
@@ -124,6 +135,7 @@ const SelectGuests = ({ navigation }) => {
       setContactSelected((prevParticipants) =>
         prevParticipants.filter((p) => p.id !== participant.id)
       );
+      pop(participant);
     } else if (isMandatory) {
       // Remove o participante do array de mandatorios e de selecionados
       setMandatoryContactSelected((prevParticipants) =>
@@ -132,12 +144,14 @@ const SelectGuests = ({ navigation }) => {
       setContactSelected((prevParticipants) =>
         prevParticipants.filter((p) => p.id !== participant.id)
       );
+      pop(participant);
     } else {
       const formattedPhone = formatPhone(participant);
       setContactSelected((prevParticipants) => [
         ...prevParticipants,
         formattedPhone,
       ]);
+      pushForward(participant);
     }
   };
 
@@ -216,10 +230,38 @@ const SelectGuests = ({ navigation }) => {
           <AddContact setOpen={setOpen} userPhone={user.phone} />
         </Modal>
         {userContacts?.length > 0 && (
-          <S.ContainerSubtitle>
-            <S.Subtitle>Contatos</S.Subtitle>
-            <S.Mandatory>Obrigatório?</S.Mandatory>
-          </S.ContainerSubtitle>
+          <>
+            <S.ContainerSubtitle>
+              <S.Subtitle>Contatos</S.Subtitle>
+              <S.Mandatory>Obrigatório?</S.Mandatory>
+            </S.ContainerSubtitle>
+            <S.ForwardedGuests>
+              {selections.length > 0 &&
+                selections.map((participant, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <Contact
+                        name={participant.name}
+                        phoneOrEmail={
+                          participant.phoneNumbers &&
+                          participant.phoneNumbers[0]
+                            ? participant.phoneNumbers[0].number
+                            : 'Nenhum contato disponível'
+                        }
+                        onPress={() => toggleParticipantSelection(participant)}
+                        onPressMandatory={() => toggleMandatory(participant)}
+                        isSelected={contactSelected.some(
+                          (p) => p.id === participant.id
+                        )}
+                        isMandatory={mandatoryContactSelected.some(
+                          (p) => p.id === participant.id
+                        )}
+                      />
+                    </React.Fragment>
+                  );
+                })}
+            </S.ForwardedGuests>
+          </>
         )}
         <S.Scroll>
           {userContacts

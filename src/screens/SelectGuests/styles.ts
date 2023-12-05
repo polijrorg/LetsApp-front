@@ -105,6 +105,10 @@ export const Scroll = styled.ScrollView`
   height: 80%;
 `;
 
+export const ForwardedGuests = styled.View`
+  width: 100%;
+`;
+
 export const ContainerSubtitle = styled.View`
   /* flex: 1; */
   height: 40px;
