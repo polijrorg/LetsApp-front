@@ -56,9 +56,6 @@ const CreateEvent = ({ navigation }) => {
       .tz('America/Sao_Paulo')
       .format();
 
-    console.log('beginSearch', beginSearch);
-    console.log('endSearch', endSearch);
-
     if (title === '') {
       setTitleError(true);
       return;
