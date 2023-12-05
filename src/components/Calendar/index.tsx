@@ -1,5 +1,7 @@
 import CalendarDay from './CalendarDay';
 import * as S from './styles';
+import useAuth from '@hooks/useAuth';
+import CalendarServices from '@services/CalendarServices';
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +16,32 @@ function formatNumber(number: number) {
 
 const Calendar: React.FC<Props> = ({}) => {
   const [days, setDays] = useState({});
+  const { user } = useAuth();
+  const [week, setWeek] = useState({
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+  });
+
+  useEffect(() => {
+    const getEventsInWeek = async () => {
+      const response = await CalendarServices.getEventsInWeek(user.phone);
+      let weekEvents = {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+      };
+      response.map((event) => {
+        weekEvents[moment(event.begin).day()] = true;
+      });
+      setWeek(weekEvents);
+    };
+    getEventsInWeek();
+  }, [user.phone]);
 
   useEffect(() => {
     const getDays = async () => {
@@ -42,11 +70,31 @@ const Calendar: React.FC<Props> = ({}) => {
   }, []);
   return (
     <S.Wrapper>
-      <CalendarDay selected weekday="Seg" day={formatNumber(days[1])} />
-      <CalendarDay weekday="Ter" day={formatNumber(days[2])} />
-      <CalendarDay weekday="Qua" day={formatNumber(days[3])} />
-      <CalendarDay weekday="Qui" day={formatNumber(days[4])} />
-      <CalendarDay weekday="Sex" day={formatNumber(days[5])} />
+      <CalendarDay
+        selected={week[1]}
+        weekday="Seg"
+        day={formatNumber(days[1])}
+      />
+      <CalendarDay
+        selected={week[2]}
+        weekday="Ter"
+        day={formatNumber(days[2])}
+      />
+      <CalendarDay
+        selected={week[3]}
+        weekday="Qua"
+        day={formatNumber(days[3])}
+      />
+      <CalendarDay
+        selected={week[4]}
+        weekday="Qui"
+        day={formatNumber(days[4])}
+      />
+      <CalendarDay
+        selected={week[5]}
+        weekday="Sex"
+        day={formatNumber(days[5])}
+      />
     </S.Wrapper>
   );
 };

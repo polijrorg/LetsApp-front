@@ -1,5 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@styles/default.theme';
+import { Text } from 'react-native';
 import styled from 'styled-components/native';
 
 type OptionProps = {
@@ -11,6 +12,17 @@ export const Body = styled.View`
   display: flex;
   flex: 1;
   margin-top: 32px;
+`;
+
+export const EmptyText = styled(Text)`
+  font-family: Roboto;
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.8px;
+  color: ${theme.colors.highEmphasis};
+  align-self: center;
+  text-align: center;
+  padding: 24px 24px;
 `;
 
 export const Header = styled.View`
