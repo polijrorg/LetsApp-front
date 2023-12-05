@@ -26,8 +26,8 @@ const CreateEvent = ({ navigation }) => {
     contactSelected,
     dateStart,
     dateEnd,
-    // timeStart,
-    // timeEnd,
+    timeStart,
+    timeEnd,
   } = useInvite();
 
   const [description, setDescrition] = useState('');
@@ -40,17 +40,21 @@ const CreateEvent = ({ navigation }) => {
   const { user } = useAuth();
 
   async function createEvent() {
-    // const beginSearch = moment(timeStart, 'HH:mm:ss').format();
+    const beginSearch = moment(dateStart)
+      .set({
+        hour: moment(timeStart).get('hour'),
+        minute: moment(timeStart).get('minute'),
+      })
+      .tz('America/Sao_Paulo')
+      .format();
 
-    // const date = moment(dateEnd.toString()).get('date');
-    // const month = moment(dateEnd.toString()).get('month');
-    // const year = moment(dateEnd.toString()).get('year');
-
-    // const endSearch = moment(timeEnd.toString(), 'HH:mm:ss')
-    //   .set({ date, month, year })
-    //   .format();
-
-    //RESOLVER DEPOIS
+    const endSearch = moment(dateEnd)
+      .set({
+        hour: moment(timeEnd).get('hour'),
+        minute: moment(timeEnd).get('minute'),
+      })
+      .tz('America/Sao_Paulo')
+      .format();
 
     if (title === '') {
       setTitleError(true);
@@ -83,14 +87,8 @@ const CreateEvent = ({ navigation }) => {
           optionalAttendees: contactSelected.map(
             (contact) => contact.email || contact.phone
           ),
-          beginSearch: moment(dateStart)
-            .tz('America/Sao_Paulo')
-            .startOf('day')
-            .format(),
-          endSearch: moment(dateEnd)
-            .tz('America/Sao_Paulo')
-            .startOf('day')
-            .format(),
+          beginSearch,
+          endSearch,
         });
       } else {
         await CalendarServices.createOutlookEvent({
@@ -108,17 +106,11 @@ const CreateEvent = ({ navigation }) => {
           optionalAttendees: contactSelected.map(
             (contact) => contact.email || contact.phone
           ),
-          beginSearch: moment(dateStart)
-            .tz('America/Sao_Paulo')
-            .startOf('day')
-            .format(),
-          endSearch: moment(dateEnd)
-            .tz('America/Sao_Paulo')
-            .startOf('day')
-            .format(),
+          beginSearch,
+          endSearch,
         });
       }
-      navigation.navigate('MainScreen');
+      // navigation.navigate('MainScreen');
     } catch (error) {
       console.log(error);
     }
