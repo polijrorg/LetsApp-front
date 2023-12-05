@@ -147,11 +147,9 @@ export default class UserServices {
 
   static async resendCode(phone: string): Promise<void> {
     try {
-      const response = await api.post('/resendCode', {
+      await api.post('/resendCode', {
         phone,
       });
-
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -162,15 +160,12 @@ export default class UserServices {
     email,
     inviteId,
   }: IUpdateStateRequest): Promise<void> {
-    console.log('entrou');
     try {
-      const response = await api.post('/invites/updateInviteState', {
+      await api.post('/invites/updateInviteState', {
         state,
         email,
         inviteId,
       });
-
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }

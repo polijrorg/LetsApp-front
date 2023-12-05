@@ -129,7 +129,6 @@ const CreateEvent = ({ navigation }) => {
             <S.IconBack source={IconArrow} />
           </TouchableOpacity>
           <S.GradientBottom colors={['transparent', 'black']} />
-          {/* <KeyboardAvoidingView behavior="position"> */}
           <S.Header>
             <S.InputsWrapper>
               <EventTitle title={title} setTitle={setTitle} />
@@ -160,6 +159,7 @@ const CreateEvent = ({ navigation }) => {
                 <S.ErrorText>Por favor, selecione um endereço</S.ErrorText>
               )}
             </S.InputsWrapper>
+
             <S.Buttons>
               <TouchableOpacity
                 onPress={() => {
@@ -193,7 +193,6 @@ const CreateEvent = ({ navigation }) => {
               </TouchableOpacity>
             </S.Buttons>
           </S.Header>
-          {/* </KeyboardAvoidingView> */}
         </S.Back>
       </S.Body>
     </TouchableWithoutFeedback>
