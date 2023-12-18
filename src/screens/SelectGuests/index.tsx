@@ -43,7 +43,7 @@ const SelectGuests = ({ navigation }) => {
   useEffect(() => {
     const getUserContacts = async () => {
       try {
-        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        const response = await api.get(`GetUserByPhone/${user?.phone}`);
         setUserContacts(response.data.user.contatos);
         setIsLoading(false);
       } catch (error) {
@@ -59,6 +59,8 @@ const SelectGuests = ({ navigation }) => {
   };
 
   useEffect(() => {
+    setContactSelected([]);
+    setMandatoryContactSelected([]);
     const getContacts = async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
@@ -66,10 +68,14 @@ const SelectGuests = ({ navigation }) => {
           fields: [Contacts.Fields.PhoneNumbers],
           sort: Contacts.SortTypes.FirstName,
         });
+        data.sort((a, b) => {
+          return a.firstName?.localeCompare(b.firstName);
+        });
         setContacts(data);
       }
     };
     getContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleMandatory = async (participant) => {
@@ -151,7 +157,7 @@ const SelectGuests = ({ navigation }) => {
         ...prevParticipants,
         formattedPhone,
       ]);
-      pushForward(participant);
+      pushForward(formattedPhone);
     }
   };
 
@@ -168,9 +174,9 @@ const SelectGuests = ({ navigation }) => {
     let formattedPhone: string;
     if (unsignedPhone) {
       if (unsignedPhone.length === 9) {
-        formattedPhone = `+55${user.phone.slice(3, 5)}${unsignedPhone}`;
+        formattedPhone = `+55${user?.phone.slice(3, 5)}${unsignedPhone}`;
       } else if (unsignedPhone.length === 8) {
-        formattedPhone = `+55${user.phone.slice(3, 5)}9${unsignedPhone}`;
+        formattedPhone = `+55${user?.phone.slice(3, 5)}9${unsignedPhone}`;
       } else if (unsignedPhone.length >= 11) {
         formattedPhone = `+55${unsignedPhone.slice(unsignedPhone.length - 11)}`;
       }
@@ -186,6 +192,8 @@ const SelectGuests = ({ navigation }) => {
 
     return usersPhoneParticipant;
   };
+
+  // console.log(selections);
 
   return (
     <>
@@ -227,42 +235,56 @@ const SelectGuests = ({ navigation }) => {
           </S.ContainerEmail>
         </Pressable>
         <Modal isOpen={open}>
-          <AddContact setOpen={setOpen} userPhone={user.phone} />
+          <AddContact setOpen={setOpen} userPhone={user?.phone} />
         </Modal>
-        {userContacts?.length > 0 && (
+        {selections?.length > 0 && (
           <>
             <S.ContainerSubtitle>
-              <S.Subtitle>Contatos</S.Subtitle>
+              <S.Subtitle>Selecionados</S.Subtitle>
               <S.Mandatory>Obrigatório?</S.Mandatory>
             </S.ContainerSubtitle>
-            <S.ForwardedGuests>
-              {selections.length > 0 &&
-                selections.map((participant, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <Contact
-                        name={participant.name}
-                        phoneOrEmail={
-                          participant.phoneNumbers &&
-                          participant.phoneNumbers[0]
-                            ? participant.phoneNumbers[0].number
-                            : 'Nenhum contato disponível'
-                        }
-                        onPress={() => toggleParticipantSelection(participant)}
-                        onPressMandatory={() => toggleMandatory(participant)}
-                        isSelected={contactSelected.some(
-                          (p) => p.id === participant.id
-                        )}
-                        isMandatory={mandatoryContactSelected.some(
-                          (p) => p.id === participant.id
-                        )}
-                      />
-                    </React.Fragment>
-                  );
-                })}
-            </S.ForwardedGuests>
+            <S.SelectedContainer lenght={selections?.length}>
+              <S.Scroll>
+                <S.ForwardedGuests>
+                  {selections.length > 0 &&
+                    selections.map((participant, index) => {
+                      return (
+                        <React.Fragment key={index}>
+                          <Contact
+                            name={participant.name}
+                            phoneOrEmail={
+                              participant.phone && participant.phone
+                                ? participant.phone
+                                : participant.email
+                                ? participant.email
+                                : 'Nenhum contato disponível'
+                            }
+                            onPress={() =>
+                              toggleParticipantSelection(participant)
+                            }
+                            onPressMandatory={() =>
+                              toggleMandatory(participant)
+                            }
+                            isSelected={contactSelected.some(
+                              (p) => p.id === participant.id
+                            )}
+                            isMandatory={mandatoryContactSelected.some(
+                              (p) => p.id === participant.id
+                            )}
+                          />
+                        </React.Fragment>
+                      );
+                    })}
+                </S.ForwardedGuests>
+              </S.Scroll>
+            </S.SelectedContainer>
           </>
         )}
+        <S.ContainerSubtitle>
+          <S.Subtitle>Contatos</S.Subtitle>
+          <S.Mandatory>Obrigatório?</S.Mandatory>
+        </S.ContainerSubtitle>
+
         <S.Scroll>
           {userContacts
             ?.filter((participant) => participant.name?.includes(search))

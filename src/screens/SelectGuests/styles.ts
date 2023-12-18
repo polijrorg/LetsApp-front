@@ -2,6 +2,10 @@ import { theme } from '@styles/default.theme';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 
+interface Props {
+  lenght: number;
+}
+
 export const Body = styled.View`
   flex: 1;
   padding: 16px;
@@ -103,6 +107,11 @@ export const AddContact = styled(Text)`
 export const Scroll = styled.ScrollView`
   margin-top: 8px;
   height: 80%;
+`;
+
+export const SelectedContainer = styled(View)<Props>`
+  height: ${({ lenght }) =>
+    lenght === 1 ? '80px' : lenght === 2 ? '140px' : '200px'};
 `;
 
 export const ForwardedGuests = styled.View`

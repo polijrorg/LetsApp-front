@@ -43,7 +43,7 @@ const SuggestSchedule = ({ navigation }) => {
   async function getSchedules() {
     try {
       const response = await CalendarServices.getRecommendedTime({
-        phone: user.phone,
+        phone: user?.phone,
         beginDate: moment(dateStart)
           .tz('America/Sao_Paulo')
           .startOf('day')

@@ -13,7 +13,7 @@ export const ModalCalendar: React.FC = () => {
 
   async function handleGetGoogleUrl() {
     try {
-      const googleUrl = await CalendarServices.getGoogleUrl(user.phone);
+      const googleUrl = await CalendarServices.getGoogleUrl(user?.phone);
       await AuthSession.startAsync({ authUrl: googleUrl });
       await updateUser();
     } catch (error) {
@@ -23,7 +23,7 @@ export const ModalCalendar: React.FC = () => {
 
   async function handleGetOutlookUrl() {
     try {
-      const googleUrl = await CalendarServices.getOutlookUrl(user.phone);
+      const googleUrl = await CalendarServices.getOutlookUrl(user?.phone);
       await AuthSession.startAsync({ authUrl: googleUrl });
       await updateUser();
     } catch (error) {

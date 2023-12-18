@@ -42,21 +42,15 @@ const Contact: React.FC<ContactProps> = ({
         </S.Data>
       </S.ContentWrapper>
       {!isDisabled && (isSelected || isMandatory) ? (
-        <TouchableOpacity
-          onPress={() => {
-            console.log('manddataodiru');
-          }}
-        >
-          <CheckBox
-            checkedIcon="check"
-            uncheckedIcon="square-o"
-            checkedColor="#3446E4"
-            uncheckedColor="#3446E4"
-            checked={isMandatory}
-            disabled={isDisabled}
-            onPress={onPressMandatory}
-          />
-        </TouchableOpacity>
+        <CheckBox
+          checkedIcon="check"
+          uncheckedIcon="square-o"
+          checkedColor="#3446E4"
+          uncheckedColor="#3446E4"
+          checked={isMandatory}
+          disabled={isDisabled}
+          onPress={onPressMandatory}
+        />
       ) : null}
     </S.ContainerContact>
   );

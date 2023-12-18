@@ -29,7 +29,7 @@ const SuggestNewTime = ({ navigation, route }) => {
     console.log(invite.element);
     try {
       const response = await CalendarServices.getSuggestedNewTimes({
-        phone: user.phone,
+        phone: user?.phone,
         inviteId: invite.element.id,
       });
 
@@ -76,7 +76,7 @@ const SuggestNewTime = ({ navigation, route }) => {
   const handleUpdateEvent = async () => {
     try {
       const response = await CalendarServices.updateEvent({
-        phone: user.phone,
+        phone: user?.phone,
         idInvite: invite.id,
         begin: selectedSchedule.start,
         end: selectedSchedule.end,
