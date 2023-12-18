@@ -22,6 +22,16 @@ export const Body = styled.View`
   flex: 1;
 `;
 
+export const SpinnerWrapper = styled(View)`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
+`;
+
 export const GradientBottom = styled(LinearGradient)`
   position: absolute;
   bottom: 65%;

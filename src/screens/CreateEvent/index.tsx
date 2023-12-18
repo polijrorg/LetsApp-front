@@ -10,6 +10,7 @@ import { createURL } from 'expo-linking';
 import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -37,9 +38,12 @@ const CreateEvent = ({ navigation }) => {
   const [addressError, setAddressError] = useState(false);
   const [titleError, setTitleError] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { user } = useAuth();
 
   async function createEvent() {
+    setIsLoading(true);
     const beginSearch = moment(dateStart)
       .set({
         hour: moment(timeStart).get('hour'),
@@ -58,6 +62,7 @@ const CreateEvent = ({ navigation }) => {
 
     if (title === '') {
       setTitleError(true);
+      setIsLoading(false);
       return;
     }
 
@@ -65,6 +70,7 @@ const CreateEvent = ({ navigation }) => {
 
     if (!online && address === '') {
       setAddressError(true);
+      setIsLoading(false);
       return;
     }
     setAddressError(false);
@@ -75,7 +81,7 @@ const CreateEvent = ({ navigation }) => {
         await CalendarServices.createGoogleEvent({
           prefix,
           name: title,
-          phone: user.phone,
+          phone: user?.phone,
           begin: selectedSchedule.start,
           attendees: mandatoryContactSelected.map(
             (contact) => contact.email || contact.phone
@@ -94,7 +100,7 @@ const CreateEvent = ({ navigation }) => {
         await CalendarServices.createOutlookEvent({
           prefix,
           name: title,
-          phone: user.phone,
+          phone: user?.phone,
           begin: selectedSchedule.start,
           attendees: mandatoryContactSelected.map(
             (contact) => contact.email || contact.phone
@@ -110,93 +116,102 @@ const CreateEvent = ({ navigation }) => {
           endSearch,
         });
       }
+      setIsLoading(false);
       navigation.navigate('MainScreen');
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <S.Body>
-        <S.Back source={Office}>
-          <S.GradientTop colors={['black', 'transparent']} />
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('SuggestSchedule');
-            }}
-          >
-            <S.IconBack source={IconArrow} />
-          </TouchableOpacity>
-          <S.GradientBottom colors={['transparent', 'black']} />
-          {/* <KeyboardAvoidingView behavior="position"> */}
-          <S.Header>
-            <S.InputsWrapper>
-              <EventTitle title={title} setTitle={setTitle} />
-              {titleError && (
-                <S.ErrorTitle>Escolha um nome para o evento</S.ErrorTitle>
-              )}
-              <ToggleOnlineButton online={online} setOnline={setOnline} />
-              <S.ContainerContent>
-                <S.Content
-                  placeholder="Descrição"
-                  multiline={true}
-                  value={description}
-                  onChangeText={(text) => setDescrition(text)}
-                  placeholderTextColor={theme.colors.lowEmphasis}
-                />
-              </S.ContainerContent>
-              {!online && (
-                <S.ContainerLink>
+    <>
+      {isLoading && (
+        <S.SpinnerWrapper>
+          <ActivityIndicator size="large" color={theme.colors.primary.main} />
+        </S.SpinnerWrapper>
+      )}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <S.Body>
+          <S.Back source={Office}>
+            <S.GradientTop colors={['black', 'transparent']} />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SuggestSchedule');
+              }}
+            >
+              <S.IconBack source={IconArrow} />
+            </TouchableOpacity>
+            <S.GradientBottom colors={['transparent', 'black']} />
+            {/* <KeyboardAvoidingView behavior="position"> */}
+            <S.Header>
+              <S.InputsWrapper>
+                <EventTitle title={title} setTitle={setTitle} />
+                {titleError && (
+                  <S.ErrorTitle>Escolha um nome para o evento</S.ErrorTitle>
+                )}
+                <ToggleOnlineButton online={online} setOnline={setOnline} />
+                <S.ContainerContent>
                   <S.Content
-                    placeholder="Digite o endereço da reunião"
-                    value={address}
-                    onChangeText={(text) => setAddress(text)}
+                    placeholder="Descrição"
+                    multiline={true}
+                    value={description}
+                    onChangeText={(text) => setDescrition(text)}
                     placeholderTextColor={theme.colors.lowEmphasis}
                   />
-                </S.ContainerLink>
-              )}
-              {addressError && (
-                <S.ErrorText>Por favor, selecione um endereço</S.ErrorText>
-              )}
-            </S.InputsWrapper>
-            <S.Buttons>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SuggestSchedule');
-                }}
-              >
-                <Button
-                  width="136px"
-                  backgroundColor="#FAFAFA"
-                  borderColor="#949494"
-                  hasIcon={false}
-                  icon={Office}
-                  title="Voltar"
-                  titleColor="#949494"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  createEvent();
-                }}
-              >
-                <Button
-                  width="136px"
-                  backgroundColor="#3446E4"
-                  borderColor="transparent"
-                  hasIcon={false}
-                  icon={Office}
-                  title="Criar"
-                  titleColor="#FAFAFA"
-                />
-              </TouchableOpacity>
-            </S.Buttons>
-          </S.Header>
-          {/* </KeyboardAvoidingView> */}
-        </S.Back>
-      </S.Body>
-    </TouchableWithoutFeedback>
+                </S.ContainerContent>
+                {!online && (
+                  <S.ContainerLink>
+                    <S.Content
+                      placeholder="Digite o endereço da reunião"
+                      value={address}
+                      onChangeText={(text) => setAddress(text)}
+                      placeholderTextColor={theme.colors.lowEmphasis}
+                    />
+                  </S.ContainerLink>
+                )}
+                {addressError && (
+                  <S.ErrorText>Por favor, selecione um endereço</S.ErrorText>
+                )}
+              </S.InputsWrapper>
+              <S.Buttons>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('SuggestSchedule');
+                  }}
+                >
+                  <Button
+                    width="136px"
+                    backgroundColor="#FAFAFA"
+                    borderColor="#949494"
+                    hasIcon={false}
+                    icon={Office}
+                    title="Voltar"
+                    titleColor="#949494"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    createEvent();
+                  }}
+                >
+                  <Button
+                    width="136px"
+                    backgroundColor="#3446E4"
+                    borderColor="transparent"
+                    hasIcon={false}
+                    icon={Office}
+                    title="Criar"
+                    titleColor="#FAFAFA"
+                  />
+                </TouchableOpacity>
+              </S.Buttons>
+            </S.Header>
+            {/* </KeyboardAvoidingView> */}
+          </S.Back>
+        </S.Body>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 

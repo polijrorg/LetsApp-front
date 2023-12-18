@@ -43,7 +43,7 @@ const VerificationCode = ({ navigation }) => {
   );
 
   const handleCountdown = async () => {
-    await UserServices.resendCode(initialUser.phone);
+    await UserServices.resendCode(initialUser?.phone);
     setCountdown(true);
     startCountDown(60);
     setElapsedTime(0);
@@ -82,7 +82,7 @@ const VerificationCode = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    initialUser.name ? UserServices.resendCode(initialUser.phone) : null;
+    initialUser.name ? UserServices.resendCode(initialUser?.phone) : null;
     console.log(initialUser.name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -107,7 +107,7 @@ const VerificationCode = ({ navigation }) => {
                 if (value.length === 6) {
                   try {
                     await api.post('/verify', {
-                      phone: initialUser.phone,
+                      phone: initialUser?.phone,
                       code: parseInt(value, 10),
                     });
                     navigation.navigate('InitialData');

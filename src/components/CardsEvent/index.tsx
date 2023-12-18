@@ -12,8 +12,6 @@ const CardsEvent: React.FC<CardsEventProps> = ({ event, navigation }) => {
   const online = require('../../assets/OnlineEvent.png');
   const presencial = require('../../assets/PresencialEvent.png');
 
-  console.log(event.element.link);
-
   return (
     <S.ContainerCard
       onPress={() => {

@@ -28,7 +28,7 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await api.get(`GetUserByPhone/${user.phone}`);
+        const response = await api.get(`GetUserByPhone/${user?.phone}`);
         setCompleteUser(response.data);
         setOpen(!response.data.calendar_found);
       } catch (error) {
@@ -104,7 +104,7 @@ const MainScreen = ({ navigation }) => {
               name: user?.name,
               imageUser: user?.photo,
               email: completeUser?.user?.email,
-              phone: user.phone,
+              phone: user?.phone,
             });
           }}
         >

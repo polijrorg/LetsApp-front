@@ -27,7 +27,7 @@ const Calendar: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     const getEventsInWeek = async () => {
-      const response = await CalendarServices.getEventsInWeek(user.phone);
+      const response = await CalendarServices.getEventsInWeek(user?.phone);
       let weekEvents = {
         1: false,
         2: false,
@@ -41,7 +41,7 @@ const Calendar: React.FC<Props> = ({}) => {
       setWeek(weekEvents);
     };
     getEventsInWeek();
-  }, [user.phone]);
+  }, [user?.phone]);
 
   useEffect(() => {
     const getDays = async () => {

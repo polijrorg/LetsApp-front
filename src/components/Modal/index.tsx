@@ -77,7 +77,7 @@ export const ModalCard: React.FC<ModalProps> = ({
   async function DeleteAccount() {
     try {
       await deleteUser({
-        phone: user.phone,
+        phone: user?.phone,
       } as IDeleteUserRequest);
     } catch (error) {
       console.log(error);

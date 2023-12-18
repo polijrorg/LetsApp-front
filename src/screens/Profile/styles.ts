@@ -1,5 +1,5 @@
 import { theme } from '@styles/default.theme';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 
 interface Props {
@@ -152,6 +152,16 @@ export const Delete = styled.Text`
 export const IconDelete = styled.Image`
   width: 24px;
   height: 24px;
+`;
+
+export const SpinnerWrapper = styled(View)`
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.8);
 `;
 
 export const SmallCircleRight = styled.View`

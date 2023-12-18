@@ -54,7 +54,6 @@ export const AuthProvider: React.FC<{
   };
 
   const deleteUser = async (data: IDeleteUserRequest) => {
-    console.log(data);
     await UserService.deleteUser(data);
     await AsyncStorage.clear();
 
@@ -65,7 +64,7 @@ export const AuthProvider: React.FC<{
 
   const updateUser = async () => {
     try {
-      const response = await api.get(`GetUserByPhone/${user.phone}`);
+      const response = await api.get(`GetUserByPhone/${user?.phone}`);
       setUser(response.data.user);
       await AsyncStorage.setItem(
         'letsApp:user',
