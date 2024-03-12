@@ -1,4 +1,4 @@
-package com.expobaretypescript;
+package com.letsapp.letsapp;
 
 import android.os.Build;
 import android.os.Bundle;
