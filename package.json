@@ -35,7 +35,7 @@
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.4",
     "@react-navigation/native-stack": "^6.9.10",
-    "@types/react": "~18.0.24",
+    "@types/react": "~18.0.27",
     "@types/react-native": "~0.70.6",
     "@types/styled-components": "^5.1.26",
     "@types/styled-components-react-native": "^5.1.3",
