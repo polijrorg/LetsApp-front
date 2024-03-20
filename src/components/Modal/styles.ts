@@ -3,7 +3,7 @@ import { Modal } from 'react-native';
 import styled from 'styled-components/native';
 
 type TypeProps = {
-  type: 'Number' | 'Account';
+  type?: 'Schedule' | 'Number' | 'Account' | 'Contact';
 };
 
 export const ModalContainer = styled(Modal)``;

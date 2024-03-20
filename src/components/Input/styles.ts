@@ -2,9 +2,9 @@ import { theme } from '@styles/default.theme';
 import styled from 'styled-components/native';
 
 type InputProps = {
-  width: string;
-  height: string;
-  arrow: boolean;
+  width?: string;
+  height?: string;
+  arrow?: boolean;
 };
 
 export const ContainerInput = styled.View<InputProps>`

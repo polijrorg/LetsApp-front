@@ -1,12 +1,12 @@
 import styled from 'styled-components/native';
 
 type ButtonProps = {
-  width: string;
-  backgroundColor: string;
-  borderColor: string;
-  titleColor: string;
-  hasIcon: boolean;
-  countdown: boolean;
+  width?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  titleColor?: string;
+  hasIcon?: boolean;
+  countdown?: boolean;
 };
 
 export const ContainerButton = styled.View<ButtonProps>`

@@ -10,7 +10,7 @@ export type InputProps = {
   pencil?: boolean;
   value?: string;
   onChange?: (text: string) => void;
-  keyboardType?: string;
+  keyboardType?: 'numeric' | null;
   editable?: boolean;
   ref?: React.MutableRefObject<any>;
 };
@@ -42,7 +42,6 @@ const Input = React.forwardRef(
           placeholderTextColor={theme.colors.mediumEmphasis}
           keyboardType={keyboardType}
           editable={editable}
-          ref={ref}
         />
         <S.ContainerArrow arrow={arrow}>
           <S.Arrow source={ImageArrow} />

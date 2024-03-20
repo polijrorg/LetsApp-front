@@ -5,7 +5,7 @@ import { GestureResponderEvent } from 'react-native';
 export type ButtonProps = {
   width: string;
   hasIcon?: boolean;
-  icon?: string;
+  icon?: any;
   title: string;
   onPress?: (event: GestureResponderEvent) => void;
 };
