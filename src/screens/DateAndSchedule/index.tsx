@@ -178,7 +178,7 @@ const DateAndSchedule = ({ navigation }) => {
                       <S.inputDate
                         placeholder="Selecione uma data de início"
                         value={moment(date).format('DD/MM/YYYY')}
-                        onChangeText={setDate}
+                        onChangeText={(text) => setDate(new Date(text))}
                         editable={false}
                         onPressIn={toggleStartPicker}
                       />
@@ -205,7 +205,7 @@ const DateAndSchedule = ({ navigation }) => {
                       <S.inputDate
                         placeholder="Selecione uma data de término"
                         value={moment(date1).format('DD/MM/YYYY')}
-                        onChangeText={setDate1}
+                        onChangeText={(text) => setDate1(new Date(text))}
                         editable={false}
                         onPressIn={toggleEndPicker}
                       />
@@ -234,7 +234,7 @@ const DateAndSchedule = ({ navigation }) => {
                       <S.inputDate
                         placeholder="Selecione um horário de início"
                         value={format(time, 'HH:mm')}
-                        onChangeText={setTime}
+                        onChangeText={(text) => setTime(new Date(text))}
                         editable={false}
                         onPressIn={toggleTimeStartPicker}
                       />
@@ -260,7 +260,7 @@ const DateAndSchedule = ({ navigation }) => {
                       <S.inputDate
                         placeholder="Selecione o fim do intervalo"
                         value={format(time1, 'HH:mm')}
-                        onChangeText={setTime1}
+                        onChangeText={(text) => setTime1(new Date(text))}
                         editable={false}
                         onPressIn={toggleTimeEndPicker}
                       />

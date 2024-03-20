@@ -4,8 +4,8 @@ import { Text, KeyboardAvoidingView, TextInput, View } from 'react-native';
 import styled from 'styled-components/native';
 
 type InviteProps = {
-  source: string;
-  selectedOption: 'presencial' | 'online';
+  source: any;
+  selectedOption?: 'presencial' | 'online';
 };
 
 export const Wrapper = styled(KeyboardAvoidingView)`
