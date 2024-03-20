@@ -20,7 +20,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
     },
-    "android": {},
+    "android": {
+      "package": "com.letsapp.letsapp"
+    },
     "ios": {}
   }
 }
