@@ -133,7 +133,7 @@ const CreateEvent = ({ navigation }) => {
       )}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <S.Body>
-          <S.Back source={Office}>
+          <S.Back source={Office} >
             <S.GradientTop colors={['black', 'transparent']} />
             <TouchableOpacity
               onPress={() => {

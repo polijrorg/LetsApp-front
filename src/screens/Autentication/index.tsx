@@ -121,7 +121,7 @@ const Autentication = ({ navigation }) => {
                           onChange(inputValue);
                           setDDD(inputValue);
                         }
-                        if (e.length === 2) {
+                        if (inputValue.length === 2) {
                           handleAutoTab();
                         }
                       }}

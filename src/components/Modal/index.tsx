@@ -156,7 +156,7 @@ export const ModalCard: React.FC<ModalProps> = ({
             </S.ContainerInputsContact>
           ) : null}
           <S.ContainerDescrition>
-            <S.Descrtion type={type}>{description}</S.Descrtion>
+            <S.Descrtion>{description}</S.Descrtion>
             {type === 'Schedule' ? (
               <CheckBox
                 checkedIcon="check"

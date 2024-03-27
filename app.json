@@ -4,6 +4,11 @@
     "scheme": "lets-app",
     "currentFullName": "@owner/slug",
     "originalFullName": "@account/project_name",
+    "icon": "./public/assets/Icon.png",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./public/assets/Splash.png"
+    },
     "slug": "lets-app",
     "owner": "letsapp",
     "version": "1.0.0",
@@ -20,7 +25,12 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
     },
-    "android": {},
-    "ios": {}
+    "android": {
+      "package": "com.letsapp.letsapp"
+    },
+    "ios": {
+      "buildNumber": "2",
+      "bundleIdentifier": "com.letsappmeetings.letsapp"
+    } 
   }
 }

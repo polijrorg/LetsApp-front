@@ -3,6 +3,7 @@ import PublicRoutes from './PublicRoutes';
 import useAuth from '@hooks/useAuth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createURL } from 'expo-linking';
+import { StatusBar } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 const prefix = createURL('/lest-app');
@@ -43,6 +44,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer independent={true} linking={linking}>
+      <StatusBar barStyle='dark-content'/>
       {routes[route]}
     </NavigationContainer>
   );

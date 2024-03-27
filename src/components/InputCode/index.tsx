@@ -7,7 +7,7 @@ export type InputProps = {
   placeholder: string;
   value?: string;
   onChange?: (text: string) => void;
-  keyboardType?: string;
+  keyboardType?: 'numeric' | null;
 };
 
 const InputCode: React.FC<InputProps> = ({
