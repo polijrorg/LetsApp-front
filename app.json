@@ -29,6 +29,7 @@
       "package": "com.letsapp.letsapp"
     },
     "ios": {
+      "buildNumber": "2",
       "bundleIdentifier": "com.letsappmeetings.letsapp"
     } 
   }
