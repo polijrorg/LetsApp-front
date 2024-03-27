@@ -31,11 +31,12 @@ const Input = React.forwardRef(
       keyboardType,
       editable = true,
     }: InputProps,
-    ref
+    ref: React.ForwardedRef<any>
   ) => {
     return (
-      <S.ContainerInput width={width} height={height}>
+      <S.ContainerInput width={width} height={height}> 
         <S.Input
+          ref={ref}
           value={value}
           onChangeText={onChange}
           placeholder={placeholder}

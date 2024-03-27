@@ -29,9 +29,8 @@ export const Icon = styled(Image)<Props>`
   width: 112px;
   height: 112px;
   border-radius: 78px;
-  border: 6px solid
-    ${({ image }) =>
-      image ? theme.colors.primary.main : theme.colors.lightGrey};
+  border-width: 6px;
+  border-color:  ${({ image }) => image ? theme.colors.primary.main : theme.colors.lightGrey};
 `;
 
 export const IconBack = styled.Image`
