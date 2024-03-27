@@ -4,6 +4,11 @@
     "scheme": "lets-app",
     "currentFullName": "@owner/slug",
     "originalFullName": "@account/project_name",
+    "icon": "./public/assets/Icon.png",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./public/assets/Splash.png"
+    },
     "slug": "lets-app",
     "owner": "letsapp",
     "version": "1.0.0",
@@ -23,6 +28,8 @@
     "android": {
       "package": "com.letsapp.letsapp"
     },
-    "ios": {}
+    "ios": {
+      "bundleIdentifier": "com.letsappmeetings.letsapp"
+    } 
   }
 }
