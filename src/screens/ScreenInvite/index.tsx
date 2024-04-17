@@ -18,7 +18,7 @@ export type CardsInviteProps = {
 };
 
 const IconArrow = require('../../assets/ArrowBackWhite.png');
-const Office = require('../../assets/Office.png');
+const Office = require('../../assets/Office.jpg');
 const online = require('../../assets/OnlineEvent.png');
 const presencial = require('../../assets/PresencialEvent.png');
 const calendar = require('../../assets/CalendarIcon.png');

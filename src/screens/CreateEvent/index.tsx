@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBackWhite.png');
-const Office = require('../../assets/Office.png');
+const Office = require('../../assets/Office.jpg');
 // const Edition = require('../../assets/Edition.png');
 
 const CreateEvent = ({ navigation }) => {
