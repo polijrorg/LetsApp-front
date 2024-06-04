@@ -106,14 +106,6 @@ const VerificationCode = ({ navigation }) => {
                 setVerificationCode(value);
                 if (value.length === 6) {
                   try {
-                    /////////////////////////////////////////////////////////////
-                    // remove the section below when GCP verification is ready //
-                    if (value === '000000') {
-                      navigation.navigate('InitialData');
-                      return;
-                    }
-                    // remove the section above when GCP verification is ready //
-                    /////////////////////////////////////////////////////////////
                     await api.post('/verify', {
                       phone: initialUser?.phone,
                       code: parseInt(value, 10),
