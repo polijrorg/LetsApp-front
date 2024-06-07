@@ -11,10 +11,8 @@
     },
     "slug": "lets-app",
     "owner": "letsapp",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "version": "1.0.1",
+    "assetBundlePatterns": ["**/*"],
     "extra": {
       "eas": {
         "projectId": "59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
@@ -29,8 +27,8 @@
       "package": "com.letsapp.letsapp"
     },
     "ios": {
-      "buildNumber": "3",
-      "bundleIdentifier": "com.letsappmeetings.letsapp"
-    } 
+      "buildNumber": "4",
+      "bundleIdentifier": "com.rgfmeetings.letsapp"
+    }
   }
 }
