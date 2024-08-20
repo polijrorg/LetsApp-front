@@ -20,6 +20,7 @@ import Toast from 'react-native-root-toast';
 const styles = StyleSheet.create({
   datePicker: {
     height: 150,
+    width: 250,
   },
 });
 
@@ -169,6 +170,7 @@ const DateAndSchedule = ({ navigation }) => {
                     display="spinner"
                     value={date}
                     onChange={onChangeStart}
+                    style={styles.datePicker}
                     themeVariant="light"
                   />
                 )}
@@ -224,6 +226,7 @@ const DateAndSchedule = ({ navigation }) => {
                     mode="time"
                     display="spinner"
                     value={time}
+                    style={styles.datePicker}
                     onChange={onChangeTimeStart}
                     themeVariant="light"
                   />
@@ -249,6 +252,7 @@ const DateAndSchedule = ({ navigation }) => {
                   <DateTimePicker
                     mode="time"
                     display="spinner"
+                    style={styles.datePicker}
                     value={time1}
                     onChange={onChangeTimeEnd}
                     themeVariant="light"

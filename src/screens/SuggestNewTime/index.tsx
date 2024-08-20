@@ -18,6 +18,7 @@ const SuggestNewTime = ({ navigation, route }) => {
   const { selectedSchedule, setSelectedSchedule } = useInvite();
   const invite = route.params.invite;
   const { user } = useAuth();
+  console.log('selectedDayIndex:', selectedSchedule);
 
   const [schedulesByDate, setSchedulesByDate] = useState({});
 

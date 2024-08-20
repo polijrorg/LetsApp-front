@@ -10,14 +10,14 @@
       "image": "./public/assets/Splash.png"
     },
     "slug": "lets-app",
-    "owner": "letsapp",
-    "version": "1.0.0",
+    "owner": "letsappd",
+    "version": "1.0.1",
     "assetBundlePatterns": [
       "**/*"
     ],
     "extra": {
       "eas": {
-        "projectId": "59c8c7b9-edfe-43aa-a3a0-39bc47e7fdc6"
+        "projectId": "43e1acb4-a0ff-4a74-b046-deba86cd4a00"
       }
     },
     "runtimeVersion": "1.0.0",
@@ -31,6 +31,6 @@
     "ios": {
       "buildNumber": "2",
       "bundleIdentifier": "com.letsappmeetings.letsapp"
-    } 
+    }
   }
 }
