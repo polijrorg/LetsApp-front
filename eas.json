@@ -10,5 +10,14 @@
     "production": {
       "channel": "production"
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "financeiro@polijunior.com.br",
+        "ascAppId": "6480121688",
+        "appleTeamId": "82L63Y7JQJ"
+      }
+    }
   }
 }
