@@ -36,6 +36,7 @@ const SuggestSchedule = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log('timeStart AAAAAAAAAAA:', timeStart);
     console.log('mandatory guests: ', mandatoryContactSelected.map(
       (contact) => contact.email || contact.phone
     ));

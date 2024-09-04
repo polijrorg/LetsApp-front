@@ -11,6 +11,7 @@ import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { parse } from 'path';
+import { Invite } from '@screens/MainScreen/styles';
 
 // interface SchedulesByDate {
 //   date: Object;
@@ -21,28 +22,46 @@ const SuggestNewTime = ({ navigation, route }) => {
   const invite = route.params.invite;
   const { user } = useAuth();
   console.log('selectedDayIndex:', selectedSchedule);
+  const calculateDuration = (begin, end) => {
+    const beginDate = new Date(begin);
+    const endDate = new Date(end);
+    const durationInMinutes: number = (Number(endDate) - Number(beginDate)) / 60000;
+    return durationInMinutes; // converte de milissegundos para minutos
+  };
+  function extractTime(isoDateTime) {
+    const date = new Date(isoDateTime);
+    // Formatando para obter horas, minutos e segundos
+    const hours = date.getHours().toString().padStart(2, '0'); // garante dois dígitos para a hora
+    const minutes = date.getMinutes().toString().padStart(2, '0'); // garante dois dígitos para os minutos
+    return `${hours}:${minutes}:00`;
+  }
+  
+  // Calculando a duração do evento específico
+
 
   const [schedulesByDate, setSchedulesByDate] = useState({});
 
   useEffect(() => {
-    console.log('mandatory guests: ', mandatoryContactSelected);
-    console.log('duration:', duration);
-    console.log('dateStart :', moment(dateStart)
+    const tryDuration = calculateDuration(invite.element.begin, invite.element.end);
+    console.log('invite:', invite);
+    console.log('mandatory guests: ', [invite.element.phone]);
+    console.log('dateStart :', moment(invite.element.beginSearch)
         .tz('America/Sao_Paulo')
         .startOf('day')
         .format());
-    //console.log('beginHour :', format(timeStart, 'HH:mm') + ':00');
-    console.log('duration :', parseInt(duration));
-    console.log('endDate :', moment(dateEnd)
+    console.log('beginHour :', extractTime(invite.element.beginSearch));
+    console.log('endDate :', moment(invite.element.endSearch)
         .tz('America/Sao_Paulo')
         .startOf('day')
         .format());
-    //console.log('endHour :', format(timeEnd, 'HH:mm') + ':00');
+   console.log('endHour :', extractTime(invite.element.endSearch));
     console.log('mandatoryGuests', mandatoryContactSelected.map(
           (contact) => contact.email || contact.phone
         ));
+        console.log('inviteId:', invite.element.id);
+        console.log('tryDuration:', tryDuration);
     getSchedules();
-  });
+  }, []);
 
   async function getSchedules() {
     console.log(invite.element);
@@ -51,19 +70,37 @@ const SuggestNewTime = ({ navigation, route }) => {
       //   phone: user?.phone,
       //   inviteId: invite.element.id,
       // });
+    const tryDuration = calculateDuration(invite.element.begin, invite.element.end).toString();
       const sRespponse = await CalendarServices.getRecommendedTime({
         phone: user?.phone,
-        beginDate: moment(dateStart)
+        beginDate: moment(invite.element.beginSearch)
+          .tz('America/Sao_Paulo')
+          .startOf('day')
+          .format(),
+        beginHour: extractTime(invite.element.beginSearch),
+        duration: parseInt(tryDuration),
+        endDate: moment(invite.element.endSearch)
+          .tz('America/Sao_Paulo')
+          .startOf('day')
+          .format(),
+        endHour: extractTime(invite.element.endSearch),
+        mandatoryGuests: mandatoryContactSelected.map(
+          (contact) => contact.email || contact.phone
+        ),
+      });
+      const testeRespponse = await CalendarServices.getRecommendedTime({
+        phone: user?.phone,
+        beginDate: moment(invite.element.beginSearch)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
         beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: parseInt(duration),
-        endDate: moment(dateEnd)
+        duration: parseInt(tryDuration),
+        endDate: moment(invite.element.endSearch)
           .tz('America/Sao_Paulo')
           .startOf('day')
           .format(),
-        endHour: format(timeEnd, 'HH:mm') + ':00',
+        endHour: format(timeEnd, 'HH:mm') + ':0 0',
         mandatoryGuests: mandatoryContactSelected.map(
           (contact) => contact.email || contact.phone
         ),
