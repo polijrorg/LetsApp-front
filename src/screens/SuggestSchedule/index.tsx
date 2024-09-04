@@ -36,6 +36,17 @@ const SuggestSchedule = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log('mandatory guests: ', mandatoryContactSelected.map(
+      (contact) => contact.email || contact.phone
+    ));
+    console.log('duration:', parseInt(duration));
+    console.log('beginDate :', moment(dateStart).tz('America/Sao_Paulo')
+    .startOf('day')
+    .format());
+    console.log('beginHour :', format(timeStart, 'HH:mm') + ':00');
+    console.log('endDate :', moment(dateEnd).tz('America/Sao_Paulo').startOf('day')
+    .format());
+    console.log('endHour :', format(timeEnd, 'HH:mm') + ':00');
     getSchedules();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -6,16 +6,18 @@ import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
 import { AppError } from '@utils/AppError';
 import moment from 'moment-timezone';
+import format from 'date-fns/format';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
+import { parse } from 'path';
 
 // interface SchedulesByDate {
 //   date: Object;
 // }
 
 const SuggestNewTime = ({ navigation, route }) => {
-  const { selectedSchedule, setSelectedSchedule } = useInvite();
+  const { selectedSchedule, setSelectedSchedule, mandatoryContactSelected, dateStart, dateEnd, timeEnd, timeStart, duration } = useInvite();
   const invite = route.params.invite;
   const { user } = useAuth();
   console.log('selectedDayIndex:', selectedSchedule);
@@ -23,18 +25,53 @@ const SuggestNewTime = ({ navigation, route }) => {
   const [schedulesByDate, setSchedulesByDate] = useState({});
 
   useEffect(() => {
+    console.log('mandatory guests: ', mandatoryContactSelected);
+    console.log('duration:', duration);
+    console.log('dateStart :', moment(dateStart)
+        .tz('America/Sao_Paulo')
+        .startOf('day')
+        .format());
+    //console.log('beginHour :', format(timeStart, 'HH:mm') + ':00');
+    console.log('duration :', parseInt(duration));
+    console.log('endDate :', moment(dateEnd)
+        .tz('America/Sao_Paulo')
+        .startOf('day')
+        .format());
+    //console.log('endHour :', format(timeEnd, 'HH:mm') + ':00');
+    console.log('mandatoryGuests', mandatoryContactSelected.map(
+          (contact) => contact.email || contact.phone
+        ));
     getSchedules();
   });
 
   async function getSchedules() {
     console.log(invite.element);
     try {
-      const response = await CalendarServices.getSuggestedNewTimes({
+      // const response = await CalendarServices.getSuggestedNewTimes({
+      //   phone: user?.phone,
+      //   inviteId: invite.element.id,
+      // });
+      const sRespponse = await CalendarServices.getRecommendedTime({
         phone: user?.phone,
-        inviteId: invite.element.id,
+        beginDate: moment(dateStart)
+          .tz('America/Sao_Paulo')
+          .startOf('day')
+          .format(),
+        beginHour: format(timeStart, 'HH:mm') + ':00',
+        duration: parseInt(duration),
+        endDate: moment(dateEnd)
+          .tz('America/Sao_Paulo')
+          .startOf('day')
+          .format(),
+        endHour: format(timeEnd, 'HH:mm') + ':00',
+        mandatoryGuests: mandatoryContactSelected.map(
+          (contact) => contact.email || contact.phone
+        ),
       });
+      console.log('sRespponse:', sRespponse);
+      filterSchedulesByDay(sRespponse.freeTimes);
 
-      filterSchedulesByDay(response.freeTimes);
+      //filterSchedulesByDay(response.freeTimes);
     } catch (error) {
       console.log(error);
     }
