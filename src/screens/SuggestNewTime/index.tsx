@@ -88,23 +88,6 @@ const SuggestNewTime = ({ navigation, route }) => {
           (contact) => contact.email || contact.phone
         ),
       });
-      const testeRespponse = await CalendarServices.getRecommendedTime({
-        phone: user?.phone,
-        beginDate: moment(invite.element.beginSearch)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: parseInt(tryDuration),
-        endDate: moment(invite.element.endSearch)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        endHour: format(timeEnd, 'HH:mm') + ':0 0',
-        mandatoryGuests: mandatoryContactSelected.map(
-          (contact) => contact.email || contact.phone
-        ),
-      });
       console.log('sRespponse:', sRespponse);
       filterSchedulesByDay(sRespponse.freeTimes);
 
