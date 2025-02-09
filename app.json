@@ -11,7 +11,7 @@
     },
     "slug": "lets-app",
     "owner": "letsappd",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "assetBundlePatterns": [
       "**/*"
     ],
