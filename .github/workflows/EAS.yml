@@ -1,0 +1,33 @@
+name: EAS Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: 🔑 Definir Token Expo
+        run: echo "EXPO_TOKEN=vblHslkfIrFbxkfngSbteAVvGv5utb5bnAQlMCmy" >> $GITHUB_ENV
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🚀 Create update
+        run: eas update --auto --non-interactive
