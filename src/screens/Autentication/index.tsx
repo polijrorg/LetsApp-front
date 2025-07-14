@@ -12,15 +12,16 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import * as yup from 'yup';
-
+import { InferType } from 'yup';
+import userService from '@services/UserServices';
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 
-type FormDataProps = {
-  DDD: string;
-  phone: string;
-};
-
+// type FormDataProps = {
+//   DDD: string;
+//   phone: string;
+// };
+type FormDataProps = InferType<typeof ValidationSchema>;
 const ValidationSchema = yup.object({
   phone: yup
     .string()
@@ -31,7 +32,7 @@ const ValidationSchema = yup.object({
 });
 
 const Autentication = ({ navigation }) => {
-  const { register } = useAuth();
+  // const { register } = useAuth();
   const DDDref = createRef<TextInput>();
   const phoneRef = createRef<TextInput>();
 
@@ -52,20 +53,25 @@ const Autentication = ({ navigation }) => {
     try {
       const formattedPhone = `+55${data.DDD}${data.phone}`;
   
-      const response = await fetch("https://letsapp.polijrinternal.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone: formattedPhone }),
-      });
-  
-      if (!response.ok) {
+      // const response = await fetch("https://letsapp.polijrinternal.com/register", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ phone: formattedPhone }),
+      // });
+      // const response = await register({ phone: formattedPhone });
+          console.log("*** handleSignUp chamado ***");
+
+      const response = await userService.register({ phone: formattedPhone });
+      if (response.ok) {
         throw new Error(`Erro ao registrar: ${response.status}`);
       }
-  
-      const result = await response.json();
-      console.log("Registro bem-sucedido:", result);
+      // await register({ phone: formattedPhone });
+
+      console.log("Registro bem-sucedido:", response.data);
+      // const result = response.data.json();
+      // console.log("Registro bem-sucedido:", result);
   
       // Passando o número de telefone formatado para a próxima tela
       navigation.navigate('VerificationCode', { formattedPhone: formattedPhone });
@@ -189,7 +195,7 @@ const Autentication = ({ navigation }) => {
               />
             </TouchableOpacity>
           </S.Content>
-          {!isKeyboardActive && <S.SmallCircleLeft />}
+          {!isKeyboardActive && <S.SmallCircleLeft /> }
           <S.SmallCircleRight />
           <S.SmallTop />
         </S.Body>

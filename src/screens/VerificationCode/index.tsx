@@ -25,7 +25,8 @@ const VerificationCode = ({ navigation, route }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const { secondsLeft, startCountDown } = useCountDown();
   const { initialUser } = useAuth();
-
+  const [phone, setPhone] = useState('');
+  
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
   // Ouvinte para o teclado ficar ativo
@@ -59,7 +60,7 @@ const VerificationCode = ({ navigation, route }) => {
       if (!response.ok) {
         throw new Error(`Erro ao reenviar o código: ${response.status}`);
       }
-
+      setPhone(formattedPhone);
       setCountdown(true);
       startCountDown(60);
       setElapsedTime(0);
@@ -83,6 +84,7 @@ const VerificationCode = ({ navigation, route }) => {
     const handleSmsReceived = async (message) => {
       const code = message.body.match(/\d{6}/)[0];
       setVerificationCode(code);
+      console.log(' formattedPhone:', formattedPhone);
       try {
         await api.post('/verify', {
           phone: formattedPhone, // Usa formattedPhone
@@ -103,7 +105,7 @@ const VerificationCode = ({ navigation, route }) => {
 
   useEffect(() => {
     // Envia o código automaticamente ao carregar a tela
-    UserServices.resendCode(formattedPhone);
+    // UserServices.resendCode(formattedPhone);
   }, [formattedPhone]); // Adiciona formattedPhone como dependência
 
   return (
@@ -131,7 +133,7 @@ const VerificationCode = ({ navigation, route }) => {
                     });
                     navigation.navigate('InitialData');
                   } catch (error) {
-                    console.log(error);
+                    console.log('Erro verifycode', error);
                   }
                 }
               }}

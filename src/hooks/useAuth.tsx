@@ -64,14 +64,21 @@ export const AuthProvider: React.FC<{
 
   const updateUser = async () => {
     try {
+      setLoading(true);
       const response = await api.get(`GetUserByPhone/${user?.phone}`);
-      setUser(response.data.user);
-      await AsyncStorage.setItem(
-        'letsApp:user',
-        JSON.stringify(response.data.user)
-      );
+      
+      if (response.data?.user) {
+        setUser(response.data.user);
+        await AsyncStorage.setItem(
+          'letsApp:user',
+          JSON.stringify(response.data.user)
+        );
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Erro ao atualizar usuário:', error);
+      // Não limpa o usuário em caso de erro de rede
+    } finally {
+      setLoading(false);
     }
   };
 

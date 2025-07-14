@@ -18,14 +18,16 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import * as yup from 'yup';
+import { InferType } from 'yup';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 const Gallery = require('../../assets/Gallery.png');
 
-type FormErrors = {
-  name: string;
-};
+// type FormErrors = {
+//   name: string;
+// };
+type FormErrors = InferType<typeof ValidationSchema>;
 
 const ValidationSchema = yup.object({
   name: yup.string().required('Informe o nome de usuário'),
@@ -75,6 +77,7 @@ const InitialData = ({ navigation }) => {
   }
 
   async function handleSendData() {
+    console.log('phone', phone);
     try {
       const form = new FormData();
       form.append('phone', phone);

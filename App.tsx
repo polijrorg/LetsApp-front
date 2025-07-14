@@ -1,3 +1,7 @@
+if (__DEV__) {
+  const devtools = require('react-devtools-core');
+  devtools.connectToDevTools({ host: 'localhost', port: 8097 });
+}
 import AppProvider from '@hooks/index';
 import Routes from '@routes/index';
 import { useFonts } from 'expo-font';

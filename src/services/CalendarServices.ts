@@ -105,13 +105,23 @@ export default class CalendarServices {
   }
 
   static async getGoogleUrl(phone: string): Promise<string> {
-    const response = await api.post(`/getGoogleAuthUrl/${phone}`);
-    return response.data;
+    try {
+      const response = await api.post(`/getGoogleAuthUrl/${phone}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter URL do Google:', error);
+      throw new Error('Falha na autenticação do Google Calendar');
+    }
   }
 
   static async getOutlookUrl(phone: string): Promise<string> {
-    const response = await api.post(`/getOutlookAuthUrl/${phone}`);
-    return response.data;
+    try {
+      const response = await api.post(`/getOutlookAuthUrl/${phone}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter URL do Outlook:', error);
+      throw new Error('Falha na autenticação do Outlook Calendar');
+    }
   }
 
   static async getRecommendedTime(
@@ -132,72 +142,108 @@ export default class CalendarServices {
   static async createGoogleEvent(
     data: ICreateEvent
   ): Promise<ICreateEventResponse> {
-    const response = await api.post('/createGoogleEvent', {
-      name: data.name,
-      phone: data.phone,
-      begin: data.begin,
-      attendees: data.attendees,
-      end: data.end,
-      address: data.address,
-      description: data.description,
-      createMeetLink: data.createMeetLink,
-      optionalAttendees: data.optionalAttendees,
-      beginSearch: data.beginSearch,
-      endSearch: data.endSearch,
-    });
-
-    const linkNotificationResponses: string[] = [];
-
-    response.data.pseudoGuests.map(async (pseudoGuest: PseudoUser) => {
-      const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
-
-      const linkNotificationResponse = await UserServices.sendSignUpLink({
-        link,
-        pseudoUserId: pseudoGuest.pseudoUserId,
+    try {
+      const response = await api.post('/createGoogleEvent', {
+        name: data.name,
+        phone: data.phone,
+        begin: data.begin,
+        attendees: data.attendees,
+        end: data.end,
+        address: data.address,
+        description: data.description,
+        createMeetLink: data.createMeetLink,
+        optionalAttendees: data.optionalAttendees,
+        beginSearch: data.beginSearch,
+        endSearch: data.endSearch,
       });
 
-      linkNotificationResponses.push(linkNotificationResponse);
-    });
+      const linkNotificationResponses: string[] = [];
 
-    return { ...response.data, linkNotificationResponses };
+      if (response.data.pseudoGuests) {
+        const notificationPromises = response.data.pseudoGuests.map(async (pseudoGuest: PseudoUser) => {
+          try {
+            const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+            const linkNotificationResponse = await UserServices.sendSignUpLink({
+              link,
+              pseudoUserId: pseudoGuest.pseudoUserId,
+            });
+            return linkNotificationResponse;
+          } catch (error) {
+            console.error('Erro ao enviar link de inscrição:', error);
+            return 'Erro ao enviar convite';
+          }
+        });
+
+        const results = await Promise.allSettled(notificationPromises);
+        results.forEach(result => {
+          if (result.status === 'fulfilled') {
+            linkNotificationResponses.push(result.value);
+          } else {
+            linkNotificationResponses.push('Falha no envio');
+          }
+        });
+      }
+
+      return { ...response.data, linkNotificationResponses };
+    } catch (error) {
+      console.error('Erro ao criar evento Google:', error);
+      throw new Error('Falha ao criar evento no Google Calendar');
+    }
   }
 
   static async createOutlookEvent(
     data: ICreateEvent
   ): Promise<ICreateEventResponse> {
-    console.log(data);
-    const response = await api.post('/createOutlookEvent', {
-      name: data.name,
-      phone: data.phone,
-      begin: data.begin,
-      attendees: data.attendees,
-      end: data.end,
-      address: data.address,
-      description: data.description,
-      createMeetLink: data.createMeetLink,
-      optionalAttendees: data.optionalAttendees,
-      beginSearch: data.beginSearch,
-      endSearch: data.endSearch,
-    });
+    try {
+      console.log('Criando evento Outlook:', data);
+      const response = await api.post('/createOutlookEvent', {
+        name: data.name,
+        phone: data.phone,
+        begin: data.begin,
+        attendees: data.attendees,
+        end: data.end,
+        address: data.address,
+        description: data.description,
+        createMeetLink: data.createMeetLink,
+        optionalAttendees: data.optionalAttendees,
+        beginSearch: data.beginSearch,
+        endSearch: data.endSearch,
+      });
 
-    const linkNotificationResponses: string[] = [];
+      const linkNotificationResponses: string[] = [];
 
-    const responses = response.data.pseudoGuests.map(
-      async (pseudoGuest: PseudoUser) => {
-        const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+      if (response.data.pseudoGuests) {
+        const notificationPromises = response.data.pseudoGuests.map(
+          async (pseudoGuest: PseudoUser) => {
+            try {
+              const link = `${data.prefix}/authentication/${pseudoGuest.pseudoUserId}`;
+              const linkNotificationResponse = await UserServices.sendSignUpLink({
+                link,
+                pseudoUserId: pseudoGuest.pseudoUserId,
+              });
+              return linkNotificationResponse;
+            } catch (error) {
+              console.error('Erro ao enviar link de inscrição:', error);
+              return 'Erro ao enviar convite';
+            }
+          }
+        );
 
-        const linkNotificationResponse = await UserServices.sendSignUpLink({
-          link,
-          pseudoUserId: pseudoGuest.pseudoUserId,
+        const results = await Promise.allSettled(notificationPromises);
+        results.forEach(result => {
+          if (result.status === 'fulfilled') {
+            linkNotificationResponses.push(result.value);
+          } else {
+            linkNotificationResponses.push('Falha no envio');
+          }
         });
-
-        linkNotificationResponses.push(linkNotificationResponse);
       }
-    );
 
-    await Promise.all(responses);
-
-    return { ...response.data, linkNotificationResponses };
+      return { ...response.data, linkNotificationResponses };
+    } catch (error) {
+      console.error('Erro ao criar evento Outlook:', error);
+      throw new Error('Falha ao criar evento no Outlook Calendar');
+    }
   }
 
   static async getSuggestedNewTimes(data: ISuggestedNewTimesRequest) {
