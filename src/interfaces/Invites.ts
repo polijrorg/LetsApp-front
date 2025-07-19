@@ -1,5 +1,5 @@
 export default interface Invite {
-  element: {
+    summary: string
     address: string;
     begin: Date;
     description: string;
@@ -12,7 +12,7 @@ export default interface Invite {
     organizerPhoto: string;
     phone: string;
     state: 'accepted' | 'declined' | 'needsAction';
-  };
+  
   maybe: number;
   no: number;
   status: number;

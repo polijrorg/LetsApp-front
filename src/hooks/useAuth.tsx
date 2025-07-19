@@ -3,16 +3,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserServices from '@services/UserServices';
 import UserService, { IDeleteUserRequest } from '@services/UserServices';
 import { api } from '@services/api';
+import { AxiosResponse } from 'axios';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
-interface IRegisterRequest {
+export interface IRegisterRequest {
   phone: string;
 }
 
 interface AuthContextData {
   user: User;
   phone: string;
-  register: (data: IRegisterRequest) => Promise<void>;
+  register: (data: IRegisterRequest) => Promise<IRegisterRequest>;
   updateUser: () => Promise<void>;
   deleteUser: (data: IDeleteUserRequest) => Promise<void>;
   deleteAsyncStorage: () => Promise<void>;
@@ -40,14 +41,16 @@ export const AuthProvider: React.FC<{
   //   getUserData();
   // }, []);
 
-  const register = async (data: IRegisterRequest) => {
+  const register = async (data: IRegisterRequest): Promise<IRegisterRequest> => {
     try {
+      console.log("*** register chamado ***", data);
       const response = await UserService.register(data);
-
-      setInitialUser(response);
-      setPhone(response.phone);
-
-      await AsyncStorage.setItem('letsApp:phone', response.phone);
+      console.log('Response from register:', response);
+      setInitialUser(response.data);
+      setPhone(response.data.phone);
+  
+      await AsyncStorage.setItem('letsApp:phone', response.data.phone);
+      return response.data;
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -65,8 +68,10 @@ export const AuthProvider: React.FC<{
   const updateUser = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Atualizando usuário...');
+
       const response = await api.get(`GetUserByPhone/${user?.phone}`);
-      
+      console.log(`updateUser useAuth 72: Response: ${JSON.stringify(response.data)}`)
       if (response.data?.user) {
         setUser(response.data.user);
         await AsyncStorage.setItem(
@@ -86,6 +91,8 @@ export const AuthProvider: React.FC<{
     const response = await UserServices.addNameAndImage(data);
 
     setUser(response);
+    console.log('User updated with name and image:', response);
+    // Atualiza o AsyncStorage com o novo usuário
     await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
   };
 

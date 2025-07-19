@@ -1,3 +1,4 @@
+import { AuthenticationModal } from '@components/AuthenticationModal';
 import * as S from './styles';
 import Calendar from '@components/Calendar';
 import CardsEvent from '@components/CardsEvent';
@@ -29,6 +30,7 @@ const MainScreen = ({ navigation }) => {
     const getUser = async () => {
       try {
         const response = await api.get(`GetUserByPhone/${user?.phone}`);
+        console.log(`MainScreen 33 ${JSON.stringify(response.data)}`)
         setCompleteUser(response.data);
         setOpen(!response.data.calendar_found);
       } catch (error) {
@@ -45,13 +47,17 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     const getInvites = async () => {
       try {
-        if (completeUser !== null) {
-          const response = await CalendarServices.getUserInvites(
-            completeUser.user?.email
-          );
-          setInvites(response);
-          setNumberInvites(response.length);
-        }
+        console.log('MainScreen 45 completeUser: Invites', completeUser);
+
+        // if (completeUser !== null) {
+        //   const response = await CalendarServices.getGoogleEvents(
+        //     completeUser.user?.email
+        //   );
+        //   console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
+
+        //   setInvites(response);
+        //   setNumberInvites(response.length);
+        // }
       } catch (error) {
         console.log(error);
       }
@@ -60,12 +66,14 @@ const MainScreen = ({ navigation }) => {
   }, [completeUser, user?.email]);
 
   useEffect(() => {
+    // console.log('MainScreen 68 completeUser: Events', completeUser);
     const getEvents = async () => {
       try {
         if (completeUser !== null) {
-          const response = await CalendarServices.getUserEvents(
+          const response = await CalendarServices.getGoogleEvents(
             completeUser.user?.email
           );
+          console.log(`MainScreen 68 Events: ${JSON.stringify(response)}`)
           setEvents(response);
         }
       } catch (error) {
@@ -82,20 +90,31 @@ const MainScreen = ({ navigation }) => {
   const [numberInvites, setNumberInvites] = useState<number>(null);
 
   const handleEventsPress = () => {
+      console.log('🔥 CLICOU EM EVENTOS');
+
     setSelectedOption('events');
     setShowEvent(true);
   };
 
   const handleInvitePress = () => {
+      console.log('🔥 CLICOU EM EVENTOS');
     setSelectedOption('invite');
     setShowEvent(false);
   };
 
   return (
     <S.Container>
-      <Modal transparent visible={open}>
-        <ModalCalendar />
-      </Modal>
+        <AuthenticationModal
+          visible={open} 
+           onClose={function (): void {
+            console.log('🔴 Fechando modal');
+            setOpen(false);
+          // throw new Error('Function not implemented.');
+        } } onSuccess={function (provider: 'google' | 'outlook'): void {
+            console.log('🟢 Sucesso na autenticação:', provider);
+            setOpen(false);
+          // throw new Error('Function not implemented.');
+        } } userPhone={user?.phone} />
       <S.Header>
         <S.Name>Olá {user?.name}!</S.Name>
         <TouchableOpacity
@@ -144,7 +163,7 @@ const MainScreen = ({ navigation }) => {
               {events.map((event, index) => (
                 <React.Fragment key={index}>
                   <CardsEvent
-                    key={event.element.id}
+                    key={event.id}
                     event={event}
                     navigation={navigation}
                   />
@@ -162,7 +181,7 @@ const MainScreen = ({ navigation }) => {
               {invites.map((invite, index) => (
                 <React.Fragment key={index}>
                   <CardsInvite
-                    key={invite.element.id}
+                    key={invite.id}
                     invite={invite}
                     navigation={navigation}
                   />

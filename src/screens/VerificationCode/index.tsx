@@ -119,7 +119,7 @@ const VerificationCode = ({ navigation, route }) => {
               <S.TitleII>código!</S.TitleII>
             </S.ContainerTitle>
             <InputCode
-              height="32px"
+              height="60px"
               width="240px"
               placeholder=""
               value={verificationCode}

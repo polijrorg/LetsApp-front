@@ -21,22 +21,22 @@ const CardsInvite: React.FC<CardsInviteProps> = ({ invite, navigation }) => {
         });
       }}
     >
-      {invite.element.organizerPhoto ? (
-        <S.Image source={{ uri: invite.element.organizerPhoto }} />
+      {invite.organizerPhoto ? (
+        <S.Image source={{ uri: invite.organizerPhoto }} />
       ) : (
         <S.Image source={require('../../assets/UserCircle.png')} />
       )}
       <S.InfoWrapper>
-        <S.Name>{invite.element.name}</S.Name>
+        <S.Name>{invite.summary}</S.Name>
         <S.ContainerContent>
           <S.Icon
-            source={invite.element.address !== '' ? presencial : online}
+            source={invite.address !== '' ? presencial : online}
           />
-          <S.Adress>{invite.element.address || 'Evento online'}</S.Adress>
+          <S.Adress>{invite.address || 'Evento online'}</S.Adress>
         </S.ContainerContent>
         <S.ContainerContent>
           <S.Icon source={calendar} />
-          <S.Date>{moment(invite.element.begin).format('DD/MM/YYYY')}</S.Date>
+          <S.Date>{moment(invite.begin).format('DD/MM/YYYY')}</S.Date>
         </S.ContainerContent>
       </S.InfoWrapper>
     </S.ContainerCard>

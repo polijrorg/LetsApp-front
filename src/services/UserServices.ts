@@ -44,7 +44,7 @@ interface IUpdateStateRequest {
 
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<any> {
-        console.log("*** register chamado ***");
+        console.log("*** register chamado ***", data);
 
     try {
       const response = await api.post('/register', data);
@@ -54,7 +54,7 @@ export default class UserServices {
 
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error in register:', error);
     }
   }
 

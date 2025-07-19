@@ -32,7 +32,7 @@ const ValidationSchema = yup.object({
 });
 
 const Autentication = ({ navigation }) => {
-  // const { register } = useAuth();
+  const { register } = useAuth();
   const DDDref = createRef<TextInput>();
   const phoneRef = createRef<TextInput>();
 
@@ -52,28 +52,13 @@ const Autentication = ({ navigation }) => {
   async function handleSignUp(data: FormDataProps) {
     try {
       const formattedPhone = `+55${data.DDD}${data.phone}`;
-  
-      // const response = await fetch("https://letsapp.polijrinternal.com/register", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ phone: formattedPhone }),
-      // });
-      // const response = await register({ phone: formattedPhone });
-          console.log("*** handleSignUp chamado ***");
 
-      const response = await userService.register({ phone: formattedPhone });
-      if (response.ok) {
-        throw new Error(`Erro ao registrar: ${response.status}`);
-      }
-      // await register({ phone: formattedPhone });
-
-      console.log("Registro bem-sucedido:", response.data);
-      // const result = response.data.json();
-      // console.log("Registro bem-sucedido:", result);
-  
-      // Passando o número de telefone formatado para a próxima tela
+      console.log("*** handleSignUp chamado ***");
+      const response = await register({ phone: formattedPhone });
+      response.phone = formattedPhone; // Ajusta o telefone no response
+      // const response = await userService.register({ phone: formattedPhone });
+      console.log("Response from register:", response);
+      // Se register não retorna nada, apenas navegue para a próxima tela
       navigation.navigate('VerificationCode', { formattedPhone: formattedPhone });
     } catch (error) {
       console.error("Erro ao registrar:", error);
@@ -120,7 +105,7 @@ const Autentication = ({ navigation }) => {
             </S.Description>
             <Input
               arrow={true}
-              height="32px"
+              height="40px"
               width="304px"
               placeholder="Brasil"
               editable={false}
@@ -133,7 +118,7 @@ const Autentication = ({ navigation }) => {
                   render={({ field: { onChange, value } }) => (
                     <Input
                       arrow={false}
-                      height="32px"
+                      height="40px"
                       width="60px"
                       placeholder="DDD"
                       value={value}
@@ -162,7 +147,7 @@ const Autentication = ({ navigation }) => {
                   render={({ field: { onChange, value } }) => (
                     <Input
                       arrow={false}
-                      height="32px"
+                      height="40px"
                       width="238px"
                       placeholder="Número"
                       value={value}

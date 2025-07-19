@@ -82,6 +82,7 @@ export default class CalendarServices {
         name: data.name,
         email: data.email,
       });
+      console.log('Contato adicionado:', response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -92,6 +93,7 @@ export default class CalendarServices {
     const response = await api.post('invites/listEventsByUser', {
       email,
     });
+    console.log(`CalendarServices 96 getUserEvents: email ${email} response: ${JSON.stringify(response.data)}`)
 
     return response.data;
   }
@@ -100,7 +102,12 @@ export default class CalendarServices {
     const response = await api.post('invites/listInvitesByUser', {
       email,
     });
-
+    console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
+    return response.data;
+  }
+  static async getGoogleEvents(email: string): Promise<Event[]> {
+    const response = await api.get(`/getGoogleEvents/${email}`);
+    console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
     return response.data;
   }
 
