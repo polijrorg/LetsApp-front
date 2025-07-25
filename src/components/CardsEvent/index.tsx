@@ -1,5 +1,4 @@
 import * as S from './styles';
-import Event from '@interfaces/Events';
 import moment from 'moment';
 import React from 'react';
 import { google, calendar_v3 } from 'googleapis';

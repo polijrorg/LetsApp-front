@@ -6,7 +6,6 @@ import CardsInvite from '@components/CardsInvite';
 import { ModalCalendar } from '@components/ModalCalendar';
 import useAuth from '@hooks/useAuth';
 import CompleteUser from '@interfaces/CompleteUser';
-import Event from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import { useIsFocused } from '@react-navigation/native';
 import CalendarServices from '@services/CalendarServices';
@@ -14,12 +13,15 @@ import { api } from '@services/api';
 import 'moment/locale/pt-br';
 import React, { useState, useEffect } from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
+import { google, calendar_v3 } from 'googleapis';
 
+
+type GoogleEvent = calendar_v3.Schema$Event;
 const IconProfile = require('../../assets/UserCircle.png');
 const IconMore = require('../../assets/IconMore.png');
 
 const MainScreen = ({ navigation }) => {
-  const { user, deleteAsyncStorage } = useAuth();
+  const { user, deleteAsyncStorage, updateUser } = useAuth();
 
   const [open, setOpen] = useState(true);
   const [completeUser, setCompleteUser] = useState<CompleteUser>(null);
@@ -32,7 +34,9 @@ const MainScreen = ({ navigation }) => {
         const response = await api.get(`GetUserByPhone/${user?.phone}`);
         console.log(`MainScreen 33 ${JSON.stringify(response.data)}`)
         setCompleteUser(response.data);
-        setOpen(!response.data.calendar_found);
+        setOpen(!response.data.calendar_found);      
+        console.log(`MainScreen 33 ${JSON.stringify(response.data.calendar_found)}`)
+
       } catch (error) {
         console.log(error);
         if (error.response.data.message === 'User Not Found') {
@@ -67,10 +71,39 @@ const MainScreen = ({ navigation }) => {
 
   useEffect(() => {
     // console.log('MainScreen 68 completeUser: Events', completeUser);
+
+    user?.email && getEvents();
+  }, [completeUser, user?.email]);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await api.get(`GetUserByPhone/${user?.phone}`);
+        if (response.data.calendar_found) {
+          const authUrl = await CalendarServices.getOutlookUrl(user?.phone);
+          console.log('🔵 URL de autenticação do Outlook:', authUrl);
+          await updateUser();
+        }
+        console.log(`MainScreen 33 ${JSON.stringify(response.data.calendar_found)}`)
+
+      } catch (error) {
+        console.log(error);
+        if (error.response.data.message === 'User Not Found') {
+          deleteAsyncStorage();
+        }
+      }
+    };
+    getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
+  const [showEvent, setShowEvent] = useState(false);
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [events, setEvents] = useState<GoogleEvent[]>([]);
+  const [numberInvites, setNumberInvites] = useState<number>(null);
     const getEvents = async () => {
       try {
         if (completeUser !== null) {
-          const response = await CalendarServices.getGoogleEvents(
+          const response = await CalendarServices.getUserEvents(
             completeUser.user?.email
           );
           console.log(`MainScreen 68 Events: ${JSON.stringify(response)}`)
@@ -80,18 +113,9 @@ const MainScreen = ({ navigation }) => {
         console.log(error);
       }
     };
-    user?.email && getEvents();
-  }, [completeUser, user?.email]);
-
-  const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
-  const [showEvent, setShowEvent] = useState(false);
-  const [invites, setInvites] = useState<Invite[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [numberInvites, setNumberInvites] = useState<number>(null);
-
   const handleEventsPress = () => {
-      console.log('🔥 CLICOU EM EVENTOS');
-
+    console.log('🔥 CLICOU EM EVENTOS');
+    getEvents();
     setSelectedOption('events');
     setShowEvent(true);
   };

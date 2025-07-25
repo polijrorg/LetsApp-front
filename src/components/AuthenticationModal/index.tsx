@@ -36,11 +36,7 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
         dismissButtonStyle: 'close',
         presentationStyle: WebBrowser.WebBrowserPresentationStyle.OVER_CURRENT_CONTEXT,
       });
-      await updateUser();
-      // Para React Native, usar WebBrowser ou AuthSession do Expo
-      // import * as WebBrowser from 'expo-web-browser';
-      // const result = await WebBrowser.openAuthSessionAsync(authUrl, 'letsapp://auth');
-      
+      await updateUser();  
       console.log('URL de autenticação Google:', authUrl);
     } catch (error) {
       console.error('Erro na autenticação Google:', error);

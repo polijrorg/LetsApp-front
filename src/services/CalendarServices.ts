@@ -1,11 +1,13 @@
 import UserServices from './UserServices';
 import { api } from './api';
-import Event, { EventElement } from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import PseudoGuest from '@interfaces/PseudoGuest';
 import SuggestedTimes from '@interfaces/SuggestedTimes';
 import User, { PseudoUser } from '@interfaces/User';
+import { google, calendar_v3 } from 'googleapis';
 
+
+type GoogleEvent = calendar_v3.Schema$Event;
 interface IAddContact {
   userPhone: string;
   phone: string;
@@ -89,7 +91,7 @@ export default class CalendarServices {
     }
   }
 
-  static async getUserEvents(email: string): Promise<Event[]> {
+  static async getUserEvents(email: string): Promise<GoogleEvent[]> {
     const response = await api.post('invites/listEventsByUser', {
       email,
     });
@@ -105,7 +107,7 @@ export default class CalendarServices {
     console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
     return response.data;
   }
-  static async getGoogleEvents(email: string): Promise<Event[]> {
+  static async getGoogleEvents(email: string): Promise<GoogleEvent[]> {
     const response = await api.get(`/getGoogleEvents/${email}`);
     console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
     return response.data;
@@ -273,7 +275,7 @@ export default class CalendarServices {
     return response.data;
   }
 
-  static async getEventsInWeek(phone: string): Promise<EventElement[]> {
+  static async getEventsInWeek(phone: string): Promise<GoogleEvent[]> {
     const response = await api.get(`/invites/listEventsInWeek/${phone}`);
 
     return response.data;

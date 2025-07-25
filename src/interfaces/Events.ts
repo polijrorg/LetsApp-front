@@ -1,4 +1,13 @@
+import { google, calendar_v3 } from 'googleapis';
 import User, { PseudoUser } from './User';
+
+export interface IEventsUserResponse extends calendar_v3.Schema$Event {
+    accepted?: calendar_v3.Schema$EventAttendee[]
+    declined?: calendar_v3.Schema$EventAttendee[]
+    tentative?:calendar_v3.Schema$EventAttendee[]
+    needsAction?: calendar_v3.Schema$EventAttendee[]
+}
+
 
 export default interface Event {
   // element: EventElement;
