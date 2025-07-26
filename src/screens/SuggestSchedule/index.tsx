@@ -52,32 +52,41 @@ const SuggestSchedule = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function getSchedules() {
-    try {
-      const response = await CalendarServices.getRecommendedTime({
-        phone: user?.phone,
-        beginDate: moment(dateStart)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        beginHour: format(timeStart, 'HH:mm') + ':00',
-        duration: parseInt(duration),
-        endDate: moment(dateEnd)
-          .tz('America/Sao_Paulo')
-          .startOf('day')
-          .format(),
-        endHour: format(timeEnd, 'HH:mm') + ':00',
-        mandatoryGuests: mandatoryContactSelected.map(
-          (contact) => contact.email || contact.phone
-        ),
-      });
-      filterSchedulesByDay(response.freeTimes);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
+  async function getSchedules(): Promise<void> {
+  setIsLoading(true);
+
+  try {
+    console.log('🔵 Buscando horários recomendados...');
+
+    const formatDate = (date: Date) =>
+      moment(date).tz('America/Sao_Paulo').startOf('day').format();
+
+    const formatHour = (hour: Date) => `${format(hour, 'HH:mm')}:00`;
+
+    const payload = {
+      phone: user?.phone,
+      beginDate: formatDate(dateStart),
+      beginHour: formatHour(timeStart),
+      duration: parseInt(duration, 10),
+      endDate: formatDate(dateEnd),
+      endHour: formatHour(timeEnd),
+      mandatoryGuests: mandatoryContactSelected.map(
+        (contact) => contact.email || contact.phone
+      ),
+    };
+
+    const response = await CalendarServices.getRecommendedTime(payload);
+
+    console.log('✅ Horários recomendados recebidos:', response);
+
+    filterSchedulesByDay(response.freeTimes);
+  } catch (error: any) {
+    console.error('❌ Erro ao buscar horários recomendados:', error?.message || error);
+  } finally {
+    setIsLoading(false);
   }
+}
+
 
   const filterSchedulesByDay = (freeTimes) => {
     const initialValue = {};

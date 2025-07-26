@@ -6,6 +6,7 @@ import useAuth from '@hooks/useAuth';
 import useInvite from '@hooks/useInvite';
 import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
+import { buildDateTime, validateFormInputs } from '@utils/date/eventDate';
 import { createURL } from 'expo-linking';
 import moment from 'moment-timezone';
 import React, { useState } from 'react';
@@ -44,85 +45,53 @@ const CreateEvent = ({ navigation }) => {
 
   async function createEvent() {
     setIsLoading(true);
-    const beginSearch = moment(dateStart)
-      .set({
-        hour: moment(timeStart).get('hour'),
-        minute: moment(timeStart).get('minute'),
-      })
-      .tz('America/Sao_Paulo')
-      .format();
 
-    const endSearch = moment(dateEnd)
-      .set({
-        hour: moment(timeEnd).get('hour'),
-        minute: moment(timeEnd).get('minute'),
-      })
-      .tz('America/Sao_Paulo')
-      .format();
-
-    if (title === '') {
-      setTitleError(true);
+    const beginSearch = buildDateTime(dateStart, timeStart);
+    const endSearch = buildDateTime(dateEnd, timeEnd);
+    const isValid = validateFormInputs({
+        title,
+        online,
+        address,
+        setTitleError,
+        setAddressError,
+    });
+    if (!isValid) {
       setIsLoading(false);
       return;
     }
 
-    setTitleError(false);
-
-    if (!online && address === '') {
-      setAddressError(true);
-      setIsLoading(false);
-      return;
-    }
-    setAddressError(false);
-    const prefix = createURL('/lest-app');
+    const eventPayload = {
+      prefix: createURL('/lest-app'),
+      name: title,
+      phone: user?.phone,
+      begin: selectedSchedule.start,
+      end: selectedSchedule.end,
+      address: online ? '' : address,
+      description,
+      createMeetLink: online,
+      attendees: mandatoryContactSelected.map((c) => c.email || c.phone),
+      optionalAttendees: contactSelected.map((c) => c.email || c.phone),
+      beginSearch,
+      endSearch,
+    };
 
     try {
-      if (user.type === 'GOOGLE') {
-        await CalendarServices.createGoogleEvent({
-          prefix,
-          name: title,
-          phone: user?.phone,
-          begin: selectedSchedule.start,
-          attendees: mandatoryContactSelected.map(
-            (contact) => contact.email || contact.phone
-          ),
-          end: selectedSchedule.end,
-          address: online ? '' : address,
-          description: description,
-          createMeetLink: online,
-          optionalAttendees: contactSelected.map(
-            (contact) => contact.email || contact.phone
-          ),
-          beginSearch,
-          endSearch,
-        });
+      const isGoogle = user.type === 'GOOGLE';
+
+      if (isGoogle) {
+        await CalendarServices.createGoogleEvent(eventPayload);
       } else {
-        await CalendarServices.createOutlookEvent({
-          prefix,
-          name: title,
-          phone: user?.phone,
-          begin: selectedSchedule.start,
-          attendees: mandatoryContactSelected.map(
-            (contact) => contact.email || contact.phone
-          ),
-          end: selectedSchedule.end,
-          address: online ? '' : address,
-          description: description,
-          createMeetLink: online,
-          optionalAttendees: contactSelected.map(
-            (contact) => contact.email || contact.phone
-          ),
-          beginSearch,
-          endSearch,
-        });
+        await CalendarServices.createOutlookEvent(eventPayload);
       }
-      setIsLoading(false);
+
       navigation.navigate('MainScreen');
     } catch (error) {
+      console.error(error);
+    } finally {
       setIsLoading(false);
-      console.log(error);
     }
   }
+
 
   return (
     <>

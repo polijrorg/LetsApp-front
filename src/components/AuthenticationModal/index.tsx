@@ -50,7 +50,8 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
     try {
       setLoading('outlook');
       const authUrl = await CalendarServices.getOutlookUrl(userPhone);
-      await WebBrowser.openBrowserAsync(authUrl);
+
+      await WebBrowser.openAuthSessionAsync(authUrl, 'let-sapp://auth');
       await updateUser();
       // Para React Native, usar WebBrowser ou AuthSession do Expo
       // import * as WebBrowser from 'expo-web-browser';

@@ -95,7 +95,7 @@ export default class CalendarServices {
     const response = await api.post('invites/listEventsByUser', {
       email,
     });
-    console.log(`CalendarServices 96 getUserEvents: email ${email} response: ${JSON.stringify(response.data)}`)
+    // console.log(`CalendarServices 96 getUserEvents: email ${email} response: ${JSON.stringify(response.data)}`)
 
     return response.data;
   }

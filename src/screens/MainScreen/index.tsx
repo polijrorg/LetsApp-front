@@ -32,10 +32,10 @@ const MainScreen = ({ navigation }) => {
     const getUser = async () => {
       try {
         const response = await api.get(`GetUserByPhone/${user?.phone}`);
-        console.log(`MainScreen 33 ${JSON.stringify(response.data)}`)
+        // console.log(`MainScreen 33 ${JSON.stringify(response.data)}`)
         setCompleteUser(response.data);
         setOpen(!response.data.calendar_found);      
-        console.log(`MainScreen 33 ${JSON.stringify(response.data.calendar_found)}`)
+        // console.log(`MainScreen 33 ${JSON.stringify(response.data.calendar_found)}`)
 
       } catch (error) {
         console.log(error);
@@ -51,7 +51,7 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     const getInvites = async () => {
       try {
-        console.log('MainScreen 45 completeUser: Invites', completeUser);
+        // console.log('MainScreen 45 completeUser: Invites', completeUser);
 
         // if (completeUser !== null) {
         //   const response = await CalendarServices.getGoogleEvents(
@@ -75,15 +75,21 @@ const MainScreen = ({ navigation }) => {
     user?.email && getEvents();
   }, [completeUser, user?.email]);
   useEffect(() => {
-    const getUser = async () => {
+    const getURL = async () => {
       try {
-        const response = await api.get(`GetUserByPhone/${user?.phone}`);
-        if (response.data.calendar_found) {
-          const authUrl = await CalendarServices.getOutlookUrl(user?.phone);
-          console.log('🔵 URL de autenticação do Outlook:', authUrl);
-          await updateUser();
+        if (completeUser.calendar_found ) { 
+          console.log('🔵 type', completeUser.user.type);
+          if (completeUser.user.type === 'GOOGLE' && completeUser.user.email) {
+            const authUrl = await CalendarServices.getGoogleUrl(user?.phone);
+            console.log('🔵 URL de autenticação do Google:', authUrl);
+          }
+          if (completeUser.user.type === 'OUTLOOK' && completeUser.user.email) {
+            const authUrl = await CalendarServices.getOutlookUrl(user?.phone);
+            console.log('🔵 URL de autenticação do Outlook:', authUrl);          
+          } 
         }
-        console.log(`MainScreen 33 ${JSON.stringify(response.data.calendar_found)}`)
+        await updateUser();
+        // console.log(`MainScreen 33 calendarFound ${JSON.stringify(response.data.calendar_found)}`)
 
       } catch (error) {
         console.log(error);
@@ -92,7 +98,7 @@ const MainScreen = ({ navigation }) => {
         }
       }
     };
-    getUser();
+    getURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
@@ -106,7 +112,7 @@ const MainScreen = ({ navigation }) => {
           const response = await CalendarServices.getUserEvents(
             completeUser.user?.email
           );
-          console.log(`MainScreen 68 Events: ${JSON.stringify(response)}`)
+          // console.log(`MainScreen 68 Events: ${JSON.stringify(response)}`)
           setEvents(response);
         }
       } catch (error) {

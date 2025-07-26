@@ -81,7 +81,7 @@ export const NameEvent = styled.Text`
 export const ErrorText = styled(Text)`
   font-size: 12px;
   font-family: 'RobotoLight';
-  letter-spacing: 0c.5px;
+  letter-spacing: 0.5px;
   color: red;
   align-self: flex-start;
   padding: 8px 2px;
@@ -89,7 +89,7 @@ export const ErrorText = styled(Text)`
 export const ErrorTitle = styled(Text)`
   font-size: 12px;
   font-family: 'RobotoLight';
-  letter-spacing: 0c.5px;
+  letter-spacing: 0.5px;
   color: red;
   padding: 8px 2px;
   margin-bottom: -28px;
