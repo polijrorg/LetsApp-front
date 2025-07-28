@@ -152,6 +152,7 @@ export default class CalendarServices {
     data: ICreateEvent
   ): Promise<ICreateEventResponse> {
     try {
+      console.log('Criando evento Google:', data);
       const response = await api.post('/createGoogleEvent', {
         name: data.name,
         phone: data.phone,
@@ -167,7 +168,7 @@ export default class CalendarServices {
       });
 
       const linkNotificationResponses: string[] = [];
-
+      console.log('Criando evento Google:', response.data);
       if (response.data.pseudoGuests) {
         const notificationPromises = response.data.pseudoGuests.map(async (pseudoGuest: PseudoUser) => {
           try {
@@ -176,6 +177,7 @@ export default class CalendarServices {
               link,
               pseudoUserId: pseudoGuest.pseudoUserId,
             });
+            console.log('Link de inscrição enviado:', linkNotificationResponse);
             return linkNotificationResponse;
           } catch (error) {
             console.error('Erro ao enviar link de inscrição:', error);

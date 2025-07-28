@@ -77,7 +77,7 @@ const SuggestSchedule = ({ navigation }) => {
 
     const response = await CalendarServices.getRecommendedTime(payload);
 
-    console.log('✅ Horários recomendados recebidos:', response);
+    // console.log('✅ Horários recomendados recebidos:', response);
 
     filterSchedulesByDay(response.freeTimes);
   } catch (error: any) {

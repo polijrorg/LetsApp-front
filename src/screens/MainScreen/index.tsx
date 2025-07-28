@@ -51,23 +51,24 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     const getInvites = async () => {
       try {
-        // console.log('MainScreen 45 completeUser: Invites', completeUser);
+        console.log('MainScreen 45 completeUser: Invites', completeUser);
 
-        // if (completeUser !== null) {
-        //   const response = await CalendarServices.getGoogleEvents(
-        //     completeUser.user?.email
-        //   );
-        //   console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
-
-        //   setInvites(response);
-        //   setNumberInvites(response.length);
-        // }
+        if (completeUser !== null) {
+          const response = await CalendarServices.getGoogleEvents(
+            completeUser.user?.email
+          );
+          console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
+          // console.log('MainScreen 54 Invites: ', response);
+          // console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
+          setInvites(response);
+          setNumberInvites(response.length);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     user?.email && getInvites();
-  }, [completeUser, user?.email]);
+  }, []);
 
   useEffect(() => {
     // console.log('MainScreen 68 completeUser: Events', completeUser);
@@ -103,7 +104,7 @@ const MainScreen = ({ navigation }) => {
   },[]);
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
-  const [invites, setInvites] = useState<Invite[]>([]);
+  const [invites, setInvites] = useState<GoogleEvent[]>([]);
   const [events, setEvents] = useState<GoogleEvent[]>([]);
   const [numberInvites, setNumberInvites] = useState<number>(null);
     const getEvents = async () => {

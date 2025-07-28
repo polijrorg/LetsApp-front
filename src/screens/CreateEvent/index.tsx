@@ -74,10 +74,10 @@ const CreateEvent = ({ navigation }) => {
       beginSearch,
       endSearch,
     };
-
+    console.log('🔵🔵eventPayload', JSON.stringify(eventPayload));
     try {
       const isGoogle = user.type === 'GOOGLE';
-
+      console.log('isGoogle', isGoogle);
       if (isGoogle) {
         await CalendarServices.createGoogleEvent(eventPayload);
       } else {

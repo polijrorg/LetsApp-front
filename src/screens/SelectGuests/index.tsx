@@ -130,6 +130,7 @@ const SelectGuests = ({ navigation }) => {
   };
 
   const toggleParticipantSelection = async (participant) => {
+    console.log('🟢🟢🟢toggleParticipantSelection', participant);
     // Verifica se o participante já foi selecionado
     const isSelected = contactSelected.some((p) => p.id === participant.id);
     const isMandatory = mandatoryContactSelected.some(
@@ -158,6 +159,7 @@ const SelectGuests = ({ navigation }) => {
         formattedPhone,
       ]);
       pushForward(formattedPhone);
+
     }
   };
 

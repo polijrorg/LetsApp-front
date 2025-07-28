@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{
       await AsyncStorage.setItem('letsApp:phone', response.data.phone);
       return response.data;
     } catch (error) {
-      throw new Error((error as Error).message);
+      throw new Error(`Erro ao registrar${(error as Error).message}`);
     }
   };
 

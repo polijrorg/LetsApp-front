@@ -27,9 +27,9 @@ const InvitedGuests = ({ navigation, route }) => {
             <S.Subtitle>Aceitaram</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.accepted.map((guest) => (
+            event.accepted.map((guest, index) => (
               <Contact
-                key={guest?.id}
+                key={guest?.id || guest?.email || `accepted-${index}`}
                 name={guest?.displayName || 'Convidado'}
                 phoneOrEmail={guest?.email}
                 isDisabled={true}
@@ -41,9 +41,9 @@ const InvitedGuests = ({ navigation, route }) => {
             <S.Subtitle>Pendentes</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.tentative.map((guest) => (
+            event.tentative.map((guest, index) => (
               <Contact
-                key={guest?.id}
+                key={guest?.id|| guest?.email || `tentative-${index}`} 
                 name={guest?.displayName || 'Convidado'}
                 phoneOrEmail={guest?.email}
                 isDisabled={true}
@@ -55,9 +55,9 @@ const InvitedGuests = ({ navigation, route }) => {
             <S.Subtitle>Recusaram</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.declined.map((guest) => (
+            event.declined.map((guest, index) => (
               <Contact
-                key={guest?.id}
+                key={guest?.id || guest?.email || `declined-${index}`}
                 name={guest?.displayName || 'Convidado'}
                 phoneOrEmail={guest?.email}
                 isDisabled={true}
@@ -79,9 +79,9 @@ const InvitedGuests = ({ navigation, route }) => {
             <S.Subtitle>Não responderam</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.needsAction.map((guest) => (
+            event.needsAction.map((guest,index) => (
               <Contact
-                key={guest?.id}
+                key={guest?.id || guest?.email || `needsAction-${index}`}
                 name={guest?.displayName || 'Convidado'}
                 phoneOrEmail={guest?.email}
                 isDisabled={true}

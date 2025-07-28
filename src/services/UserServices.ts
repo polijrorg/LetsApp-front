@@ -44,8 +44,6 @@ interface IUpdateStateRequest {
 
 export default class UserServices {
   static async register(data: IRegisterRequest): Promise<any> {
-        console.log("*** register chamado ***", data);
-
     try {
       const response = await api.post('/register', data);
 
@@ -104,10 +102,12 @@ export default class UserServices {
 
   static async sendSignUpLink(data: ISendLinkRequest): Promise<string> {
     try {
+      console.log('Enviando link de inscrição:', data);
       const response = await api.post('/SendSignUpLink', {
         link: data.link,
         pseudoUserId: data.pseudoUserId,
       });
+      console.log('Link de inscrição enviado com sucesso:', response.data);
       return response.data;
     } catch (error) {
       console.log(error);

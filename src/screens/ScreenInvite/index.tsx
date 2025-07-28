@@ -37,6 +37,8 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
 
   useEffect(() => {
     const getAvailability = async () => {
+          console.log('entrou getAcceptanceState' + invite);
+
       const response = await UserServices.checkUserAvailability({
         id: user.id,
         inviteId: invite.element.id,
