@@ -49,26 +49,9 @@ const MainScreen = ({ navigation }) => {
   }, [user, isFocused]);
 
   useEffect(() => {
-    const getInvites = async () => {
-      try {
-        console.log('MainScreen 45 completeUser: Invites', completeUser);
 
-        if (completeUser !== null) {
-          const response = await CalendarServices.getGoogleEvents(
-            completeUser.user?.email
-          );
-          console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
-          // console.log('MainScreen 54 Invites: ', response);
-          // console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
-          setInvites(response);
-          setNumberInvites(response.length);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
     user?.email && getInvites();
-  }, []);
+  }, [completeUser, user?.email]);
 
   useEffect(() => {
     // console.log('MainScreen 68 completeUser: Events', completeUser);
@@ -109,12 +92,31 @@ const MainScreen = ({ navigation }) => {
   const [numberInvites, setNumberInvites] = useState<number>(null);
     const getEvents = async () => {
       try {
+        console.log('MainScreen 68 completeUser: Events', completeUser);
         if (completeUser !== null) {
           const response = await CalendarServices.getUserEvents(
             completeUser.user?.email
           );
           // console.log(`MainScreen 68 Events: ${JSON.stringify(response)}`)
           setEvents(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const getInvites = async () => {
+      try {
+        console.log('MainScreen 45 completeUser: Invites', completeUser);
+        
+        if (completeUser !== null) {
+          const response = await CalendarServices.getUserInvites(
+            completeUser.user?.email
+          );
+          console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
+          // console.log('MainScreen 54 Invites: ', response);
+          // console.log(`MainScreen 53 Invites: ${JSON.stringify(response)}`)
+          setInvites(response);
+          setNumberInvites(response.length);
         }
       } catch (error) {
         console.log(error);
@@ -128,7 +130,8 @@ const MainScreen = ({ navigation }) => {
   };
 
   const handleInvitePress = () => {
-      console.log('🔥 CLICOU EM EVENTOS');
+    console.log('🔥 CLICOU EM EVENTOS');
+    getInvites();
     setSelectedOption('invite');
     setShowEvent(false);
   };

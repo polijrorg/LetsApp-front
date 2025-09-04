@@ -5,6 +5,7 @@ import PseudoGuest from '@interfaces/PseudoGuest';
 import SuggestedTimes from '@interfaces/SuggestedTimes';
 import User, { PseudoUser } from '@interfaces/User';
 import { google, calendar_v3 } from 'googleapis';
+import type { AxiosError } from 'axios';
 
 
 type GoogleEvent = calendar_v3.Schema$Event;
@@ -100,16 +101,26 @@ export default class CalendarServices {
     return response.data;
   }
 
-  static async getUserInvites(email: string): Promise<Invite[]> {
-    const response = await api.post('invites/listInvitesByUser', {
-      email,
-    });
-    console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
+  static async getUserInvites(email: string): Promise<GoogleEvent[]> {
+     console.log(`CalendarServices → getUserInvites: email ${email}`);
+  try {
+    const response = await api.post('invites/listInvitesByUser', { email });
+    console.log('CalendarServices → resposta 200:', response.data);
     return response.data;
+  } catch (err) {
+    const error = err as AxiosError;
+    if (error.response) {
+      console.error('CalendarServices → erro status:', error.response.status);
+      console.error('CalendarServices → erro body:', error.response.data);
+    } else {
+      console.error('CalendarServices → erro sem response:', error.message);
+    }
+    throw error; // ou trate como achar melhor
+  }
   }
   static async getGoogleEvents(email: string): Promise<GoogleEvent[]> {
     const response = await api.get(`/getGoogleEvents/${email}`);
-    console.log(`CalendarServices 100 getUserInvites: email ${email} response: ${JSON.stringify(response.data)}`)
+    console.log(`CalendarServices 100 getUserEvents: email ${email} response: ${JSON.stringify(response.data)}`)
     return response.data;
   }
 
