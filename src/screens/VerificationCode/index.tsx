@@ -11,54 +11,42 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Alert,
+  Platform,
 } from 'react-native';
-import SmsListener from 'react-native-android-sms-listener';
+import SmsUserConsent from 'react-native-sms-user-consent';
 
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 const Phone = require('../../assets/PhoneIcon.png');
 
 const VerificationCode = ({ navigation, route }) => {
-  const { formattedPhone } = route.params; // Acessa o formattedPhone passado como parâmetro
+  const { formattedPhone } = route.params;
   const [verificationCode, setVerificationCode] = useState('');
   const [countdown, setCountdown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const { secondsLeft, startCountDown } = useCountDown();
   const { initialUser } = useAuth();
-
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
-  // Ouvinte para o teclado ficar ativo
-  const keyboardDidShowListener = Keyboard.addListener(
-    'keyboardDidShow',
-    () => {
-      setIsKeyboardActive(true);
-    }
-  );
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => setIsKeyboardActive(true));
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => setIsKeyboardActive(false));
 
-  // Ouvinte para o teclado ficar inativo
-  const keyboardDidHideListener = Keyboard.addListener(
-    'keyboardDidHide',
-    () => {
-      setIsKeyboardActive(false);
-    }
-  );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleCountdown = async () => {
     try {
       const response = await fetch('https://letsapp.polijrinternal.com/resendCode', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phone: formattedPhone, // Usa formattedPhone
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formattedPhone }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Erro ao reenviar o código: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Erro ao reenviar o código: ${response.status}`);
 
       setCountdown(true);
       startCountDown(60);
@@ -71,40 +59,74 @@ const VerificationCode = ({ navigation, route }) => {
     }
   };
 
+  // Auto resend code on load
   useEffect(() => {
-    setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
-    if (elapsedTime === 60) {
-      setCountdown(false);
-      setElapsedTime(0);
-    }
-  }, [secondsLeft]);
+    UserServices.resendCode(formattedPhone);
+  }, [formattedPhone]);
 
   useEffect(() => {
-    const handleSmsReceived = async (message) => {
-      const code = message.body.match(/\d{6}/)[0];
-      setVerificationCode(code);
+    // Only run on Android
+    if (Platform.OS !== 'android') {
+      return;
+    }
+
+    // Check if module is available
+    if (!SmsUserConsent || typeof SmsUserConsent.startSmsListener !== 'function') {
+      console.warn('SMS User Consent module not available on this platform');
+      return;
+    }
+
+    const startSmsListener = async () => {
       try {
-        await api.post('/verify', {
-          phone: formattedPhone, // Usa formattedPhone
-          code: parseInt(code, 10),
+        // Request phone number hint (optional)
+        const phoneNumber = await SmsUserConsent.requestHint().catch(err => {
+          console.log('Phone hint not available:', err);
+          return null;
         });
-        navigation.navigate('Profile');
-      } catch (error) {
-        console.log(error);
+        
+        if (phoneNumber) {
+          console.log('Hinted phone number:', phoneNumber);
+        }
+
+        // Start listening for SMS
+        const listener = SmsUserConsent.startSmsListener(event => {
+          const message = event?.message;
+          if (!message) return;
+
+          const code = message.match(/\d{6}/)?.[0];
+          if (code) {
+            setVerificationCode(code);
+            api
+              .post('/verify', { 
+                phone: formattedPhone, 
+                code: parseInt(code, 10) 
+              })
+              .then(() => navigation.navigate('Profile'))
+              .catch(err => {
+                console.error('Verify error:', err);
+                Alert.alert('Erro', 'Código inválido. Tente novamente.');
+              });
+          }
+        });
+
+        console.log('SMS listener started successfully');
+      } catch (err) {
+        console.error('SMS User Consent error:', err);
       }
     };
-    const subscription = SmsListener.addListener(handleSmsReceived);
-    return () => {
-      subscription.remove();
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, [navigation, formattedPhone]); // Adiciona formattedPhone como dependência
+
+    startSmsListener();
+  }, [formattedPhone, navigation]);
 
   useEffect(() => {
-    // Envia o código automaticamente ao carregar a tela
-    UserServices.resendCode(formattedPhone);
-  }, [formattedPhone]); // Adiciona formattedPhone como dependência
+    if (countdown) {
+      setElapsedTime(prev => prev + 1);
+      if (elapsedTime >= 60) {
+        setCountdown(false);
+        setElapsedTime(0);
+      }
+    }
+  }, [secondsLeft, countdown, elapsedTime]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -116,30 +138,32 @@ const VerificationCode = ({ navigation, route }) => {
               <S.TitleI>Insira o </S.TitleI>
               <S.TitleII>código!</S.TitleII>
             </S.ContainerTitle>
+
             <InputCode
               height="32px"
               width="240px"
               placeholder=""
               value={verificationCode}
-              onChange={async (value) => {
+              onChange={async value => {
                 setVerificationCode(value);
                 if (value.length === 6) {
                   try {
                     await api.post('/verify', {
-                      phone: formattedPhone, // Usa formattedPhone
+                      phone: formattedPhone,
                       code: parseInt(value, 10),
                     });
                     navigation.navigate('InitialData');
                   } catch (error) {
-                    console.log(error);
+                    console.error('Verification error:', error);
+                    Alert.alert('Erro', 'Código inválido. Tente novamente.');
                   }
                 }
               }}
               keyboardType="numeric"
             />
-            <S.Description>
-              Preencha aqui com o código recebido por SMS
-            </S.Description>
+
+            <S.Description>Preencha aqui com o código recebido por SMS</S.Description>
+
             <TouchableOpacity
               activeOpacity={0.5}
               disabled={countdown}
@@ -150,28 +174,32 @@ const VerificationCode = ({ navigation, route }) => {
                 width="328px"
                 backgroundColor={countdown ? '#949494' : '#3446E4'}
                 borderColor="transparent"
-                hasIcon={true}
+                hasIcon
                 icon={Message}
-                title={countdown ? `Reenviar código (${secondsLeft}s)` : 'Reenviar código'}
+                title={
+                  countdown
+                    ? `Reenviar código (${secondsLeft}s)`
+                    : 'Reenviar código'
+                }
                 titleColor="#FAFAFA"
               />
             </TouchableOpacity>
+
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Autentication');
-              }}
+              onPress={() => navigation.navigate('Autentication')}
             >
               <Button
                 width="328px"
                 backgroundColor="#FFFFFF"
                 borderColor="#949494"
-                hasIcon={true}
+                hasIcon
                 icon={Phone}
                 title="Mudar número"
                 titleColor="#949494"
               />
             </TouchableOpacity>
           </S.Content>
+
           {!isKeyboardActive && <S.SmallCircleLeft />}
           <S.SmallCircleRight />
           <S.SmallTop />

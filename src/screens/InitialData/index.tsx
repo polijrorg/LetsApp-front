@@ -4,11 +4,6 @@ import Input from '@components/Input';
 import { ModalCard } from '@components/Modal';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useAuth from '@hooks/useAuth';
-// import UserServices from '@services/UserServices';
-// import { useNavigation } from '@react-navigation/native';
-// import { AppNavigatorRoutesProps } from '@routes/PublicRoutes';
-// import { api } from '@services/api';
-// import * as AuthSession from 'expo-auth-session';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,6 +11,8 @@ import {
   Keyboard,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
+  Platform,
 } from 'react-native';
 import * as yup from 'yup';
 
@@ -36,6 +33,7 @@ const InitialData = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [imageUser, setImageUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { addNameAndImage, phone } = useAuth();
 
@@ -49,67 +47,133 @@ const InitialData = ({ navigation }) => {
     resolver: yupResolver(ValidationSchema),
   });
 
-  async function pickImageFromGallery() {
-    try {
-      const result: ImagePicker.ImagePickerResult =
-        await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          quality: 1,
-          aspect: [4, 4],
-          allowsEditing: true,
-        });
-
-      if (!result.canceled && result.assets[0].uri) {
-        const fileExtension = result.assets[0].uri.split('.').pop();
-
-        setImageUser({
-          name: `random-file-name`,
-          uri: result.assets[0].uri,
-          type: `${result.assets[0].type}/${fileExtension}`,
-        } as any);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-    }
-  }
-
-  async function handleSendData() {
-    try {
-      const form = new FormData();
-      form.append('phone', phone);
-      form.append('name', name);
-      form.append('photo', imageUser);
-
-      await addNameAndImage(form);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // Ouvinte para o teclado ficar ativo
-  const keyboardDidShowListener = Keyboard.addListener(
-    'keyboardDidShow',
-    () => {
-      setIsKeyboardActive(true);
-    }
-  );
-
-  // Ouvinte para o teclado ficar inativo
-  const keyboardDidHideListener = Keyboard.addListener(
-    'keyboardDidHide',
-    () => {
-      setIsKeyboardActive(false);
-    }
-  );
-
-  // Remover os ouvintes de eventos de teclado quando o componente for desmontado
   useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setIsKeyboardActive(true)
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setIsKeyboardActive(false)
+    );
+
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  });
+  }, []);
+
+  async function pickImageFromGallery() {
+    try {
+      // Request permissions
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permissão negada',
+          'Precisamos de permissão para acessar suas fotos.'
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'], // Updated API - use array instead of MediaTypeOptions
+        quality: 0.8, // Reduced quality for smaller file size
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+
+      if (!result.canceled && result.assets[0].uri) {
+        const uri = result.assets[0].uri;
+        const fileExtension = uri.split('.').pop() || 'jpg';
+        const fileName = uri.split('/').pop() || `profile-${Date.now()}.${fileExtension}`;
+        
+        // Get the mime type
+        const mimeType = result.assets[0].type === 'video' 
+          ? `video/${fileExtension}`
+          : `image/${fileExtension}`;
+
+        setImageUser({
+          uri,
+          name: fileName,
+          type: mimeType,
+        });
+
+        console.log('Image selected:', { uri, name: fileName, type: mimeType });
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Erro', 'Não foi possível selecionar a imagem.');
+    }
+  }
+
+  async function handleSendData() {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+
+      // Validate required fields
+      if (!name || name.trim() === '') {
+        Alert.alert('Erro', 'Por favor, informe seu nome.');
+        return;
+      }
+
+      if (!phone) {
+        Alert.alert('Erro', 'Telefone não encontrado. Tente fazer login novamente.');
+        return;
+      }
+
+      const formData = new FormData();
+      
+      // Add phone and name
+      formData.append('phone', phone);
+      formData.append('name', name.trim());
+
+      // Add image if exists
+      if (imageUser) {
+        // React Native FormData expects this format
+        formData.append('photo', {
+          uri: Platform.OS === 'ios' ? imageUser.uri.replace('file://', '') : imageUser.uri,
+          name: imageUser.name,
+          type: imageUser.type,
+        } as any);
+      }
+
+      console.log('Sending data:', {
+        phone,
+        name: name.trim(),
+        hasImage: !!imageUser,
+      });
+
+      await addNameAndImage(formData);
+
+      // Success - navigate or show success message
+      console.log('Data saved successfully');
+      
+    } catch (error) {
+      console.error('Error saving data:', error);
+      
+      // More specific error handling
+      if (error.response) {
+        console.error('Server error:', error.response.data);
+        Alert.alert(
+          'Erro',
+          error.response.data?.message || 'Erro ao salvar dados. Tente novamente.'
+        );
+      } else if (error.request) {
+        Alert.alert(
+          'Erro de conexão',
+          'Não foi possível conectar ao servidor. Verifique sua internet.'
+        );
+      } else {
+        Alert.alert('Erro', 'Ocorreu um erro ao salvar os dados.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -121,7 +185,10 @@ const InitialData = ({ navigation }) => {
             <S.Description>
               Preencha aqui com a sua foto e seu nome
             </S.Description>
-            <TouchableOpacity onPress={() => pickImageFromGallery()}>
+            <TouchableOpacity 
+              onPress={pickImageFromGallery}
+              disabled={isLoading}
+            >
               {imageUser ? (
                 <S.Gallery
                   source={{ uri: imageUser.uri }}
@@ -146,32 +213,37 @@ const InitialData = ({ navigation }) => {
                       onChange(e);
                       setName(e);
                     }}
+                    editable={!isLoading}
                   />
                 )}
               />
               {errors.name && <S.TextError>{errors.name?.message}</S.TextError>}
             </S.Errors>
             <S.Empty />
-            <TouchableOpacity onPress={handleSubmit(handleSendData)}>
+            <TouchableOpacity 
+              onPress={handleSubmit(handleSendData)}
+              disabled={isLoading}
+              activeOpacity={0.7}
+            >
               <Button
                 width="328px"
-                backgroundColor="#3446E4"
+                backgroundColor={isLoading ? '#949494' : '#3446E4'}
                 borderColor="transparent"
                 hasIcon={false}
                 icon={Message}
-                title="Salvar"
+                title={isLoading ? 'Salvando...' : 'Salvar'}
                 titleColor="#FAFAFA"
               />
-              <ModalCard
-                Open={open}
-                setOpen={setOpen}
-                navigation={navigation}
-                screen="MainScreen"
-                type="Schedule"
-                valueEmail={email}
-                onChangeEmail={(text) => setEmail(text)}
-              />
             </TouchableOpacity>
+            <ModalCard
+              Open={open}
+              setOpen={setOpen}
+              navigation={navigation}
+              screen="MainScreen"
+              type="Schedule"
+              valueEmail={email}
+              onChangeEmail={(text) => setEmail(text)}
+            />
           </S.Content>
           {!isKeyboardActive && <S.SmallCircleLeft />}
           <S.SmallCircleRight />
