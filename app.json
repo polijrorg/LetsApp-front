@@ -26,7 +26,11 @@
       "url": "https://u.expo.dev/338b867b-3c8d-4e5b-b70f-bc2c5a1bee47"
     },
     "android": {
-      "package": "com.letsapp.letsapp"
+      "package": "com.letsapp.letsapp",
+      "permissions": [
+        "RECEIVE_SMS",
+        "READ_SMS"
+      ]
     },
     "ios": {
       "buildNumber": "2",
