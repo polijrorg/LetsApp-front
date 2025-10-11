@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import * as yup from 'yup';
 
@@ -52,25 +53,15 @@ const Autentication = ({ navigation }) => {
     try {
       const formattedPhone = `+55${data.DDD}${data.phone}`;
   
-      const response = await fetch("https://letsapp.polijrinternal.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone: formattedPhone }),
-      });
+      // Use the register function from useAuth to store phone in context and AsyncStorage
+      await register({ phone: formattedPhone });
   
-      if (!response.ok) {
-        throw new Error(`Erro ao registrar: ${response.status}`);
-      }
-  
-      const result = await response.json();
-      console.log("Registro bem-sucedido:", result);
-  
-      // Passando o número de telefone formatado para a próxima tela
+      // Navigate to verification code screen
       navigation.navigate('VerificationCode', { formattedPhone: formattedPhone });
     } catch (error) {
       console.error("Erro ao registrar:", error);
+      // Show error alert to user
+      Alert.alert('Erro', 'Não foi possível registrar. Tente novamente.');
     }
   }
 
@@ -114,7 +105,7 @@ const Autentication = ({ navigation }) => {
             </S.Description>
             <Input
               arrow={true}
-              height="32px"
+              height="40px"
               width="304px"
               placeholder="Brasil"
               editable={false}
@@ -127,7 +118,7 @@ const Autentication = ({ navigation }) => {
                   render={({ field: { onChange, value } }) => (
                     <Input
                       arrow={false}
-                      height="32px"
+                      height="40px"
                       width="60px"
                       placeholder="DDD"
                       value={value}
@@ -156,7 +147,7 @@ const Autentication = ({ navigation }) => {
                   render={({ field: { onChange, value } }) => (
                     <Input
                       arrow={false}
-                      height="32px"
+                      height="40px"
                       width="238px"
                       placeholder="Número"
                       value={value}

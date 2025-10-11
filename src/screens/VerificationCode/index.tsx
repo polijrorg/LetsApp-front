@@ -25,7 +25,7 @@ const VerificationCode = ({ navigation, route }) => {
   const [countdown, setCountdown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const { secondsLeft, startCountDown } = useCountDown();
-  const { initialUser } = useAuth();
+  const { initialUser, updateUser } = useAuth();
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
   useEffect(() => {
@@ -101,7 +101,10 @@ const VerificationCode = ({ navigation, route }) => {
                 phone: formattedPhone, 
                 code: parseInt(code, 10) 
               })
-              .then(() => navigation.navigate('Profile'))
+              .then(async (response) => {
+                console.log('Auto-verification successful:', response.data);
+                navigation.navigate('InitialData');
+              })
               .catch(err => {
                 console.error('Verify error:', err);
                 Alert.alert('Erro', 'Código inválido. Tente novamente.');
@@ -140,7 +143,7 @@ const VerificationCode = ({ navigation, route }) => {
             </S.ContainerTitle>
 
             <InputCode
-              height="32px"
+              height="48px"
               width="240px"
               placeholder=""
               value={verificationCode}
@@ -148,10 +151,12 @@ const VerificationCode = ({ navigation, route }) => {
                 setVerificationCode(value);
                 if (value.length === 6) {
                   try {
-                    await api.post('/verify', {
+                    const response = await api.post('/verify', {
                       phone: formattedPhone,
                       code: parseInt(value, 10),
                     });
+                    
+                    console.log('Verification successful:', response.data);
                     navigation.navigate('InitialData');
                   } catch (error) {
                     console.error('Verification error:', error);

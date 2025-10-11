@@ -28,8 +28,8 @@
     "android": {
       "package": "com.letsapp.letsapp",
       "permissions": [
-        "RECEIVE_SMS",
-        "READ_SMS"
+        "android.permission.RECEIVE_SMS",
+        "android.permission.READ_SMS"
       ]
     },
     "ios": {

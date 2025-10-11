@@ -66,6 +66,7 @@ export const AuthProvider: React.FC<{
         throw new Error('No response from server');
       }
 
+      // Store the initial user data and phone
       setInitialUser(response);
       setPhone(response.phone);
 
@@ -97,13 +98,15 @@ export const AuthProvider: React.FC<{
       }
 
       const phoneToUse = user?.phone || phone;
+      console.log(phoneToUse)
       const response = await api.get(`GetUserByPhone/${phoneToUse}`);
 
-      if (response.data?.user) {
-        setUser(response.data.user);
+      if (response.data && response.data.id) {
+        // The API returns user data directly in response.data
+        setUser(response.data);
         await AsyncStorage.setItem(
           'letsApp:user',
-          JSON.stringify(response.data.user)
+          JSON.stringify(response.data)
         );
       } else {
         throw new Error('No user data received');

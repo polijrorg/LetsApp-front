@@ -36,6 +36,7 @@ const InitialData = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { addNameAndImage, phone } = useAuth();
+  console.log('Phone from auth:', phone);
 
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
 
@@ -122,6 +123,7 @@ const InitialData = ({ navigation }) => {
 
       if (!phone) {
         Alert.alert('Erro', 'Telefone não encontrado. Tente fazer login novamente.');
+        navigation.navigate('Autentication');
         return;
       }
 
