@@ -108,7 +108,7 @@ export const ModalCard: React.FC<ModalProps> = ({
           <S.Title type={type}>{title}</S.Title>
           {type === 'Schedule' ? (
             <Input
-              height="32px"
+              height="40px"
               width="278px"
               placeholder="nome@gmail.com"
               onChange={onChangeEmail}
@@ -118,14 +118,14 @@ export const ModalCard: React.FC<ModalProps> = ({
             <S.ContainerInputs>
               <Input
                 arrow={false}
-                height="32px"
+                height="40px"
                 width="60px"
                 placeholder="DDD"
               />
 
               <Input
                 arrow={false}
-                height="32px"
+                height="40px"
                 width="200px"
                 placeholder="Número"
               />
@@ -133,21 +133,21 @@ export const ModalCard: React.FC<ModalProps> = ({
           ) : type === 'Contact' ? (
             <S.ContainerInputsContact>
               <FixedInput
-                height="32px"
+                height="40px"
                 width="278px"
                 placeholder="Nome"
                 value={name}
                 setValue={setName}
               />
               {/* <FixedInput
-                height="32px"
+                height="40px"
                 width="278px"
                 placeholder="Telefone"
                 value={phoneNumber}
                 setValue={setPhoneNumber}
               /> */}
               <FixedInput
-                height="32px"
+                height="40px"
                 width="278px"
                 placeholder="Email"
                 value={email}

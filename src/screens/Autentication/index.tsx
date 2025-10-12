@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import * as yup from 'yup';
 import { InferType } from 'yup';
@@ -52,16 +53,16 @@ const Autentication = ({ navigation }) => {
   async function handleSignUp(data: FormDataProps) {
     try {
       const formattedPhone = `+55${data.DDD}${data.phone}`;
-
-      console.log("*** handleSignUp chamado ***");
-      const response = await register({ phone: formattedPhone });
-      response.phone = formattedPhone; // Ajusta o telefone no response
-      // const response = await userService.register({ phone: formattedPhone });
-      console.log("Response from register:", response);
-      // Se register não retorna nada, apenas navegue para a próxima tela
+  
+      // Use the register function from useAuth to store phone in context and AsyncStorage
+      await register({ phone: formattedPhone });
+  
+      // Navigate to verification code screen
       navigation.navigate('VerificationCode', { formattedPhone: formattedPhone });
     } catch (error) {
       console.error("Erro ao registrar:", error);
+      // Show error alert to user
+      Alert.alert('Erro', 'Não foi possível registrar. Tente novamente.');
     }
   }
 

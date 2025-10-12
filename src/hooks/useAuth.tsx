@@ -11,15 +11,15 @@ export interface IRegisterRequest {
 }
 
 interface AuthContextData {
-  user: User;
-  phone: string;
-  register: (data: IRegisterRequest) => Promise<IRegisterRequest>;
+  user: User | null;
+  phone: string | null;
+  register: (data: IRegisterRequest) => Promise<void>;
   updateUser: () => Promise<void>;
   deleteUser: (data: IDeleteUserRequest) => Promise<void>;
   deleteAsyncStorage: () => Promise<void>;
   loading: boolean;
   addNameAndImage: (data: FormData) => Promise<void>;
-  initialUser: User;
+  initialUser: User | null;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -27,100 +27,141 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC<{
   children?: React.ReactNode | undefined;
 }> = ({ children }) => {
-  const [initialUser, setInitialUser] = useState({} as User);
+  const [initialUser, setInitialUser] = useState<User | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [phone, setPhone] = useState<string>();
+  const [phone, setPhone] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     const { '@letsApp:userId': userId } = parseCookies();
-  //     const response = await UserService.getUserById(userId);
-  //     setUser(response);
-  //   };
-  //   getUserData();
-  // }, []);
+  // Load user data on mount
+  useEffect(() => {
+    const loadStoredData = async () => {
+      try {
+        const [userStorage, phoneStorage] = await Promise.all([
+          AsyncStorage.getItem('letsApp:user'),
+          AsyncStorage.getItem('letsApp:phone'),
+        ]);
 
-  const register = async (data: IRegisterRequest): Promise<IRegisterRequest> => {
+        if (userStorage) {
+          const parsedUser = JSON.parse(userStorage);
+          setUser(parsedUser);
+        }
+
+        if (phoneStorage) {
+          setPhone(phoneStorage);
+        }
+      } catch (error) {
+        console.error('Error loading stored data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStoredData();
+  }, []); // Run only once on mount
+
+  const register = async (data: IRegisterRequest): Promise<void> => {
     try {
       console.log("*** register chamado ***", data);
       const response = await UserService.register(data);
-      console.log('Response from register:', response);
-      setInitialUser(response.data);
-      setPhone(response.data.phone);
-  
-      await AsyncStorage.setItem('letsApp:phone', response.data.phone);
-      return response.data;
+
+      if (!response) {
+        throw new Error('No response from server');
+      }
+
+      // Store the initial user data and phone
+      setInitialUser(response);
+      setPhone(response.phone);
+
+      await AsyncStorage.setItem('letsApp:phone', response.phone);
+      // Do not return anything to match Promise<void>
     } catch (error) {
-      throw new Error(`Erro ao registrar${(error as Error).message}`);
+      console.error('Register error:', error);
+      throw new Error((error as Error).message);
     }
   };
 
   const deleteUser = async (data: IDeleteUserRequest) => {
-    await UserService.deleteUser(data);
-    await AsyncStorage.clear();
+    try {
+      await UserService.deleteUser(data);
+      await AsyncStorage.multiRemove(['letsApp:user', 'letsApp:phone']);
 
-    setUser(null);
-    setPhone(null);
-    setLoading(false);
+      setUser(null);
+      setPhone(null);
+    } catch (error) {
+      console.error('Delete user error:', error);
+      throw error;
+    }
   };
 
   const updateUser = async () => {
     try {
-      setLoading(true);
-      console.log('🔄 Atualizando usuário...');
+      if (!user?.phone && !phone) {
+        throw new Error('No phone number available');
+      }
 
-      const response = await api.get(`GetUserByPhone/${user?.phone}`);
-      console.log(`updateUser useAuth 72: Response: ${JSON.stringify(response.data)}`)
-      if (response.data?.user) {
-        setUser(response.data.user);
+      const phoneToUse = user?.phone || phone;
+      console.log(phoneToUse)
+      const response = await api.get(`GetUserByPhone/${phoneToUse}`);
+
+      if (response.data && response.data.id) {
+        // The API returns user data directly in response.data
+        setUser(response.data);
         await AsyncStorage.setItem(
           'letsApp:user',
-          JSON.stringify(response.data.user)
+          JSON.stringify(response.data)
         );
+      } else {
+        throw new Error('No user data received');
       }
     } catch (error) {
-      console.error('Erro ao atualizar usuário:', error);
-      // Não limpa o usuário em caso de erro de rede
-    } finally {
-      setLoading(false);
+      console.error('Update user error:', error);
+      throw error;
     }
   };
 
-  const addNameAndImage = async (data: FormData) => {
-    const response = await UserServices.addNameAndImage(data);
+  const addNameAndImage = async (data: FormData): Promise<void> => {
+    try {
+      const response = await UserServices.addNameAndImage(data);
 
-    setUser(response);
-    console.log('User updated with name and image:', response);
-    // Atualiza o AsyncStorage com o novo usuário
-    await AsyncStorage.setItem('letsApp:user', JSON.stringify(response));
+      // Validate response before storing
+      if (!response) {
+        throw new Error('No response from server');
+      }
+
+      console.log('addNameAndImage response:', response);
+
+      // Create updated user object
+      const updatedUser = {
+        ...user,
+        ...response,
+        // Ensure we keep the phone if it's not in the response
+        phone: response.phone || user?.phone || phone,
+      };
+
+      setUser(updatedUser);
+      
+      // Only store if we have valid data
+      if (updatedUser && Object.keys(updatedUser).length > 0) {
+        await AsyncStorage.setItem('letsApp:user', JSON.stringify(updatedUser));
+      }
+
+      // Do not return anything to match Promise<void>
+    } catch (error) {
+      console.error('addNameAndImage error:', error);
+      throw error;
+    }
   };
 
   const deleteAsyncStorage = async () => {
-    await AsyncStorage.clear();
-
-    setUser(null);
-    setPhone(null);
-    setLoading(false);
+    try {
+      await AsyncStorage.multiRemove(['letsApp:user', 'letsApp:phone']);
+      setUser(null);
+      setPhone(null);
+    } catch (error) {
+      console.error('Clear storage error:', error);
+      throw error;
+    }
   };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    const getUser = async () => {
-      const userStorage = JSON.parse(
-        await AsyncStorage.getItem('letsApp:user')
-      );
-      const phoneStorage = await AsyncStorage.getItem('letsApp:phone');
-
-      if (userStorage) setUser(userStorage);
-      if (phoneStorage) setPhone(phoneStorage);
-
-      setLoading(false);
-    };
-
-    if (!user || !phone) getUser();
-    else setLoading(false);
-  });
 
   return (
     <AuthContext.Provider

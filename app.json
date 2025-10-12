@@ -27,7 +27,11 @@
     },
     "android": {
       "package": "com.letsapp.letsapp",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECEIVE_SMS",
+        "android.permission.READ_SMS"
+      ]
     },
     "ios": {
       "buildNumber": "2",
