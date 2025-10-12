@@ -1,6 +1,7 @@
 import * as S from './styles';
 import Button from '@components/Button';
 import useAuth from '@hooks/useAuth';
+import { IEventsUserResponse } from '@interfaces/Events';
 import Invite from '@interfaces/Invites';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserServices from '@services/UserServices';
@@ -24,22 +25,24 @@ const presencial = require('../../assets/PresencialEvent.png');
 const calendar = require('../../assets/CalendarIcon.png');
 
 const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
-  const invite: Invite = route.params.invite;
+  const invite: IEventsUserResponse = route.params.invite;
   const [acceptanceState, setAcceptanceState] = useState<string | null>(null);
   const { user } = useAuth();
 
   const getAcceptanceState = async (): Promise<void> => {
     const acceptance = await AsyncStorage.getItem(
-      `@acceptanceState${invite.element.id}`
+      `@acceptanceState${invite.id}`
     );
     setAcceptanceState(acceptance);
   };
 
   useEffect(() => {
     const getAvailability = async () => {
+          console.log('entrou getAcceptanceState' + invite);
+
       const response = await UserServices.checkUserAvailability({
         id: user.id,
-        inviteId: invite.element.id,
+        inviteId: invite.id,
       });
 
       setIsAvailable(response);
@@ -53,7 +56,7 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
   const [isAvailable, setIsAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  const ajustDate = moment(invite.element.begin).format('DD/MM/YYYY');
+  const ajustDate = moment(invite?.start?.dateTime).format('DD/MM/YYYY');
   const formattedDate = moment(ajustDate, 'DD/MM/YYYY')
     .locale('pt-br')
     .format('ddd');
@@ -63,11 +66,11 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
     await UserServices.updateInviteState({
       state,
       email: user.email,
-      inviteId: invite.element.id,
+      inviteId: invite.id,
     });
 
     setAcceptanceState(state);
-    await AsyncStorage.setItem(`@acceptanceState${invite.element.id}`, state);
+    await AsyncStorage.setItem(`@acceptanceState${invite.id}`, state);
 
     setTimeout(() => {
       navigation.navigate('MainScreen');
@@ -87,27 +90,29 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
             <S.IconBack source={IconArrow} />
           </TouchableOpacity>
         </S.Header>
-        <S.Title>{invite.element.name}</S.Title>
+        <S.Title>{invite.summary}</S.Title>
         <S.GradientBottom colors={['transparent', 'black']} />
         <S.InfoWrapper>
           <S.ContainerContent>
-            {invite.element.organizerPhoto ? (
-              <S.Image source={{ uri: invite.element.organizerPhoto }} />
+              <S.Image source={require('../../assets/UserCircle.png')} />
+
+            {/* {invite.creator.organizerPhoto ? (
+              <S.Image source={{ uri: invite.creator.organizerPhoto }} />
             ) : (
               <S.Image source={require('../../assets/UserCircle.png')} />
-            )}
-            <S.Name>Convidado por {invite.element.organizerName}</S.Name>
+            )} */}
+            <S.Name>Convidado por {invite.creator.displayName}</S.Name>
           </S.ContainerContent>
           <S.InfoContent>
             <S.Row>
               <S.ContainerIcon>
                 <S.IconAdress
-                  source={invite.element.address !== '' ? presencial : online}
+                  source={invite.location !== '' ? presencial : online}
                 />
               </S.ContainerIcon>
               <S.Adjust>
                 <S.LocalandDate>São Paulo - SP</S.LocalandDate>
-                <S.Adress>{invite.element.address || 'Evento online'}</S.Adress>
+                <S.Adress>{invite.location || 'Evento online'}</S.Adress>
               </S.Adjust>
             </S.Row>
             <S.Row>
@@ -120,8 +125,8 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
                   {ajustDate.substring(0, 5)}
                 </S.LocalandDate>
                 <S.Date>
-                  {moment(invite.element.begin).format('HH:mm')} -{' '}
-                  {moment(invite.element.end).format('HH:mm')}
+                  {moment(invite.start.dateTime).format('HH:mm')} -{' '}
+                  {moment(invite.end.dateTime).format('HH:mm')}
                 </S.Date>
                 {!isLoading && (
                   <S.AvailabilityText available={isAvailable}>
@@ -145,7 +150,7 @@ const ScreenInvite: React.FC<CardsInviteProps> = ({ route, navigation }) => {
           <S.Line />
           <S.ContainerDescrition>
             <S.Description>Descrição</S.Description>
-            <S.Content>{invite.element.description}</S.Content>
+            <S.Content>{invite.description}</S.Content>
           </S.ContainerDescrition>
           <S.Buttons>
             {acceptanceState === 'declined' ? (

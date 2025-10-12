@@ -43,16 +43,16 @@ interface IUpdateStateRequest {
 }
 
 export default class UserServices {
-  static async register(data: IRegisterRequest): Promise<User> {
+  static async register(data: IRegisterRequest): Promise<any> {
     try {
       const response = await api.post('/register', data);
 
       // setCookie(undefined, '@letsApp:token', response.data.token);
       // setCookie(undefined, '@letsApp:userId', response.data.user.id);
 
-      return response.data;
+      return response;
     } catch (error) {
-      console.log(error);
+      console.log('Error in register:', error);
     }
   }
 
@@ -102,10 +102,12 @@ export default class UserServices {
 
   static async sendSignUpLink(data: ISendLinkRequest): Promise<string> {
     try {
+      console.log('Enviando link de inscrição:', data);
       const response = await api.post('/SendSignUpLink', {
         link: data.link,
         pseudoUserId: data.pseudoUserId,
       });
+      console.log('Link de inscrição enviado com sucesso:', response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -151,7 +153,7 @@ export default class UserServices {
         phone,
       });
 
-      console.log(response.data);
+      console.log('Resend Code', response.data);
     } catch (error) {
       console.log(error);
     }
@@ -170,7 +172,7 @@ export default class UserServices {
         inviteId,
       });
 
-      console.log(response.data);
+      console.log('updateInviteState',response.data);
     } catch (error) {
       console.log(error);
     }

@@ -13,15 +13,16 @@ import {
   Alert,
 } from 'react-native';
 import * as yup from 'yup';
-
+import { InferType } from 'yup';
+import userService from '@services/UserServices';
 const Logo = require('../../assets/Logo.png');
 const Message = require('../../assets/MessageIcon.png');
 
-type FormDataProps = {
-  DDD: string;
-  phone: string;
-};
-
+// type FormDataProps = {
+//   DDD: string;
+//   phone: string;
+// };
+type FormDataProps = InferType<typeof ValidationSchema>;
 const ValidationSchema = yup.object({
   phone: yup
     .string()
@@ -180,7 +181,7 @@ const Autentication = ({ navigation }) => {
               />
             </TouchableOpacity>
           </S.Content>
-          {!isKeyboardActive && <S.SmallCircleLeft />}
+          {!isKeyboardActive && <S.SmallCircleLeft /> }
           <S.SmallCircleRight />
           <S.SmallTop />
         </S.Body>

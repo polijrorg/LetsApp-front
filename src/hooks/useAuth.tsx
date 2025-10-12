@@ -3,9 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserServices from '@services/UserServices';
 import UserService, { IDeleteUserRequest } from '@services/UserServices';
 import { api } from '@services/api';
+import { AxiosResponse } from 'axios';
 import React, { useContext, useState, createContext, useEffect } from 'react';
 
-interface IRegisterRequest {
+export interface IRegisterRequest {
   phone: string;
 }
 
@@ -60,6 +61,7 @@ export const AuthProvider: React.FC<{
 
   const register = async (data: IRegisterRequest): Promise<void> => {
     try {
+      console.log("*** register chamado ***", data);
       const response = await UserService.register(data);
 
       if (!response) {

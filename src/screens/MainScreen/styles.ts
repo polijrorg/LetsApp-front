@@ -36,6 +36,8 @@ export const Icon = styled.Image`
   width: 36px;
   height: 36px;
   border-radius: 18px;
+  pointer-events: box-none; /* Permite cliques passarem através */
+
 `;
 
 export const Name = styled.Text`
@@ -136,6 +138,7 @@ export const Container = styled.View`
   padding: 12px 24px;
   padding-top: 60px;
   background-color: ${theme.colors.background};
+  pointer-events: auto; /* ADICIONE ISSO */
 `;
 
 export const EventButton = styled.TouchableOpacity`

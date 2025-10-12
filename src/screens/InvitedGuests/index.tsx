@@ -1,14 +1,14 @@
 import * as S from './styles';
 import Contact from '@components/Contact';
-import Event from '@interfaces/Events';
+import { IEventsUserResponse } from '@interfaces/Events';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 const IconArrow = require('../../assets/ArrowBackBlack.png');
 
 const InvitedGuests = ({ navigation, route }) => {
-  const event: Event = route.params.event;
-
+  const event: IEventsUserResponse = route.params.event;
+  console.log('InvitedGuests 10 event.accepted:', JSON.stringify(event.accepted));
   return (
     <S.MainWrapper>
       <S.Body>
@@ -27,61 +27,43 @@ const InvitedGuests = ({ navigation, route }) => {
             <S.Subtitle>Aceitaram</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.yes.ateendees.map((guest) => (
+            event.accepted.map((guest, index) => (
               <Contact
-                key={guest.id}
-                name={guest.name}
-                phoneOrEmail={guest.email}
+                key={guest?.id || guest?.email || `accepted-${index}`}
+                name={guest?.displayName || 'Convidado'}
+                phoneOrEmail={guest?.email}
                 isDisabled={true}
               />
             ))}
-          {event &&
-            event.yes.pseudoAttendes.map((guest) => (
-              <Contact
-                key={guest.pseudoUserId}
-                name="Convidado"
-                phoneOrEmail={guest.email || guest.phone}
-                isDisabled={true}
-              />
-            ))}
-          {event.yes.ateendees.length + event.yes.pseudoAttendes.length ===
+          {event.accepted.length ===
             0 && <S.EmptyText>Nenhum convidado aceitou o convite</S.EmptyText>}
           <S.ContainerSubtitle>
             <S.Subtitle>Pendentes</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.maybe.ateendees.map((guest) => (
+            event.tentative.map((guest, index) => (
               <Contact
-                key={guest.id}
-                name={guest.name}
-                phoneOrEmail={guest.email}
+                key={guest?.id|| guest?.email || `tentative-${index}`} 
+                name={guest?.displayName || 'Convidado'}
+                phoneOrEmail={guest?.email}
                 isDisabled={true}
               />
             ))}
-          {event &&
-            event.maybe.pseudoAttendes.map((guest) => (
-              <Contact
-                key={guest.pseudoUserId}
-                name="Convidado"
-                phoneOrEmail={guest.email || guest.phone}
-                isDisabled={true}
-              />
-            ))}
-          {event.maybe.ateendees.length + event.maybe.pseudoAttendes.length ===
+          {event.tentative.length ===
             0 && <S.EmptyText>Nenhum convidado pendente</S.EmptyText>}
           <S.ContainerSubtitle>
             <S.Subtitle>Recusaram</S.Subtitle>
           </S.ContainerSubtitle>
           {event &&
-            event.no.ateendees.map((guest) => (
+            event.declined.map((guest, index) => (
               <Contact
-                key={guest.id}
-                name={guest.name}
-                phoneOrEmail={guest.email}
+                key={guest?.id || guest?.email || `declined-${index}`}
+                name={guest?.displayName || 'Convidado'}
+                phoneOrEmail={guest?.email}
                 isDisabled={true}
               />
             ))}
-          {event &&
+          {/* {event &&
             event.no.pseudoAttendes.map((guest) => (
               <Contact
                 key={guest.pseudoUserId}
@@ -89,10 +71,22 @@ const InvitedGuests = ({ navigation, route }) => {
                 phoneOrEmail={guest.email || guest.phone}
                 isDisabled={true}
               />
-            ))}
-          {event.no.ateendees.length + event.no.pseudoAttendes.length === 0 && (
+            ))} */}
+          {event.declined.length === 0 && (
             <S.EmptyText>Nenhum convidado recusou o convite</S.EmptyText>
           )}
+          <S.ContainerSubtitle>
+            <S.Subtitle>Não responderam</S.Subtitle>
+          </S.ContainerSubtitle>
+          {event &&
+            event.needsAction.map((guest,index) => (
+              <Contact
+                key={guest?.id || guest?.email || `needsAction-${index}`}
+                name={guest?.displayName || 'Convidado'}
+                phoneOrEmail={guest?.email}
+                isDisabled={true}
+              />
+            ))}
         </S.Scroll>
       </S.Body>
     </S.MainWrapper>

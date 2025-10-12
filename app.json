@@ -17,16 +17,17 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "338b867b-3c8d-4e5b-b70f-bc2c5a1bee47"
+        "projectId": "1ced3625-8285-4c2c-890c-bc239487b2a9"
       }
     },
     "runtimeVersion": "1.0.0",
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/338b867b-3c8d-4e5b-b70f-bc2c5a1bee47"
+      "url": "https://u.expo.dev/1ced3625-8285-4c2c-890c-bc239487b2a9"
     },
     "android": {
       "package": "com.letsapp.letsapp",
+      "googleServicesFile": "./google-services.json",
       "permissions": [
         "android.permission.RECEIVE_SMS",
         "android.permission.READ_SMS"
@@ -34,7 +35,19 @@
     },
     "ios": {
       "buildNumber": "2",
-      "bundleIdentifier": "com.letsappmeetings.letsapp"
-    }
+      "bundleIdentifier": "com.letsappmeetings.letsapp",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.1055155943487-qk9s625epfagcmstk5oisnvb4irruee9"
+        }
+      ]
+    ]
   }
 }

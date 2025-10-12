@@ -1,10 +1,13 @@
 import * as S from './styles';
-import Event from '@interfaces/Events';
 import moment from 'moment';
 import React from 'react';
+import { google, calendar_v3 } from 'googleapis';
+
+
+type GoogleEvent = calendar_v3.Schema$Event;;
 
 export type CardsEventProps = {
-  event: Event;
+  event: GoogleEvent;
   navigation: any;
 };
 
@@ -23,20 +26,20 @@ const CardsEvent: React.FC<CardsEventProps> = ({ event, navigation }) => {
       <S.ContainerContent>
         <S.Image>
           <S.Month>
-            {moment(event.element.begin)
+            {moment(event?.start?.dateTime)
               .locale('pt-br')
               .format('MMM')
               .replace(/^\w/, (c) => c.toUpperCase())}
           </S.Month>
-          <S.Day>{moment(event.element.begin).format('DD')}</S.Day>
+          <S.Day>{moment(event?.start?.dateTime).format('DD')}</S.Day>
         </S.Image>
         <S.ContainerContentData>
-          <S.Name>{event.element.name}</S.Name>
+          <S.Name>{event.summary}</S.Name>
           <S.ContainerContent>
             <S.IconAdress
-              source={event.element.address ? presencial : online}
+              source={event?.location ? presencial : online}
             />
-            <S.Adress>{event.element.address || 'Evento online'}</S.Adress>
+            <S.Adress>{event?.location || 'Evento online'}</S.Adress>
           </S.ContainerContent>
         </S.ContainerContentData>
       </S.ContainerContent>
