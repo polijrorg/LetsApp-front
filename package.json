@@ -47,15 +47,14 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.31.8",
-    "expo-dev-client": "~5.0.20",
-    "expo-device": "~7.0.3",
-    "expo-notifications": "~0.29.14",
     "expo": "^54.0.0",
     "expo-auth-session": "~7.0.8",
     "expo-contacts": "~15.0.9",
+    "expo-device": "~8.0.9",
     "expo-file-system": "~19.0.17",
     "expo-image-picker": "~17.0.8",
     "expo-linear-gradient": "~15.0.7",
+    "expo-notifications": "~0.32.12",
     "expo-random": "~14.0.1",
     "expo-sms": "~14.0.7",
     "expo-splash-screen": "~31.0.10",
@@ -75,7 +74,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.43.9",
     "react-native": "0.81.4",
-    "react-native-calendars": "^1.1294.0",
+    "react-native-calendars": "^1.1313.0",
     "react-native-contacts": "^7.0.6",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-elements": "^3.4.3",
@@ -117,6 +116,9 @@
     "prettier": "^2.7.1",
     "react-devtools-core": "^6.1.5",
     "standard-version": "^9.5.0"
+  },
+  "resolutions": {
+    "react-native-safe-area-context": "~5.6.0"
   },
   "private": true
 }

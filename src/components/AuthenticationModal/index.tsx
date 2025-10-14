@@ -30,17 +30,59 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       setLoading('google');
       console.log('🔵 Iniciando autenticação Google Calendar');
       console.log(`📞 Telefone: ${userPhone}`);
+      
       const authUrl = await CalendarServices.getGoogleUrl(userPhone);
-      // await WebBrowser.openBrowserAsync(authUrl);
+      console.log('URL de autenticação Google:', authUrl);
+      
       const result = await WebBrowser.openBrowserAsync(authUrl, {
         dismissButtonStyle: 'close',
         presentationStyle: WebBrowser.WebBrowserPresentationStyle.OVER_CURRENT_CONTEXT,
       });
-      await updateUser();  
-      console.log('URL de autenticação Google:', authUrl);
+      
+      console.log('🔵 WebBrowser result:', result);
+      
+      // If user completed the OAuth flow successfully, update user data
+      if (result.type === 'cancel') {
+        console.log('🔵 User cancelled authentication');
+        return;
+      }
+      
+      // Retry logic for updating user data with exponential backoff
+      const retryUpdateUser = async (attempts = 3, initialDelay = 3000) => {
+        for (let i = 0; i < attempts; i++) {
+          try {
+            const delay = initialDelay * Math.pow(1.5, i); // Exponential backoff
+            console.log(`🔵 Waiting ${delay}ms for backend processing (attempt ${i + 1}/${attempts})`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            console.log(`🔵 Attempting to update user data (attempt ${i + 1}/${attempts})`);
+            await updateUser();
+            console.log('🔵 User data updated successfully after OAuth');
+            
+            // Call success callback and close modal
+            onSuccess('google');
+            return true;
+          } catch (error) {
+            console.error(`❌ Error updating user (attempt ${i + 1}/${attempts}):`, error);
+            
+            if (i === attempts - 1) {
+              // Last attempt failed
+              throw error;
+            }
+          }
+        }
+        return false;
+      };
+      
+      await retryUpdateUser();
+      
     } catch (error) {
       console.error('Erro na autenticação Google:', error);
-      Alert.alert('Erro', 'Falha na autenticação do Google Calendar');
+      Alert.alert(
+        'Erro de Conexão', 
+        'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.',
+        [{ text: 'OK' }]
+      );
     } finally {
       setLoading(null);
     }
@@ -49,18 +91,57 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
   const handleOutlookAuth = async () => {
     try {
       setLoading('outlook');
-      const authUrl = await CalendarServices.getOutlookUrl(userPhone);
-
-      await WebBrowser.openAuthSessionAsync(authUrl, 'let-sapp://auth');
-      await updateUser();
-      // Para React Native, usar WebBrowser ou AuthSession do Expo
-      // import * as WebBrowser from 'expo-web-browser';
-      // const result = await WebBrowser.openAuthSessionAsync(authUrl, 'letsapp://auth');
+      console.log('🔵 Iniciando autenticação Outlook Calendar');
+      console.log(`📞 Telefone: ${userPhone}`);
       
+      const authUrl = await CalendarServices.getOutlookUrl(userPhone);
       console.log('URL de autenticação Outlook:', authUrl);
+
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, 'lets-app://auth');
+      console.log('🔵 WebBrowser result:', result);
+      
+      // If user completed the OAuth flow successfully, update user data
+      if (result.type === 'cancel') {
+        console.log('🔵 User cancelled authentication');
+        return;
+      }
+      
+      // Retry logic for updating user data with exponential backoff
+      const retryUpdateUser = async (attempts = 3, initialDelay = 3000) => {
+        for (let i = 0; i < attempts; i++) {
+          try {
+            const delay = initialDelay * Math.pow(1.5, i); // Exponential backoff
+            console.log(`🔵 Waiting ${delay}ms for backend processing (attempt ${i + 1}/${attempts})`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            console.log(`🔵 Attempting to update user data (attempt ${i + 1}/${attempts})`);
+            await updateUser();
+            console.log('🔵 User data updated successfully after OAuth');
+            
+            // Call success callback and close modal
+            onSuccess('outlook');
+            return true;
+          } catch (error) {
+            console.error(`❌ Error updating user (attempt ${i + 1}/${attempts}):`, error);
+            
+            if (i === attempts - 1) {
+              // Last attempt failed
+              throw error;
+            }
+          }
+        }
+        return false;
+      };
+      
+      await retryUpdateUser();
+      
     } catch (error) {
       console.error('Erro na autenticação Outlook:', error);
-      Alert.alert('Erro', 'Falha na autenticação do Outlook Calendar');
+      Alert.alert(
+        'Erro de Conexão', 
+        'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.',
+        [{ text: 'OK' }]
+      );
     } finally {
       setLoading(null);
     }

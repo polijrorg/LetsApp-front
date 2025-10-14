@@ -90,29 +90,28 @@ const InitialData = ({ navigation }) => {
     }
   }
 
-  // Ouvinte para o teclado ficar ativo
-  const keyboardDidShowListener = Keyboard.addListener(
-    'keyboardDidShow',
-    () => {
-      setIsKeyboardActive(true);
-    }
-  );
-
-  // Ouvinte para o teclado ficar inativo
-  const keyboardDidHideListener = Keyboard.addListener(
-    'keyboardDidHide',
-    () => {
-      setIsKeyboardActive(false);
-    }
-  );
-
-  // Remover os ouvintes de eventos de teclado quando o componente for desmontado
+  // Keyboard listeners setup
   useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardActive(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardActive(false);
+      }
+    );
+
+    // Cleanup listeners when component unmounts
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  });
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>

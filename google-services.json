@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "914111765141",
-    "project_id": "letsappdevmuri",
-    "storage_bucket": "letsappdevmuri.firebasestorage.app"
+    "project_number": "263450768377",
+    "project_id": "letsapp-1f87c",
+    "storage_bucket": "letsapp-1f87c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:914111765141:android:bf06a7c1b28fd47350d99c",
+        "mobilesdk_app_id": "1:263450768377:android:f2445fcc5e0a05130ac328",
         "android_client_info": {
           "package_name": "com.letsapp.letsapp"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCa6JIjGyK2TbN1en9zdUADO01KBPO318g"
+          "current_key": "AIzaSyDSQw81BPwY7E4peU1HgtDhuJjChijxRvA"
         }
       ],
       "services": {

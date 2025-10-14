@@ -64,15 +64,24 @@ export const AuthProvider: React.FC<{
       console.log("*** register chamado ***", data);
       const response = await UserService.register(data);
 
+      console.log("*** register response ***", JSON.stringify(response, null, 2));
+
       if (!response) {
         throw new Error('No response from server');
       }
 
+      // Use the phone from the request data if response doesn't have it
+      const phoneToStore = response.phone || data.phone;
+      
+      if (!phoneToStore) {
+        throw new Error('No phone number available in response or request');
+      }
+
       // Store the initial user data and phone
       setInitialUser(response);
-      setPhone(response.phone);
+      setPhone(phoneToStore);
 
-      await AsyncStorage.setItem('letsApp:phone', response.phone);
+      await AsyncStorage.setItem('letsApp:phone', phoneToStore);
       // Do not return anything to match Promise<void>
     } catch (error) {
       console.error('Register error:', error);
@@ -100,22 +109,51 @@ export const AuthProvider: React.FC<{
       }
 
       const phoneToUse = user?.phone || phone;
-      console.log(phoneToUse)
+      console.log('📞 Fetching user with phone:', phoneToUse);
+      
       const response = await api.get(`GetUserByPhone/${phoneToUse}`);
+      
+      console.log('📦 API Response:', JSON.stringify(response.data, null, 2));
 
-      if (response.data && response.data.id) {
-        // The API returns user data directly in response.data
-        setUser(response.data);
+      // Handle different response structures
+      let userData = null;
+      
+      if (response.data?.user) {
+        // Response has nested user object
+        userData = response.data.user;
+      } else if (response.data?.id) {
+        // Response is the user object directly
+        userData = response.data;
+      } else if (response.data) {
+        // Fallback: try to use response.data as-is
+        console.log('⚠️ Unexpected response structure');
+        userData = response.data;
+      }
+
+      if (userData && (userData.id || userData.phone)) {
+        setUser(userData);
         await AsyncStorage.setItem(
           'letsApp:user',
-          JSON.stringify(response.data)
+          JSON.stringify(userData)
         );
+        console.log('✅ User updated successfully');
       } else {
+        console.error('❌ Invalid user data structure:', response.data);
         throw new Error('No user data received');
       }
     } catch (error) {
       console.error('Update user error:', error);
-      throw error;
+      
+      // Provide more specific error information
+      if (error.code === 'NETWORK_ERROR' || error.message?.includes('Network Error')) {
+        throw new Error('Network connection failed. Please check your internet connection.');
+      } else if (error.response?.status === 404) {
+        throw new Error('User not found. Please try logging in again.');
+      } else if (error.response?.status >= 500) {
+        throw new Error('Server error. Please try again later.');
+      } else {
+        throw error;
+      }
     }
   };
 
