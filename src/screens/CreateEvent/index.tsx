@@ -12,7 +12,11 @@ import moment from 'moment-timezone';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -30,6 +34,7 @@ const CreateEvent = ({ navigation }) => {
     dateEnd,
     timeStart,
     timeEnd,
+    duration,
   } = useInvite();
 
   const [description, setDescrition] = useState('');
@@ -48,6 +53,25 @@ const CreateEvent = ({ navigation }) => {
 
     const beginSearch = buildDateTime(dateStart, timeStart);
     const endSearch = buildDateTime(dateEnd, timeEnd);
+    
+    // Validate time interval
+    const startTime = new Date(selectedSchedule.start);
+    const endTime = new Date(selectedSchedule.end);
+    
+    console.log('🕐 Time validation:');
+    console.log('  selectedSchedule.start:', selectedSchedule.start);
+    console.log('  selectedSchedule.end:', selectedSchedule.end);
+    console.log('  startTime object:', startTime);
+    console.log('  endTime object:', endTime);
+    console.log('  beginSearch:', beginSearch);
+    console.log('  endSearch:', endSearch);
+    
+    if (endTime <= startTime) {
+      Alert.alert('Erro', 'Intervalo de tempo inválido: o horário de fim deve ser posterior ao horário de início.');
+      setIsLoading(false);
+      return;
+    }
+    
     const isValid = validateFormInputs({
         title,
         online,
@@ -74,7 +98,11 @@ const CreateEvent = ({ navigation }) => {
       beginSearch,
       endSearch,
     };
-    console.log('🔵🔵eventPayload', JSON.stringify(eventPayload));
+    
+    console.log('🔵🔵eventPayload', JSON.stringify(eventPayload, null, 2));
+    console.log('🔵🔵selectedSchedule', JSON.stringify(selectedSchedule, null, 2));
+    console.log('🔵🔵duration from hook', duration);
+    
     try {
       const isGoogle = user.type === 'GOOGLE';
       console.log('isGoogle', isGoogle);
@@ -86,7 +114,17 @@ const CreateEvent = ({ navigation }) => {
 
       navigation.navigate('MainScreen');
     } catch (error) {
-      console.error(error);
+      console.error('❌ Event creation error:', error);
+      
+      // Better error handling
+      let errorMessage = 'Erro ao criar evento';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      Alert.alert('Erro', errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -100,10 +138,20 @@ const CreateEvent = ({ navigation }) => {
           <ActivityIndicator size="large" color={theme.colors.primary.main} />
         </S.SpinnerWrapper>
       )}
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <S.Body>
-          <S.Back source={Office} >
-            <S.GradientTop colors={['black', 'transparent']} />
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView 
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <S.Body>
+              <S.Back source={Office} >
+                <S.GradientTop colors={['black', 'transparent']} />
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('SuggestSchedule');
@@ -127,6 +175,7 @@ const CreateEvent = ({ navigation }) => {
                     value={description}
                     onChangeText={(text) => setDescrition(text)}
                     placeholderTextColor={theme.colors.lowEmphasis}
+                    style={{ color: theme.colors.highEmphasis }}
                   />
                 </S.ContainerContent>
                 {!online && (
@@ -136,6 +185,7 @@ const CreateEvent = ({ navigation }) => {
                       value={address}
                       onChangeText={(text) => setAddress(text)}
                       placeholderTextColor={theme.colors.lowEmphasis}
+                      style={{ color: theme.colors.highEmphasis }}
                     />
                   </S.ContainerLink>
                 )}
@@ -180,6 +230,8 @@ const CreateEvent = ({ navigation }) => {
           </S.Back>
         </S.Body>
       </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 };

@@ -32,11 +32,20 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       console.log(`📞 Telefone: ${userPhone}`);
       
       const authUrl = await CalendarServices.getGoogleUrl(userPhone);
-      console.log('URL de autenticação Google:', authUrl);
+      console.log('🔗 URL de autenticação Google:', authUrl);
       
+      // Validate URL before opening
+      if (!authUrl || !authUrl.startsWith('http')) {
+        console.error('❌ Invalid URL received:', authUrl);
+        throw new Error('URL inválida recebida do servidor');
+      }
+      
+      // URL is already properly encoded by the backend - use it directly
       const result = await WebBrowser.openBrowserAsync(authUrl, {
         dismissButtonStyle: 'close',
         presentationStyle: WebBrowser.WebBrowserPresentationStyle.OVER_CURRENT_CONTEXT,
+        showTitle: false,
+        enableBarCollapsing: false,
       });
       
       console.log('🔵 WebBrowser result:', result);
@@ -77,12 +86,15 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       await retryUpdateUser();
       
     } catch (error) {
-      console.error('Erro na autenticação Google:', error);
-      Alert.alert(
-        'Erro de Conexão', 
-        'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.',
-        [{ text: 'OK' }]
-      );
+      console.error('❌ Erro na autenticação Google:', error);
+      
+      let errorMessage = 'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.';
+      
+      if (error.message && error.message.includes('URL inválida')) {
+        errorMessage = 'URL de autenticação inválida. Tente novamente ou contate o suporte.';
+      }
+      
+      Alert.alert('Erro de Conexão', errorMessage, [{ text: 'OK' }]);
     } finally {
       setLoading(null);
     }
@@ -95,9 +107,22 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       console.log(`📞 Telefone: ${userPhone}`);
       
       const authUrl = await CalendarServices.getOutlookUrl(userPhone);
-      console.log('URL de autenticação Outlook:', authUrl);
-
-      const result = await WebBrowser.openAuthSessionAsync(authUrl, 'lets-app://auth');
+      console.log('🔗 URL de autenticação Outlook:', authUrl);
+      
+      // Validate URL before opening
+      if (!authUrl || !authUrl.startsWith('http')) {
+        console.error('❌ Invalid URL received:', authUrl);
+        throw new Error('URL inválida recebida do servidor');
+      }
+      
+      // URL is already properly encoded by the backend - use it directly
+      const result = await WebBrowser.openBrowserAsync(authUrl, {
+        dismissButtonStyle: 'close',
+        presentationStyle: WebBrowser.WebBrowserPresentationStyle.OVER_CURRENT_CONTEXT,
+        showTitle: false,
+        enableBarCollapsing: false,
+      });
+      
       console.log('🔵 WebBrowser result:', result);
       
       // If user completed the OAuth flow successfully, update user data
@@ -136,12 +161,15 @@ export const AuthenticationModal: React.FC<AuthenticationModalProps> = ({
       await retryUpdateUser();
       
     } catch (error) {
-      console.error('Erro na autenticação Outlook:', error);
-      Alert.alert(
-        'Erro de Conexão', 
-        'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.',
-        [{ text: 'OK' }]
-      );
+      console.error('❌ Erro na autenticação Outlook:', error);
+      
+      let errorMessage = 'Houve um problema ao conectar seu calendário. Verifique sua conexão com a internet e tente novamente.';
+      
+      if (error.message && error.message.includes('URL inválida')) {
+        errorMessage = 'URL de autenticação inválida. Tente novamente ou contate o suporte.';
+      }
+      
+      Alert.alert('Erro de Conexão', errorMessage, [{ text: 'OK' }]);
     } finally {
       setLoading(null);
     }

@@ -7,12 +7,13 @@ import IContact from '@interfaces/Contacts';
 import UserServices from '@services/UserServices';
 import { api } from '@services/api';
 import { theme } from '@styles/default.theme';
+import { containsIgnoringAccents } from '@utils/stringUtils';
 import * as Contacts from 'expo-contacts';
-import { Modal } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Modal,
   Pressable,
   TouchableOpacity,
 } from 'react-native';
@@ -40,6 +41,23 @@ const SelectGuests = ({ navigation }) => {
     setMandatoryContactSelected,
   } = useInvite();
 
+  // Helper function to get the full name from a device contact
+  const getContactName = (contact) => {
+    if (contact.name) return contact.name; // For user contacts from API
+    
+    // For device contacts from expo-contacts
+    const firstName = contact.firstName || '';
+    const lastName = contact.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim() || 'Sem nome';
+    
+    // Debug logging for search
+    if (search && search.length > 0) {
+      console.log(`🔍 Contact: "${fullName}" vs search: "${search}"`);
+    }
+    
+    return fullName;
+  };
+
   useEffect(() => {
     const getUserContacts = async () => {
       try {
@@ -65,12 +83,19 @@ const SelectGuests = ({ navigation }) => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.PhoneNumbers],
+          fields: [
+            Contacts.Fields.PhoneNumbers,
+            Contacts.Fields.FirstName,
+            Contacts.Fields.LastName,
+            Contacts.Fields.Name
+          ],
           sort: Contacts.SortTypes.FirstName,
         });
         data.sort((a, b) => {
           return a.firstName?.localeCompare(b.firstName);
         });
+        console.log('📱 Device contacts loaded:', data.length, 'contacts');
+        console.log('📱 Sample contact structure:', JSON.stringify(data[0], null, 2));
         setContacts(data);
       }
     };
@@ -187,7 +212,7 @@ const SelectGuests = ({ navigation }) => {
     const usersPhoneParticipant: IContact = {
       id: participant.id,
       userId: user.id,
-      name: participant.name,
+      name: getContactName(participant),
       phone: participant.phone || formattedPhone,
       email: participant.email,
     };
@@ -236,7 +261,7 @@ const SelectGuests = ({ navigation }) => {
             </S.Email>
           </S.ContainerEmail>
         </Pressable>
-        <Modal isOpen={open}>
+        <Modal visible={open} transparent={true} animationType="slide">
           <AddContact setOpen={setOpen} userPhone={user?.phone} />
         </Modal>
         {selections?.length > 0 && (
@@ -289,7 +314,7 @@ const SelectGuests = ({ navigation }) => {
 
         <S.Scroll>
           {userContacts
-            ?.filter((participant) => participant.name?.includes(search))
+            ?.filter((participant) => containsIgnoringAccents(participant.name, search))
             .map((participant, index) => (
               <React.Fragment key={index}>
                 <Contact
@@ -312,11 +337,11 @@ const SelectGuests = ({ navigation }) => {
           </S.ContainerSubtitle>
           {contacts &&
             contacts
-              .filter((participant) => participant.name?.includes(search))
+              .filter((participant) => containsIgnoringAccents(getContactName(participant), search))
               .map((event, index) => (
                 <React.Fragment key={index}>
                   <Contact
-                    name={event.name}
+                    name={getContactName(event)}
                     phoneOrEmail={
                       event.phoneNumbers && event.phoneNumbers[0]
                         ? event.phoneNumbers[0].number

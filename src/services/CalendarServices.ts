@@ -126,20 +126,60 @@ export default class CalendarServices {
 
   static async getGoogleUrl(phone: string): Promise<string> {
     try {
+      console.log('📞 Requesting Google auth URL for phone:', phone);
       const response = await api.post(`/getGoogleAuthUrl/${phone}`);
-      return response.data;
+      const url = response.data;
+      
+      console.log('🔗 Received Google auth URL:', url);
+      
+      // Validate URL format
+      if (!url || typeof url !== 'string') {
+        throw new Error('Invalid URL format received from server');
+      }
+      
+      // Basic URL validation
+      try {
+        new URL(url);
+      } catch (urlError) {
+        console.error('❌ Invalid URL format:', url);
+        throw new Error('Invalid URL format');
+      }
+      
+      return url;
     } catch (error) {
-      console.error('Erro ao obter URL do Google:', error);
+      console.error('❌ Error getting Google URL:', error);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
       throw new Error('Falha na autenticação do Google Calendar');
     }
   }
 
   static async getOutlookUrl(phone: string): Promise<string> {
     try {
+      console.log('📞 Requesting Outlook auth URL for phone:', phone);
       const response = await api.post(`/getOutlookAuthUrl/${phone}`);
-      return response.data;
+      const url = response.data;
+      
+      console.log('🔗 Received Outlook auth URL:', url);
+      
+      // Validate URL format
+      if (!url || typeof url !== 'string') {
+        throw new Error('Invalid URL format received from server');
+      }
+      
+      // Basic URL validation
+      try {
+        new URL(url);
+      } catch (urlError) {
+        console.error('❌ Invalid URL format:', url);
+        throw new Error('Invalid URL format');
+      }
+      
+      return url;
     } catch (error) {
-      console.error('Erro ao obter URL do Outlook:', error);
+      console.error('❌ Error getting Outlook URL:', error);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
       throw new Error('Falha na autenticação do Outlook Calendar');
     }
   }

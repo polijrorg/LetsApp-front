@@ -5,7 +5,7 @@ const getApi = async () => {
   const token = await AsyncStorage.getItem('@letsapp:token');
 
   const api = axios.create({
-    baseURL: 'http://letsapp.polijrinternal.com',
+    baseURL: 'https://letsapp.polijrinternal.com',
   });
 
   if (token) {

@@ -1,4 +1,5 @@
-import { theme } from 'native-base';
+// import { theme } from 'native-base';
+import { theme } from '@styles/default.theme';
 import { Text } from 'react-native';
 import styled from 'styled-components/native';
 

@@ -27,15 +27,34 @@ const MainScreen = ({ navigation }) => {
   const [completeUser, setCompleteUser] = useState<CompleteUser>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Debug logging for state changes
+  // Debug logging for state changes + safety timeout
   useEffect(() => {
-    console.log('MainScreen: State changed - open:', open, 'isLoading:', isLoading);
+    console.log('MainScreen: 🔍 State changed - open:', open, 'isLoading:', isLoading);
+    console.log('MainScreen: 🔍 Modal visibility logic - AuthModal should be:', open && !isLoading ? 'VISIBLE' : 'HIDDEN');
+    console.log('MainScreen: 🔍 Loading modal should be:', isLoading ? 'VISIBLE' : 'HIDDEN');
+    
+    // Safety timeout to prevent infinite loading
+    if (isLoading) {
+      const timeout = setTimeout(() => {
+        console.log('MainScreen: ⚠️ Loading timeout - force stopping loading');
+        setIsLoading(false);
+      }, 5000); // 5 second timeout (reduced from 10)
+      
+      return () => clearTimeout(timeout);
+    }
   }, [open, isLoading]);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const getUser = async () => {
+      // Don't fetch if no user phone
+      if (!user?.phone) {
+        console.log('MainScreen: No user phone available');
+        setIsLoading(false);
+        return;
+      }
+
       try {
         console.log('MainScreen: Starting getUser, user:', user?.phone);
         setIsLoading(true);
@@ -46,12 +65,13 @@ const MainScreen = ({ navigation }) => {
         
         // Only show authentication modal if calendar is NOT found
         if (!response.data?.calendar_found) {
-          console.log('MainScreen: No calendar found, showing auth modal');
+          console.log('MainScreen: ❌ No calendar found, showing auth modal');
           console.log('MainScreen: Setting open=true and isLoading=false');
           setOpen(true);
           setIsLoading(false); // Stop loading if no calendar (show auth modal)
+          setHasInitializedCalendar(true); // Mark as "initialized" to skip the init useEffect
         } else {
-          console.log('MainScreen: Calendar found, keeping loading active for initialization');
+          console.log('MainScreen: ✅ Calendar found, keeping loading active for initialization');
         }
         // If calendar is found, loading will be stopped by the initialization useEffect
 
@@ -63,16 +83,6 @@ const MainScreen = ({ navigation }) => {
         // Handle specific error cases
         if (error.response?.status === 400) {
           const errorMessage = error.response?.data?.message;
-          
-          // Token not found means user hasn't connected a calendar yet - this is OK!
-          // Show the authentication modal instead of treating it as an error
-          if (errorMessage === 'Token Not Found') {
-            console.log('MainScreen: Token not found - user needs to connect calendar');
-            console.log('MainScreen: Setting open=true and isLoading=false to show auth modal');
-            setOpen(true);
-            setIsLoading(false);
-            return;
-          }
           
           // User not found - clear storage and restart
           if (errorMessage === 'User Not Found') {
@@ -90,13 +100,16 @@ const MainScreen = ({ navigation }) => {
     };
     
     // Reset initialization flag when screen is focused
-    if (isFocused) {
-      console.log('MainScreen: Screen focused, resetting initialization');
+    if (isFocused && user?.phone) {
+      console.log('MainScreen: Screen focused, fetching user data');
       setHasInitializedCalendar(false);
       getUser();
+    } else if (!user?.phone) {
+      console.log('MainScreen: No user available, stopping loading');
+      setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, isFocused]);
+  }, [user?.phone, isFocused]); // Now using both dependencies
 
   const [selectedOption, setSelectedOption] = useState('invite'); // Inicialmente seleciona o botão de eventos
   const [showEvent, setShowEvent] = useState(false);
@@ -156,19 +169,21 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     const initializeCalendar = async () => {
       if (hasInitializedCalendar) {
-        console.log('MainScreen: Calendar already initialized');
+        console.log('MainScreen: Calendar already initialized, skipping');
         setIsLoading(false);
         return;
       }
       
       // Only run if calendar is found
       if (!completeUser?.calendar_found) {
-        console.log('MainScreen: No calendar to initialize, skipping');
-        return; // Don't do anything if no calendar - the first useEffect handles this
+        console.log('MainScreen: ❌ No calendar to initialize, skipping (calendar_found=false)');
+        setIsLoading(false); // Stop loading even if no calendar to initialize
+        setHasInitializedCalendar(true); // Mark as initialized to prevent re-running
+        return;
       }
       
       try {
-        console.log('MainScreen: Initializing calendar for type:', completeUser.user.type);
+        console.log('MainScreen: ✅ Initializing calendar for type:', completeUser.user.type);
         
         // User already has calendar connected, just update their data
         await updateUser();
@@ -181,13 +196,18 @@ const MainScreen = ({ navigation }) => {
         }
       } finally {
         // Always stop loading after calendar initialization attempt
+        console.log('MainScreen: Stopping loading after calendar initialization');
         setIsLoading(false);
       }
     };
     
-    // Only call initialization if we have complete user data and calendar is found
-    if (completeUser?.user?.phone && completeUser?.calendar_found) {
+    // Call initialization if we have complete user data
+    if (completeUser?.user?.phone) {
+      console.log('MainScreen: Complete user available, checking if initialization needed...');
       initializeCalendar();
+    } else if (completeUser && !completeUser.user?.phone) {
+      console.log('MainScreen: Complete user but no phone, stopping loading');
+      setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[completeUser?.calendar_found, completeUser?.user?.phone, hasInitializedCalendar]);

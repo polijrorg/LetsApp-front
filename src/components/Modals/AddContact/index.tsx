@@ -2,9 +2,9 @@ import * as S from './styles';
 import FixedInput from '@components/FixedInput';
 import CalendarServices from '@services/CalendarServices';
 import { theme } from '@styles/default.theme';
-import { Select, CheckIcon } from 'native-base';
+import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Props {
@@ -77,25 +77,29 @@ const AddContact: React.FC<Props> = ({ setOpen, userPhone }) => {
             value={name}
             setValue={setName}
           />
-          <Select
-            selectedValue={selected}
-            defaultValue="Telefone"
-            width="100%"
-            _selectedItem={{
-              endIcon: <CheckIcon size="5" />,
+          <View
+            style={{
+              borderColor: theme.colors.primary.dark,
+              borderWidth: 1,
+              borderRadius: 8,
+              height: 40,
+              justifyContent: 'center',
+              marginTop: 4,
+              marginBottom: 4,
             }}
-            onValueChange={(itemValue) => setSelected(itemValue)}
-            borderColor={theme.colors.primary.dark}
-            borderRadius={8}
-            height="40px"
-            fontSize="16px"
-            color={theme.colors.highEmphasis}
-            mt="4px"
-            mb="4px"
           >
-            <Select.Item label="Telefone" value="Telefone" />
-            <Select.Item label="Email" value="Email" />
-          </Select>
+            <Picker
+              selectedValue={selected}
+              onValueChange={(itemValue) => setSelected(itemValue)}
+              style={{
+                height: 40,
+                color: theme.colors.highEmphasis,
+              }}
+            >
+              <Picker.Item label="Telefone" value="Telefone" />
+              <Picker.Item label="Email" value="Email" />
+            </Picker>
+          </View>
           {selected === 'Telefone' ? (
             <FixedInput
               height="40px"

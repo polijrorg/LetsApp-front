@@ -15,6 +15,7 @@ const EventTitle: React.FC<Props> = ({ title, setTitle }) => {
         placeholderTextColor={theme.colors.primary.main}
         onChangeText={(value) => setTitle(value)}
         value={title}
+        style={{ color: theme.colors.primary.main }}
       />
       <S.Icon source={require('../../assets/Pen.png')} />
     </S.TitleWrapper>
