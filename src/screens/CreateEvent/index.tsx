@@ -138,18 +138,19 @@ const CreateEvent = ({ navigation }) => {
           <ActivityIndicator size="large" color={theme.colors.primary.main} />
         </S.SpinnerWrapper>
       )}
-      <KeyboardAvoidingView 
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <ScrollView 
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <S.Body>
+        <KeyboardAvoidingView 
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
         >
-          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <S.Body>
+          <ScrollView 
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+              <S.Body>
               <S.Back source={Office} >
                 <S.GradientTop colors={['black', 'transparent']} />
             <TouchableOpacity
@@ -228,10 +229,11 @@ const CreateEvent = ({ navigation }) => {
             </S.Header>
             {/* </KeyboardAvoidingView> */}
           </S.Back>
-        </S.Body>
-      </TouchableWithoutFeedback>
+            </S.Body>
+          </TouchableWithoutFeedback>
         </ScrollView>
       </KeyboardAvoidingView>
+      </S.Body>
     </>
   );
 };

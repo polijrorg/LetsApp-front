@@ -39,10 +39,5 @@ export const containsIgnoringAccents = (target: string, searchTerm: string): boo
   
   const result = normalizedTarget.includes(normalizedSearch);
   
-  // Debug logging
-  if (searchTerm && searchTerm.length > 0) {
-    console.log(`🔍 Search debug: "${target}" → "${normalizedTarget}" | "${searchTerm}" → "${normalizedSearch}" | Match: ${result}`);
-  }
-  
   return result;
 };

@@ -117,6 +117,15 @@ const MainScreen = ({ navigation }) => {
   const [events, setEvents] = useState<GoogleEvent[]>([]);
   const [numberInvites, setNumberInvites] = useState<number>(null);
 
+  // Switch to events tab when screen is focused (e.g., after creating an event)
+  useEffect(() => {
+    if (isFocused && completeUser?.calendar_found) {
+      console.log('MainScreen: Screen focused, switching to events tab');
+      setSelectedOption('events');
+      setShowEvent(true);
+    }
+  }, [isFocused, completeUser?.calendar_found]);
+
   const getEvents = async () => {
     try {
       console.log('MainScreen 68 completeUser: Events', completeUser);
@@ -153,7 +162,7 @@ const MainScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Only fetch events/invites if user has email AND calendar is connected
-    if (user?.email && completeUser && completeUser.calendar_found) {
+    if (user?.email && completeUser && completeUser.calendar_found && isFocused) {
       console.log('MainScreen: Fetching events and invites for connected calendar');
       getInvites();
       getEvents();
@@ -161,7 +170,7 @@ const MainScreen = ({ navigation }) => {
       console.log('MainScreen: Skipping calendar fetch - no calendar connected');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [completeUser?.user?.email, user?.email, completeUser?.calendar_found]);
+  }, [completeUser?.user?.email, user?.email, completeUser?.calendar_found, isFocused]);
 
   // This useEffect should only run once when completeUser is first set with calendar_found = true
   const [hasInitializedCalendar, setHasInitializedCalendar] = useState(false);
@@ -214,16 +223,16 @@ const MainScreen = ({ navigation }) => {
 
   const handleEventsPress = () => {
     console.log('🔥 CLICOU EM EVENTOS');
-    getEvents();
     setSelectedOption('events');
     setShowEvent(true);
+    getEvents(); // Refresh events when switching to this tab
   };
 
   const handleInvitePress = () => {
-    console.log('🔥 CLICOU EM EVENTOS');
-    getInvites();
+    console.log('🔥 CLICOU EM CONVITES');
     setSelectedOption('invite');
     setShowEvent(false);
+    getInvites(); // Refresh invites when switching to this tab
   };
 
   return (

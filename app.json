@@ -28,6 +28,7 @@
     "android": {
       "package": "com.letsapp.letsapp",
       "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "android.permission.RECEIVE_SMS",
         "android.permission.READ_SMS"

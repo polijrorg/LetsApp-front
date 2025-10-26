@@ -137,11 +137,11 @@ export const ContainerContent = styled.View`
 
 export const ContainerLink = styled.View`
   width: 288px;
-  height: 32px;
+  height: 48px;
   border-width: 1px;
   border: ${theme.colors.primary.main};
   border-radius: 8px;
-  padding: 8px;
+  padding: 6px;
   justify-content: center;
   margin-top: 12px;
 `;
